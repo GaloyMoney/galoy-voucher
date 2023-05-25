@@ -22,3 +22,21 @@ export const GET_WITHDRAW_LINK = gql`
     }
   }
 `;
+
+export const GET_WITHDRAW_LINKS_BY_USER_ID = gql`
+  query GetWithdrawLinksByUserId($user_id: ID!, $status: Status) {
+    getWithdrawLinksByUserId(user_id: $user_id, status: $status) {
+      title
+      account_type
+      min_withdrawable
+      amount
+      created_at
+      id
+      payment_hash
+      status
+      updated_at
+      payment_request
+      user_id
+    }
+  }
+`;

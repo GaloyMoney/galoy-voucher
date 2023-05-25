@@ -1018,6 +1018,7 @@ export type Query = {
   currencyList: Array<Currency>;
   getAllWithdrawLinks: Array<WithdrawLink>;
   getWithdrawLink?: Maybe<WithdrawLink>;
+  getWithdrawLinksByUserId: Array<WithdrawLink>;
   globals?: Maybe<Globals>;
   lnInvoicePaymentStatus: LnInvoicePaymentStatusPayload;
   me?: Maybe<User>;
@@ -1056,6 +1057,12 @@ export type QueryGetWithdrawLinkArgs = {
   k1?: InputMaybe<Scalars['String']>;
   payment_hash?: InputMaybe<Scalars['String']>;
   unique_hash?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryGetWithdrawLinksByUserIdArgs = {
+  status?: InputMaybe<Status>;
+  user_id: Scalars['ID'];
 };
 
 

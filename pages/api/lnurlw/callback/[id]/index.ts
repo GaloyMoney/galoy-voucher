@@ -3,10 +3,10 @@ import {
   getWithdrawLinkByK1Query,
   updateWithdrawLinkMutation,
 } from "../../../../../utils/crud";
-import { sendPaymentRequest } from "@/utils/galoy";
+import { sendPaymentRequest } from "@/services/galoy";
 import { decode } from "light-bolt11-decoder";
 
-//TODO need to add interface in this 
+//TODO need to add interface in this
 export default async function handler(req: any, res: any) {
   if (req.method === "GET") {
     const { id } = req.query;
@@ -48,7 +48,6 @@ export default async function handler(req: any, res: any) {
           .json({ status: "ERROR", reason: "Invalid amount" });
       }
 
-      
       const sendPaymentResponse = await sendPaymentRequest(
         process.env.NEXT_PUBLIC_ESCROW_WALLET_BTC || "",
         pr,

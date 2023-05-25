@@ -2,6 +2,7 @@ import knexConfig from "../config/knexfile";
 const knexConfigObj = knexConfig["development"];
 const knex = require("knex")(knexConfigObj);
 import { v4 as uuidv4 } from "uuid";
+
 //CREATE READ UPDATE DELETE functions
 export async function getWithdrawLinkByIdQuery(id: string) {
   const query = knex.select().from("withdraw_links").where({ id });
@@ -63,4 +64,22 @@ export async function updateWithdrawLinkMutation(id: string, input: any) {
 export async function deleteWithdrawLinkMutation(id: string) {
   await knex("withdraw_links").where({ id }).del();
   return id;
+}
+
+export async function getWithdrawLinksByUserIdQuery(
+  user_id: string,
+  status?: string
+) {
+  let query = knex
+    .select()
+    .from("withdraw_links")
+    .where({ user_id: user_id })
+    ;
+
+  if (status) {
+    query = query.andWhere({ status: status });
+  }
+
+  const withdrawLinks = await query.orderBy("created_at", "desc");
+  return withdrawLinks;
 }
