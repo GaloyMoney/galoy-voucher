@@ -1,0 +1,13 @@
+need to fix environment variables
+    keep them in single file 
+    make them more secure for sensitive data 
+
+change params to named params
+
+need to setup eslint and github actions  
+
+need some changes in folder structure 
+
+split pages in components
+
+add return types 

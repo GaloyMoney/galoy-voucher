@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import LoadingComponent from "@/components/LoadingComponent";
 import { UPDATE_WITHDRAW_LINK } from "@/utils/graphql/mutation";
 import { GET_WITHDRAW_LINK } from "@/utils/graphql/query";
-import { LN_INVOCE_PAYMENT_STATUS } from "@/utils/galoy";
+import { LN_INVOCE_PAYMENT_STATUS } from "@/services/galoy";
 import {
   LnInvoicePaymentStatusPayload,
   WithdrawLink,

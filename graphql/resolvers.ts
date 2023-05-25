@@ -7,6 +7,7 @@ import {
   getWithdrawLinkByUniqueHashQuery,
   getWithdrawLinkByK1Query,
   getWithdrawLinkByPaymentHashQuery,
+  getWithdrawLinksByUserIdQuery,
 } from "../utils/crud";
 
 //resolvers for the Schema
@@ -30,6 +31,10 @@ const resolvers = {
     },
     getAllWithdrawLinks: async (parent: any, args: any, context: any) => {
       return getAllWithdrawLinksQuery();
+    },
+    getWithdrawLinksByUserId: async (parent: any, args: any, context: any) => {
+      const { user_id, status } = args;
+      return getWithdrawLinksByUserIdQuery(user_id, status);
     },
   },
   Mutation: {

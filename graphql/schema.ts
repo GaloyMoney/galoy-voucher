@@ -1,4 +1,4 @@
-//TODO need to add error fields 
+//TODO need to add error fields
 const typeDefs = `#graphql
 
 type WithdrawLink {
@@ -29,6 +29,7 @@ enum Status {
 type Query {
   getWithdrawLink(id: ID, unique_hash: String, k1: String, payment_hash: String): WithdrawLink
   getAllWithdrawLinks: [WithdrawLink!]!
+  getWithdrawLinksByUserId(user_id: ID!, status: Status): [WithdrawLink!]!
 }
 
 
@@ -70,6 +71,5 @@ input UpdateWithdrawLinkInput {
   k1: String
 }
 `;
-
 
 export default typeDefs;

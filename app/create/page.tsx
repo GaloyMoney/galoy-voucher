@@ -2,7 +2,7 @@
 import { useState, ChangeEvent } from "react";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
-import { LN_INVOICE_CREATE } from "@/utils/galoy";
+import { LN_INVOICE_CREATE } from "@/services/galoy";
 import { CREATE_WITHDRAW_LINK } from "@/utils/graphql/mutation";
 import { generateRandomHash } from "@/utils/helpers";
 import LoadingComponent from "@/components/LoadingComponent";
@@ -16,7 +16,7 @@ interface CreateWithdrawLinkResponse {
   createWithdrawLink: WithdrawLink;
 }
 
-//TODO need to fix loading in this compoent 
+//TODO need to fix loading in this compoent
 export default function HomePage() {
   const router = useRouter();
   const [amount, setAmount] = useState<number>(0);
@@ -112,7 +112,6 @@ export default function HomePage() {
       </div>
     );
   }
-
 
   //TODO need to create a separate component for this and also for input fields
   return (
