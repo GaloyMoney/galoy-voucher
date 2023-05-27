@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Status,
   WithdrawLink,
@@ -8,17 +8,29 @@ import {
 import { formatDate } from "@/utils/helpers";
 import LoadingComponent from "@/components/LoadingComponent";
 import Link from "next/link";
+
 interface Params {
   params: {
     user_id: string;
   };
 }
+
 export default function UserLinks({ params: { user_id } }: Params) {
   console.log("user_id", user_id);
   const [status, setStatus] = useState<Status | null>(null); // Initial status is null
+
+  const [poll, setPoll] = useState(false);
+
   const { loading, error, data } = useGetWithdrawLinksByUserIdQuery({
     variables: { user_id, status },
+    pollInterval: poll ? 5000 : 0,
   });
+
+  useEffect(() => {
+    setPoll(true);
+    return () => setPoll(false);
+  }, []);
+
   if (loading) {
   }
 
@@ -80,7 +92,7 @@ export default function UserLinks({ params: { user_id } }: Params) {
                         {withdrawLink?.title}
                       </h2>
                       <span
-                        className={` inline-flex items-center px-3 py-2 text-xs  text-center  rounded-lg  focus:ring-4                    text-gray-600
+                        className={` inline-flex items-center px-3 py-2 text-xs  text-center  rounded-lg  focus:ring-4            text-gray-600
                     dark:text-gray-400 ${
                       withdrawLink.status === "UNFUNDED"
                         ? "border border-red-800"

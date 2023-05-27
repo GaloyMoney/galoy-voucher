@@ -5,10 +5,9 @@ import { generateRandomHash } from "@/utils/helpers";
 import LoadingComponent from "@/components/LoadingComponent";
 import {
   useCreateWithdrawLinkMutation,
-  useLnInvoiceCreateMutation,
+  useLnInvoiceCreateOnBehalfOfRecipientMutation,
 } from "@/utils/generated/graphql";
-
-
+import { NEXT_PUBLIC_ESCROW_WALLET_BTC } from "@/variables";
 
 //TODO need to fix loading in this compoent
 export default function HomePage() {
@@ -20,7 +19,7 @@ export default function HomePage() {
   const [
     createLnInvoice,
     { loading: lnInvoiceLoading, error: lnInvoiceError, data: lnInvoiceData },
-  ] = useLnInvoiceCreateMutation();
+  ] = useLnInvoiceCreateOnBehalfOfRecipientMutation();
 
   //for inserting withdraw link data
   const [
@@ -46,7 +45,7 @@ export default function HomePage() {
       const result = await createLnInvoice({
         variables: {
           input: {
-            walletId: `${process.env.NEXT_PUBLIC_ESCROW_WALLET_BTC}`,
+            recipientWalletId: `${NEXT_PUBLIC_ESCROW_WALLET_BTC}`,
             amount: amount,
             memo: memo,
           },
@@ -57,7 +56,7 @@ export default function HomePage() {
       });
 
       const { paymentRequest, paymentHash, paymentSecret, satoshis } = result
-        .data?.lnInvoiceCreate.invoice || {
+        .data?.lnInvoiceCreateOnBehalfOfRecipient.invoice || {
         paymentRequest: "",
         paymentHash: "",
         paymentSecret: "",
@@ -74,7 +73,7 @@ export default function HomePage() {
             payment_secret: paymentSecret,
             amount: satoshis, //this will be used if we charge fees and also if multiple links at once this will store their sum
             account_type: "BTC", //this can be BTC or USD
-            escrow_wallet: `${process.env.NEXT_PUBLIC_ESCROW_WALLET_BTC}`,
+            escrow_wallet: `${NEXT_PUBLIC_ESCROW_WALLET_BTC}`,
             title: memo || "LNURLw",
             min_withdrawable: satoshis,
             max_withdrawable: satoshis,

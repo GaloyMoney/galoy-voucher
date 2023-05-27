@@ -23,7 +23,6 @@ export const CREATE_WITHDRAW_LINK = gql`
   }
 `;
 
-
 export const UPDATE_WITHDRAW_LINK = gql`
   mutation UpdateWithdrawLink(
     $updateWithdrawLinkId: ID!
@@ -53,10 +52,11 @@ export const UPDATE_WITHDRAW_LINK = gql`
   }
 `;
 
-
 export const LN_INVOICE_CREATE = gql`
-  mutation LnInvoiceCreate($input: LnInvoiceCreateInput!) {
-    lnInvoiceCreate(input: $input) {
+  mutation LnInvoiceCreateOnBehalfOfRecipient(
+    $input: LnInvoiceCreateOnBehalfOfRecipientInput!
+  ) {
+    lnInvoiceCreateOnBehalfOfRecipient(input: $input) {
       errors {
         message
         path
@@ -71,4 +71,3 @@ export const LN_INVOICE_CREATE = gql`
     }
   }
 `;
-

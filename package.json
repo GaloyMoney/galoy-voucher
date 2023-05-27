@@ -21,6 +21,7 @@
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@graphql-tools/load-files": "^7.0.0",
     "@graphql-tools/merge": "^9.0.0",
+    "@headlessui/react": "^1.7.14",
     "@types/node": "^20.1.5",
     "@types/react": "^18.2.6",
     "@types/react-dom": "18.2.4",
@@ -55,10 +56,10 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@types/uuid": "^9.0.1",
-    "typescript": "^5.0.4",
-    "@graphql-codegen/introspection": "4.0.0",
     "@graphql-codegen/cli": "4.0.0",
-    "@graphql-codegen/client-preset": "4.0.0"
+    "@graphql-codegen/client-preset": "4.0.0",
+    "@graphql-codegen/introspection": "4.0.0",
+    "@types/uuid": "^9.0.1",
+    "typescript": "^5.0.4"
   }
 }

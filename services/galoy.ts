@@ -1,3 +1,4 @@
+import { ESCROW_TOKEN, NEXT_PUBLIC_GALOY_URL } from "@/variables";
 import { gql } from "@apollo/client";
 //GALOY APIS
 export const LN_INVOICE_CREATE = gql`
@@ -38,12 +39,12 @@ export async function sendPaymentRequest(
   memo: string
 ) {
   const sendPaymentResponse = await fetch(
-    `https://${process.env.NEXT_PUBLIC_GALOY_URL}/graphql`,
+    `https://${NEXT_PUBLIC_GALOY_URL}/graphql`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
+        Authorization: `Bearer ${ESCROW_TOKEN}`,
       },
       body: JSON.stringify({
         query: `
