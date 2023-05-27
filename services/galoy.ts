@@ -1,50 +1,15 @@
-import { ESCROW_TOKEN, NEXT_PUBLIC_GALOY_URL } from "@/variables";
-import { gql } from "@apollo/client";
-//GALOY APIS
-export const LN_INVOICE_CREATE = gql`
-  mutation LnInvoiceCreate($input: LnInvoiceCreateInput!) {
-    lnInvoiceCreate(input: $input) {
-      errors {
-        message
-        path
-        code
-      }
-      invoice {
-        paymentRequest
-        paymentHash
-        paymentSecret
-        satoshis
-      }
-    }
-  }
-`;
-
-export const LN_INVOCE_PAYMENT_STATUS = gql`
-  subscription LnInvoicePaymentStatus($payment_request: LnPaymentRequest!) {
-    lnInvoicePaymentStatus(input: { paymentRequest: $payment_request }) {
-      status
-      errors {
-        message
-        path
-        code
-      }
-    }
-  }
-`;
-
-//TODO need to convert this to useMutation
 export async function sendPaymentRequest(
   walletId: string,
   paymentRequest: string,
   memo: string
 ) {
   const sendPaymentResponse = await fetch(
-    `https://${NEXT_PUBLIC_GALOY_URL}/graphql`,
+    `https://${process.env.NEXT_PUBLIC_GALOY_URL}/graphql`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${ESCROW_TOKEN}`,
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
       },
       body: JSON.stringify({
         query: `
