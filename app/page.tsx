@@ -12,13 +12,13 @@ export default function Home() {
       <div className="flex flex-col mt-8 space-y-4">
         <Link
           href="/user/aaaaaaaa-e098-4a16-932b-e4f4abc24366/links"
-          className="bg-zinc-700 hover:bg-zinc-900 text-white font-bold py-2 px-4 rounded flex items-center justify-center"
+          className="bg-zinc-700 hover:bg-zinc-900 text-white font-semibold py-2 px-4 rounded flex items-center justify-center"
         >
           <button>My links</button>
         </Link>
         <Link
           href="/create"
-          className="bg-zinc-700 hover:bg-zinc-900 text-white font-bold py-2 px-4 rounded flex items-center justify-center"
+          className="bg-zinc-700 hover:bg-zinc-900 text-white font-semibold py-2 px-4 rounded flex items-center justify-center"
         >
           <button>Create new Link</button>
         </Link>
