@@ -99,7 +99,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
 
   return (
     <div className="flex flex-col gap-3 items-center justify-center h-screen">
-      <h1 className="font-bold text-3xl">
+      <h1 className="font-bold text-xl">
         Please Fund the Link to create the LNURL link{" "}
       </h1>
       <div className="w-80 h-80 flex flex-col items-center justify-center border border-gray-300 rounded-md p-4">

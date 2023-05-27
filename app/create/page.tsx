@@ -125,47 +125,48 @@ export default function HomePage() {
 
   //TODO need to create a separate component for this and also for input fields
   return (
-    <div className="flex flex-col items-center justify-center h-screen  ">
-      <div className="flex mt-2 px-4 py-2">
+    <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col">
+        <div className="flex mt-2 py-2 w-full">
+          <button
+            onClick={() => handleCurrencyChange("USD")}
+            className={`bg-zinc-700 text-white px-4 py-2  rounded-md hover:bg-zinc-900 ${
+              currency === "USD" ? "border bg-zinc-900" : ""
+            }`}
+          >
+            USD Wallet (cents)
+          </button>
+          <button
+            onClick={() => handleCurrencyChange("BTC")}
+            className={`bg-zinc-700 text-white px-4 py-2 ml-1 rounded-md hover:bg-zinc-900 ${
+              currency === "BTC" ? "border bg-zinc-900" : ""
+            }`}
+          >
+            BTC Wallet (sats)
+          </button>
+        </div>
+        <input
+          type="number"
+          placeholder={`Enter amount`}
+          value={amount.toString()}
+          onChange={handleAmountChange}
+          className="border border-stone-700 rounded-md px-4 py-2 bg-neutral-900 w-full"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Enter memo"
+          value={memo}
+          onChange={handleMemoChange}
+          className="border border-stone-700 rounded-md px-4 py-2 mt-2 bg-neutral-900 w-full"
+        />
         <button
-          onClick={() => handleCurrencyChange("USD")}
-          className={`bg-zinc-700 text-white px-4 py-2 rounded-md hover:bg-zinc-900 ${
-            currency === "USD" ? "border bg-zinc-900" : ""
-          }`}
+          onClick={handleSubmit}
+          className="bg-zinc-700 text-white px-4 py-2 mt-2 rounded-md hover:bg-zinc-900 w-full"
         >
-          USD Wallet (cents)
-        </button>
-        <button
-          onClick={() => handleCurrencyChange("BTC")}
-          className={`bg-zinc-700 text-white px-4 py-2 ml-2 rounded-md hover:bg-zinc-900 ${
-            currency === "BTC" ? "border bg-zinc-900" : ""
-          }`}
-        >
-          BTC Wallet (sats)
+          Create LNURLw
         </button>
       </div>
-      <input
-        type="number"
-        placeholder={`Enter amount`}
-        value={amount.toString()}
-        onChange={handleAmountChange}
-        className="border border-stone-700 rounded-md px-4 py-2 bg-neutral-900"
-        required
-      />
-      <input
-        type="text"
-        placeholder="Enter memo"
-        value={memo}
-        onChange={handleMemoChange}
-        className="border border-stone-700 rounded-md px-4 py-2 mt-2 bg-neutral-900"
-      />
-
-      <button
-        onClick={handleSubmit}
-        className="bg-zinc-700 text-white px-4 py-2 mt-2 rounded-md hover:bg-zinc-900"
-      >
-        Create LNURLw
-      </button>
     </div>
   );
 }
