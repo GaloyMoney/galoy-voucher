@@ -4,9 +4,8 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { ApolloProvider } from "@apollo/client";
 import apolloClient from "@/config/apollo";
-
+import NavBarComponent from "@/components/NavBarComponent";
 const inter = Inter({ subsets: ["latin"] });
-
 
 export default function RootLayout({
   children,
@@ -16,7 +15,10 @@ export default function RootLayout({
   return (
     <ApolloProvider client={apolloClient}>
       <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          <NavBarComponent />
+          {children}
+        </body>
       </html>
     </ApolloProvider>
   );

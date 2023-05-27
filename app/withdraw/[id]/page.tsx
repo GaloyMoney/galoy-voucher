@@ -6,6 +6,7 @@ import LoadingComponent from "@/components/LoadingComponent";
 import {
   useGetWithdrawLinkQuery,
 } from "@/utils/generated/graphql";
+import { NEXT_PUBLIC_LOCAL_URL } from "@/variables";
 
 interface Params {
   params: {
@@ -35,7 +36,7 @@ export default function Page({ params: { id } }: Params) {
 
   //LNURLw URL this will be encoded in LNURL format
   const url = encodeURLToLNURL(
-    `${process.env.NEXT_PUBLIC_LOCAL_URL}/api/lnurlw/${data.getWithdrawLink?.unique_hash}`
+    `${NEXT_PUBLIC_LOCAL_URL}/api/lnurlw/${data.getWithdrawLink?.unique_hash}`
   );
 
   const copyToClipboard = () => {

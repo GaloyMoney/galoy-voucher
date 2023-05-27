@@ -69,7 +69,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
               },
             });
             const updatedWithdrawLink = response.data?.updateWithdrawLink;
-            router.push(`/withdraw/${response.data?.updateWithdrawLink.id}`);
+            router.replace(`/withdraw/${response.data?.updateWithdrawLink.id}`);
           } catch (error) {
             alert(error);
           }

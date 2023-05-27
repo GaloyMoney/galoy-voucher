@@ -5,11 +5,6 @@ import { useEffect } from "react";
 // path : /
 //TODO home page or welcome screen needed to be created gere
 export default function Home() {
-  const router = useRouter();
-  // useEffect(() => {
-  //   router.push("/create");
-  // }, [router]);
-
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-6xl font-bold">Galoy Withdraw</h1>

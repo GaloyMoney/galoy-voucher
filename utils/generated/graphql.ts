@@ -1543,12 +1543,12 @@ export type UpdateWithdrawLinkMutationVariables = Exact<{
 
 export type UpdateWithdrawLinkMutation = { __typename?: 'Mutation', updateWithdrawLink: { __typename?: 'WithdrawLink', account_type: string, amount: number, created_at: string, escrow_wallet: string, id: string, k1?: string | null, max_withdrawable: number, min_withdrawable: number, payment_hash: string, payment_request: string, payment_secret: string, status: Status, title: string, unique_hash: string, user_id: string, updated_at: string } };
 
-export type LnInvoiceCreateMutationVariables = Exact<{
-  input: LnInvoiceCreateInput;
+export type LnInvoiceCreateOnBehalfOfRecipientMutationVariables = Exact<{
+  input: LnInvoiceCreateOnBehalfOfRecipientInput;
 }>;
 
 
-export type LnInvoiceCreateMutation = { __typename?: 'Mutation', lnInvoiceCreate: { __typename?: 'LnInvoicePayload', errors: Array<{ __typename?: 'GraphQLApplicationError', message: string, path?: Array<string | null> | null, code?: string | null }>, invoice?: { __typename?: 'LnInvoice', paymentRequest: any, paymentHash: any, paymentSecret: any, satoshis?: any | null } | null } };
+export type LnInvoiceCreateOnBehalfOfRecipientMutation = { __typename?: 'Mutation', lnInvoiceCreateOnBehalfOfRecipient: { __typename?: 'LnInvoicePayload', errors: Array<{ __typename?: 'GraphQLApplicationError', message: string, path?: Array<string | null> | null, code?: string | null }>, invoice?: { __typename?: 'LnInvoice', paymentRequest: any, paymentHash: any, paymentSecret: any, satoshis?: any | null } | null } };
 
 export type GetWithdrawLinkQueryVariables = Exact<{
   getWithdrawLinkId?: InputMaybe<Scalars['ID']['input']>;
@@ -1670,9 +1670,9 @@ export function useUpdateWithdrawLinkMutation(baseOptions?: Apollo.MutationHookO
 export type UpdateWithdrawLinkMutationHookResult = ReturnType<typeof useUpdateWithdrawLinkMutation>;
 export type UpdateWithdrawLinkMutationResult = Apollo.MutationResult<UpdateWithdrawLinkMutation>;
 export type UpdateWithdrawLinkMutationOptions = Apollo.BaseMutationOptions<UpdateWithdrawLinkMutation, UpdateWithdrawLinkMutationVariables>;
-export const LnInvoiceCreateDocument = gql`
-    mutation LnInvoiceCreate($input: LnInvoiceCreateInput!) {
-  lnInvoiceCreate(input: $input) {
+export const LnInvoiceCreateOnBehalfOfRecipientDocument = gql`
+    mutation LnInvoiceCreateOnBehalfOfRecipient($input: LnInvoiceCreateOnBehalfOfRecipientInput!) {
+  lnInvoiceCreateOnBehalfOfRecipient(input: $input) {
     errors {
       message
       path
@@ -1687,32 +1687,32 @@ export const LnInvoiceCreateDocument = gql`
   }
 }
     `;
-export type LnInvoiceCreateMutationFn = Apollo.MutationFunction<LnInvoiceCreateMutation, LnInvoiceCreateMutationVariables>;
+export type LnInvoiceCreateOnBehalfOfRecipientMutationFn = Apollo.MutationFunction<LnInvoiceCreateOnBehalfOfRecipientMutation, LnInvoiceCreateOnBehalfOfRecipientMutationVariables>;
 
 /**
- * __useLnInvoiceCreateMutation__
+ * __useLnInvoiceCreateOnBehalfOfRecipientMutation__
  *
- * To run a mutation, you first call `useLnInvoiceCreateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLnInvoiceCreateMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useLnInvoiceCreateOnBehalfOfRecipientMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLnInvoiceCreateOnBehalfOfRecipientMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [lnInvoiceCreateMutation, { data, loading, error }] = useLnInvoiceCreateMutation({
+ * const [lnInvoiceCreateOnBehalfOfRecipientMutation, { data, loading, error }] = useLnInvoiceCreateOnBehalfOfRecipientMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useLnInvoiceCreateMutation(baseOptions?: Apollo.MutationHookOptions<LnInvoiceCreateMutation, LnInvoiceCreateMutationVariables>) {
+export function useLnInvoiceCreateOnBehalfOfRecipientMutation(baseOptions?: Apollo.MutationHookOptions<LnInvoiceCreateOnBehalfOfRecipientMutation, LnInvoiceCreateOnBehalfOfRecipientMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LnInvoiceCreateMutation, LnInvoiceCreateMutationVariables>(LnInvoiceCreateDocument, options);
+        return Apollo.useMutation<LnInvoiceCreateOnBehalfOfRecipientMutation, LnInvoiceCreateOnBehalfOfRecipientMutationVariables>(LnInvoiceCreateOnBehalfOfRecipientDocument, options);
       }
-export type LnInvoiceCreateMutationHookResult = ReturnType<typeof useLnInvoiceCreateMutation>;
-export type LnInvoiceCreateMutationResult = Apollo.MutationResult<LnInvoiceCreateMutation>;
-export type LnInvoiceCreateMutationOptions = Apollo.BaseMutationOptions<LnInvoiceCreateMutation, LnInvoiceCreateMutationVariables>;
+export type LnInvoiceCreateOnBehalfOfRecipientMutationHookResult = ReturnType<typeof useLnInvoiceCreateOnBehalfOfRecipientMutation>;
+export type LnInvoiceCreateOnBehalfOfRecipientMutationResult = Apollo.MutationResult<LnInvoiceCreateOnBehalfOfRecipientMutation>;
+export type LnInvoiceCreateOnBehalfOfRecipientMutationOptions = Apollo.BaseMutationOptions<LnInvoiceCreateOnBehalfOfRecipientMutation, LnInvoiceCreateOnBehalfOfRecipientMutationVariables>;
 export const GetWithdrawLinkDocument = gql`
     query GetWithdrawLink($getWithdrawLinkId: ID) {
   getWithdrawLink(id: $getWithdrawLinkId) {

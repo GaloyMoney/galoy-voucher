@@ -1,3 +1,4 @@
+import { NEXT_PUBLIC_LOCAL_URL } from "@/variables";
 import { getWithdrawLinkByUniqueHashQuery } from "../../../../utils/crud";
 
 //TODO need to add interface in this 
@@ -14,7 +15,7 @@ export default async function handler(req: any, res: any) {
 
       res.status(200).json({
         tag: "withdrawRequest",
-        callback: `${process.env.NEXT_PUBLIC_LOCAL_URL}/api/lnurlw/callback/${withdrawLink.id}`,
+        callback: `${NEXT_PUBLIC_LOCAL_URL}/api/lnurlw/callback/${withdrawLink.id}`,
         k1: withdrawLink.k1,
         minWithdrawable: withdrawLink.min_withdrawable * 1000,
         maxWithdrawable: withdrawLink.max_withdrawable * 1000,

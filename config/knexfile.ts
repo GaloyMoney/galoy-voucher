@@ -1,3 +1,4 @@
+import { PGDATABASE, PGHOST, PGPASSWORD, PGUSER } from "@/variables";
 import type { Knex } from "knex";
 const env = require("dotenv").config({ path: "../.env" });
 
@@ -6,10 +7,10 @@ const config: { [key: string]: Knex.Config } = {
   development: {
     client: "postgresql",
     connection: {
-      host: `${process.env.NEXT_PUBLIC_PGHOST}`,
-      database: `${process.env.NEXT_PUBLIC_PGDATABASE}`,
-      user: `${process.env.NEXT_PUBLIC_PGUSER}`,
-      password: `${process.env.NEXT_PUBLIC_PGPASSWORD}`,
+      host: `${PGHOST}`,
+      database: `${PGDATABASE}`,
+      user: `${PGUSER}`,
+      password: `${PGPASSWORD}`,
       ssl: { rejectUnauthorized: false },
     },
     migrations: {
@@ -20,10 +21,10 @@ const config: { [key: string]: Knex.Config } = {
   staging: {
     client: "postgresql",
     connection: {
-      host: `${process.env.NEXT_PUBLIC_PGHOST}`,
-      database: `${process.env.NEXT_PUBLIC_PGDATABASE}`,
-      user: `${process.env.NEXT_PUBLIC_PGUSER}`,
-      password: `${process.env.NEXT_PUBLIC_PGPASSWORD}`,
+      host: `${PGHOST}`,
+      database: `${PGDATABASE}`,
+      user: `${PGUSER}`,
+      password: `${PGPASSWORD}`,
     },
     pool: {
       min: 2,
