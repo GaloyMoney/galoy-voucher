@@ -71,3 +71,24 @@ export const LN_INVOICE_CREATE = gql`
     }
   }
 `;
+
+
+export const LN_INVOICE_CREATE_USD = gql`
+  mutation LnUsdInvoiceCreateOnBehalfOfRecipient(
+    $input: LnUsdInvoiceCreateOnBehalfOfRecipientInput!
+  ) {
+    lnUsdInvoiceCreateOnBehalfOfRecipient(input: $input) {
+      errors {
+        message
+        path
+        code
+      }
+      invoice {
+        paymentRequest
+        paymentHash
+        paymentSecret
+        satoshis
+      }
+    }
+  }
+`;

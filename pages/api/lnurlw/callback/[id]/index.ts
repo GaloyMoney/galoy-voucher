@@ -4,7 +4,6 @@ import {
   updateWithdrawLinkMutation,
 } from "../../../../../utils/crud";
 import { sendPaymentRequest } from "@/services/galoy";
-import { NEXT_PUBLIC_ESCROW_WALLET_BTC } from "@/variables";
 import { decode } from "light-bolt11-decoder";
 
 //TODO need to add interface in this
@@ -50,7 +49,7 @@ export default async function handler(req: any, res: any) {
       }
 
       const sendPaymentResponse = await sendPaymentRequest(
-        NEXT_PUBLIC_ESCROW_WALLET_BTC || "",
+        process.env.NEXT_PUBLIC_ESCROW_WALLET_BTC || "",
         pr,
         withdrawLink.title
       );

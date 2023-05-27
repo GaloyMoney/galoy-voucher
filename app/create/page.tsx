@@ -3,23 +3,28 @@ import { useState, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { generateRandomHash } from "@/utils/helpers";
 import LoadingComponent from "@/components/LoadingComponent";
+import { useCreateWithdrawLinkMutation } from "@/utils/generated/graphql";
 import {
-  useCreateWithdrawLinkMutation,
-  useLnInvoiceCreateOnBehalfOfRecipientMutation,
-} from "@/utils/generated/graphql";
-import { NEXT_PUBLIC_ESCROW_WALLET_BTC } from "@/variables";
+  NEXT_PUBLIC_ESCROW_WALLET_BTC,
+  NEXT_PUBLIC_ESCROW_WALLET_USD,
+} from "@/variables";
+import { useCreateInvoice } from "@/hooks/useCreateInvoice";
 
 //TODO need to fix loading in this compoent
 export default function HomePage() {
   const router = useRouter();
   const [amount, setAmount] = useState<number>(0);
   const [memo, setMemo] = useState<string>("");
-
-  //creating ln invoice as a escrow account so that user can fund their links
-  const [
-    createLnInvoice,
-    { loading: lnInvoiceLoading, error: lnInvoiceError, data: lnInvoiceData },
-  ] = useLnInvoiceCreateOnBehalfOfRecipientMutation();
+  const {
+    currency,
+    handleCurrencyChange,
+    handleCreateInvoice,
+    lnInvoiceLoading,
+    lnUsdInvoiceLoading,
+    lnInvoiceError,
+    lnUsdInvoiceError,
+    lnInvoiceData,
+  } = useCreateInvoice();
 
   //for inserting withdraw link data
   const [
@@ -35,33 +40,41 @@ export default function HomePage() {
     setMemo(e.target.value);
   };
 
-  const handleCreateInvoice = async () => {
+  const handleSubmit = async () => {
     //TODO need to create Septate component for this section
-    if (amount < 20) {
+    if (amount <= 0) {
+      alert("Amount must be greater than 0");
+      return;
+    }
+    if (amount < 20 && currency === "BTC") {
       alert("Amount must be greater than 20 sats");
       return;
     }
     try {
-      const result = await createLnInvoice({
-        variables: {
-          input: {
-            recipientWalletId: `${NEXT_PUBLIC_ESCROW_WALLET_BTC}`,
-            amount: amount,
-            memo: memo,
-          },
-        },
-        context: {
-          endpoint: "MAINNET",
-        },
-      });
+      const result = await handleCreateInvoice(amount, memo);
 
-      const { paymentRequest, paymentHash, paymentSecret, satoshis } = result
-        .data?.lnInvoiceCreateOnBehalfOfRecipient.invoice || {
-        paymentRequest: "",
-        paymentHash: "",
-        paymentSecret: "",
-        satoshis: 0,
-      };
+      let invoiceData;
+      if (currency === "USD") {
+        invoiceData = (
+          result as {
+            data?: { lnUsdInvoiceCreateOnBehalfOfRecipient: { invoice: any } };
+          }
+        )?.data?.lnUsdInvoiceCreateOnBehalfOfRecipient.invoice;
+      } else {
+        invoiceData = (
+          result as {
+            data?: { lnInvoiceCreateOnBehalfOfRecipient: { invoice: any } };
+          }
+        )?.data?.lnInvoiceCreateOnBehalfOfRecipient.invoice;
+      }
+
+      const { paymentRequest, paymentHash, paymentSecret, satoshis } =
+        invoiceData || {
+          paymentRequest: "",
+          paymentHash: "",
+          paymentSecret: "",
+          satoshis: 0,
+        };
 
       //TODO need to add error checking in section
       const createWithdrawLinkResult = await createWithdrawLink({
@@ -72,8 +85,11 @@ export default function HomePage() {
             payment_hash: paymentHash,
             payment_secret: paymentSecret,
             amount: satoshis, //this will be used if we charge fees and also if multiple links at once this will store their sum
-            account_type: "BTC", //this can be BTC or USD
-            escrow_wallet: `${NEXT_PUBLIC_ESCROW_WALLET_BTC}`,
+            account_type: currency, //this can be BTC or USD
+            escrow_wallet:
+              currency === "BTC"
+                ? `${NEXT_PUBLIC_ESCROW_WALLET_BTC}`
+                : `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
             title: memo || "LNURLw",
             min_withdrawable: satoshis,
             max_withdrawable: satoshis,
@@ -93,15 +109,16 @@ export default function HomePage() {
     }
   };
 
-  if (lnInvoiceLoading || withdrawLinkLoading) {
+  if (lnInvoiceLoading || lnUsdInvoiceLoading || withdrawLinkLoading) {
     return <LoadingComponent />;
   }
 
-  if (lnInvoiceError || withdrawLinkError) {
+  if (lnInvoiceError || lnUsdInvoiceError || withdrawLinkError) {
     //TODO need to create a error component
     return (
       <div>
-        Error: {lnInvoiceError?.message} {withdrawLinkError?.message}
+        Error: {lnInvoiceError?.message} {lnUsdInvoiceError?.message}{" "}
+        {withdrawLinkError?.message}
       </div>
     );
   }
@@ -109,9 +126,27 @@ export default function HomePage() {
   //TODO need to create a separate component for this and also for input fields
   return (
     <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex mt-2 px-4 py-2">
+        <button
+          onClick={() => handleCurrencyChange("USD")}
+          className={`bg-zinc-700 text-white px-4 py-2 rounded-md hover:bg-zinc-900 ${
+            currency === "USD" ? "border bg-zinc-900" : ""
+          }`}
+        >
+          USD (cents)
+        </button>
+        <button
+          onClick={() => handleCurrencyChange("BTC")}
+          className={`bg-zinc-700 text-white px-4 py-2 ml-2 rounded-md hover:bg-zinc-900 ${
+            currency === "BTC" ? "border bg-zinc-900" : ""
+          }`}
+        >
+          BTC (sats)
+        </button>
+      </div>
       <input
         type="number"
-        placeholder="Enter amount"
+        placeholder={`Enter amount`}
         value={amount.toString()}
         onChange={handleAmountChange}
         className="border border-stone-700 rounded-md px-4 py-2 bg-neutral-900"
@@ -124,8 +159,9 @@ export default function HomePage() {
         onChange={handleMemoChange}
         className="border border-stone-700 rounded-md px-4 py-2 mt-2 bg-neutral-900"
       />
+
       <button
-        onClick={handleCreateInvoice}
+        onClick={handleSubmit}
         className="bg-zinc-700 text-white px-4 py-2 mt-2 rounded-md hover:bg-zinc-900"
       >
         Create LNURLw
