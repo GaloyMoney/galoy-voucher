@@ -125,7 +125,7 @@ export default function HomePage() {
 
   //TODO need to create a separate component for this and also for input fields
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col items-center justify-center h-screen  ">
       <div className="flex mt-2 px-4 py-2">
         <button
           onClick={() => handleCurrencyChange("USD")}
@@ -133,7 +133,7 @@ export default function HomePage() {
             currency === "USD" ? "border bg-zinc-900" : ""
           }`}
         >
-          USD (cents)
+          USD Wallet (cents)
         </button>
         <button
           onClick={() => handleCurrencyChange("BTC")}
@@ -141,7 +141,7 @@ export default function HomePage() {
             currency === "BTC" ? "border bg-zinc-900" : ""
           }`}
         >
-          BTC (sats)
+          BTC Wallet (sats)
         </button>
       </div>
       <input

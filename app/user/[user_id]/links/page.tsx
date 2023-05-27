@@ -46,11 +46,11 @@ export default function UserLinks({ params: { user_id } }: Params) {
 
   const withdrawLinks = data?.getWithdrawLinksByUserId;
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex justify-center items-start min-h-screen">
       <div className="w-full max-w-3xl p-8 rounded-lg shadow">
         <div className="mb-4">
           <select
-            className="bg-zinc-800 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            className="bg-zinc-800 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-white focus:border-white"
             value={status ? status.toString() : ""}
             onChange={(e) => handleStatusChange(e.target.value as Status)}
           >
