@@ -1,13 +1,9 @@
 "use client";
-
 import React, { useState } from "react";
-import { useQuery } from "@apollo/client";
-import { GET_WITHDRAW_LINKS_BY_USER_ID } from "@/utils/graphql/query";
 import {
-  Query,
-  QueryGetWithdrawLinksByUserIdArgs,
   Status,
   WithdrawLink,
+  useGetWithdrawLinksByUserIdQuery,
 } from "@/utils/generated/graphql";
 import { formatDate } from "@/utils/helpers";
 import LoadingComponent from "@/components/LoadingComponent";
@@ -20,10 +16,7 @@ interface Params {
 export default function UserLinks({ params: { user_id } }: Params) {
   console.log("user_id", user_id);
   const [status, setStatus] = useState<Status | null>(null); // Initial status is null
-  const { loading, error, data } = useQuery<
-    Query,
-    QueryGetWithdrawLinksByUserIdArgs
-  >(GET_WITHDRAW_LINKS_BY_USER_ID, {
+  const { loading, error, data } = useGetWithdrawLinksByUserIdQuery({
     variables: { user_id, status },
   });
   if (loading) {

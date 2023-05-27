@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_WITHDRAW_LINK = gql`
-  query Query($getWithdrawLinkId: ID) {
+  query GetWithdrawLink($getWithdrawLinkId: ID) {
     getWithdrawLink(id: $getWithdrawLinkId) {
       id
       user_id
@@ -37,6 +37,11 @@ export const GET_WITHDRAW_LINKS_BY_USER_ID = gql`
       updated_at
       payment_request
       user_id
+      max_withdrawable
+      unique_hash
+      k1
+      payment_secret
+      escrow_wallet
     }
   }
 `;

@@ -1,15 +1,13 @@
 "use client";
 import React, { useEffect } from "react";
-import { useQuery, useSubscription, useMutation } from "@apollo/client";
 import { QRCode } from "react-qrcode-logo";
 import { useRouter } from "next/navigation";
 import LoadingComponent from "@/components/LoadingComponent";
-import { UPDATE_WITHDRAW_LINK } from "@/utils/graphql/mutation";
-import { GET_WITHDRAW_LINK } from "@/utils/graphql/query";
-import { LN_INVOCE_PAYMENT_STATUS } from "@/services/galoy";
 import {
-  LnInvoicePaymentStatusPayload,
-  WithdrawLink,
+  Status,
+  useGetWithdrawLinkQuery,
+  useUpdateWithdrawLinkMutation,
+  useLnInvoicePaymentStatusSubscription
 } from "@/utils/generated/graphql";
 
 interface Params {
@@ -18,17 +16,6 @@ interface Params {
   };
 }
 
-interface QueryResult {
-  getWithdrawLink: WithdrawLink;
-}
-
-interface LnInvoicePaymentStatusData {
-  lnInvoicePaymentStatus: LnInvoicePaymentStatusPayload;
-}
-
-interface UpdateWithdrawLinkMutationResult {
-  updateWithdrawLink: WithdrawLink;
-}
 
 //this Screen is used to take funds from user for withdraw links
 //TODO need to fix loading in this
@@ -40,7 +27,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
     loading: loadingWithdrawLink,
     error: errorWithdrawLink,
     data: dataWithdrawLink,
-  } = useQuery<QueryResult>(GET_WITHDRAW_LINK, {
+  } = useGetWithdrawLinkQuery({
     variables: { getWithdrawLinkId: paymenthash },
     context: {
       endpoint: "SELF",
@@ -52,14 +39,14 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
 
   //creating web socket connection for invoice that will be used to take funds from user
   const [updateWithdrawLink, { loading: updatingWithdrawLink }] =
-    useMutation<UpdateWithdrawLinkMutationResult>(UPDATE_WITHDRAW_LINK);
+    useUpdateWithdrawLinkMutation();
 
   //TODO need to add error checking in this section
   const {
     data: paymentStatusData,
     loading: paymentStatusLoading,
     error: paymentStatusDataError,
-  } = useSubscription<LnInvoicePaymentStatusData>(LN_INVOCE_PAYMENT_STATUS, {
+  } = useLnInvoicePaymentStatusSubscription( {
     variables: {
       payment_request: paymentRequest || "",
     },
@@ -78,7 +65,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
             const response = await updateWithdrawLink({
               variables: {
                 updateWithdrawLinkId: withdrawLink?.id || "",
-                updateWithdrawLinkInput: { status: "FUNDED" },
+                updateWithdrawLinkInput: { status: Status.Funded },
               },
             });
             const updatedWithdrawLink = response.data?.updateWithdrawLink;

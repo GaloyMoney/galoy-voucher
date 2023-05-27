@@ -1,0 +1,14 @@
+overwrite: true
+schema: 
+  - "http://localhost:3000/api/graphql"
+  - "https://api.mainnet.galoy.io/graphql"
+documents: "./utils/graphql/*.ts"
+generates:
+  ./utils/generated/graphql.ts:
+    plugins: 
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"

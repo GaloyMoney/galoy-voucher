@@ -1,26 +1,21 @@
 "use client";
 import React from "react";
-import { useQuery } from "@apollo/client";
 import { QRCode } from "react-qrcode-logo";
 import { encodeURLToLNURL } from "@/utils/helpers";
 import LoadingComponent from "@/components/LoadingComponent";
-import { GET_WITHDRAW_LINK } from "@/utils/graphql/query";
 import {
-  WithdrawLink,
+  useGetWithdrawLinkQuery,
 } from "@/utils/generated/graphql";
+
 interface Params {
   params: {
     id: string;
   };
 }
 
-interface QueryResult {
-  getWithdrawLink: WithdrawLink | null;
-}
-
 // this page shows the LNURLw screen after success in fund transfer to escrow account
 export default function Page({ params: { id } }: Params) {
-  const { loading, error, data } = useQuery<QueryResult>(GET_WITHDRAW_LINK, {
+  const { loading, error, data } = useGetWithdrawLinkQuery({
     variables: { getWithdrawLinkId: id },
     context: {
       endpoint: "SELF",
@@ -43,7 +38,6 @@ export default function Page({ params: { id } }: Params) {
     `${process.env.NEXT_PUBLIC_LOCAL_URL}/api/lnurlw/${data.getWithdrawLink?.unique_hash}`
   );
 
-
   const copyToClipboard = () => {
     navigator.clipboard.writeText(url);
   };
@@ -56,12 +50,12 @@ export default function Page({ params: { id } }: Params) {
       </button>
 
       <button className="bg-zinc-700  text-white py-2 px-4 rounded w-80">
-        <span>Min Withdrawable : </span> {data.getWithdrawLink?.min_withdrawable}{" "}
-        sats
+        <span>Min Withdrawable : </span>{" "}
+        {data.getWithdrawLink?.min_withdrawable} sats
       </button>
       <button className="bg-zinc-700  text-white py-2 px-4 rounded w-80">
-        <span>Max Withdrawable : </span> {data.getWithdrawLink?.max_withdrawable}{" "}
-        sats
+        <span>Max Withdrawable : </span>{" "}
+        {data.getWithdrawLink?.max_withdrawable} sats
       </button>
       <div>
         <QRCode size={300} value={url} />
