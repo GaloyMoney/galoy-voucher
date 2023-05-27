@@ -8,14 +8,17 @@
     "start": "next start",
     "lint": "next lint",
     "knex": "npx knex  --knexfile=config/knexfile.ts",
-    "codegen": "graphql-codegen --watch "
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@apollo/client": "3.7.4",
     "@apollo/server": "^4.7.1",
     "@as-integrations/next": "^2.0.0",
-    "@graphql-codegen/cli": "^3.3.1",
+    "@graphql-codegen/cli": "4.0.0",
     "@graphql-codegen/client-preset": "^3.0.1",
+    "@graphql-codegen/typescript": "^4.0.0",
+    "@graphql-codegen/typescript-operations": "^4.0.0",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@graphql-tools/load-files": "^7.0.0",
     "@graphql-tools/merge": "^9.0.0",
     "@types/node": "^20.1.5",
@@ -33,6 +36,7 @@
     "fs": "^0.0.1-security",
     "graphql": "^16.6.0",
     "i": "^0.3.7",
+    "introspection": "^1.1.0",
     "js-lnurl": "^0.5.1",
     "knex": "^2.4.2",
     "light-bolt11-decoder": "^3.0.0",
@@ -52,6 +56,9 @@
   },
   "devDependencies": {
     "@types/uuid": "^9.0.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "@graphql-codegen/introspection": "4.0.0",
+    "@graphql-codegen/cli": "4.0.0",
+    "@graphql-codegen/client-preset": "4.0.0"
   }
 }

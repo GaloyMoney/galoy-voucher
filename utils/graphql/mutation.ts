@@ -25,7 +25,7 @@ export const CREATE_WITHDRAW_LINK = gql`
 
 
 export const UPDATE_WITHDRAW_LINK = gql`
-  mutation Mutation(
+  mutation UpdateWithdrawLink(
     $updateWithdrawLinkId: ID!
     $updateWithdrawLinkInput: UpdateWithdrawLinkInput!
   ) {
@@ -52,3 +52,23 @@ export const UPDATE_WITHDRAW_LINK = gql`
     }
   }
 `;
+
+
+export const LN_INVOICE_CREATE = gql`
+  mutation LnInvoiceCreate($input: LnInvoiceCreateInput!) {
+    lnInvoiceCreate(input: $input) {
+      errors {
+        message
+        path
+        code
+      }
+      invoice {
+        paymentRequest
+        paymentHash
+        paymentSecret
+        satoshis
+      }
+    }
+  }
+`;
+
