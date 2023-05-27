@@ -1,20 +1,14 @@
 "use client";
 import { useState, ChangeEvent } from "react";
-import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
-import { LN_INVOICE_CREATE } from "@/services/galoy";
-import { CREATE_WITHDRAW_LINK } from "@/utils/graphql/mutation";
 import { generateRandomHash } from "@/utils/helpers";
 import LoadingComponent from "@/components/LoadingComponent";
-import { LnInvoicePayload, WithdrawLink } from "@/utils/generated/graphql";
+import {
+  useCreateWithdrawLinkMutation,
+  useLnInvoiceCreateMutation,
+} from "@/utils/generated/graphql";
 
-interface InvoiceCreateData {
-  lnInvoiceCreate: LnInvoicePayload;
-}
 
-interface CreateWithdrawLinkResponse {
-  createWithdrawLink: WithdrawLink;
-}
 
 //TODO need to fix loading in this compoent
 export default function HomePage() {
@@ -26,13 +20,13 @@ export default function HomePage() {
   const [
     createLnInvoice,
     { loading: lnInvoiceLoading, error: lnInvoiceError, data: lnInvoiceData },
-  ] = useMutation<InvoiceCreateData>(LN_INVOICE_CREATE);
+  ] = useLnInvoiceCreateMutation();
 
   //for inserting withdraw link data
   const [
     createWithdrawLink,
     { loading: withdrawLinkLoading, error: withdrawLinkError },
-  ] = useMutation<CreateWithdrawLinkResponse>(CREATE_WITHDRAW_LINK);
+  ] = useCreateWithdrawLinkMutation();
 
   const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
     setAmount(parseFloat(e.target.value));
