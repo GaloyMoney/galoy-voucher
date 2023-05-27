@@ -49,7 +49,7 @@ export default async function handler(req: any, res: any) {
       }
 
       const sendPaymentResponse = await sendPaymentRequest(
-        process.env.NEXT_PUBLIC_ESCROW_WALLET_BTC || "",
+        withdrawLink.escrow_wallet,
         pr,
         withdrawLink.title
       );
