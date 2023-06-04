@@ -3,7 +3,10 @@ import {
   useLnInvoiceCreateOnBehalfOfRecipientMutation,
   useLnUsdInvoiceCreateOnBehalfOfRecipientMutation,
 } from "@/utils/generated/graphql";
-import { NEXT_PUBLIC_ESCROW_WALLET_BTC, NEXT_PUBLIC_ESCROW_WALLET_USD } from "@/variables";
+import {
+  NEXT_PUBLIC_ESCROW_WALLET_BTC,
+  NEXT_PUBLIC_ESCROW_WALLET_USD,
+} from "@/config/variables";
 
 export const useCreateInvoice = () => {
   const [currency, setCurrency] = useState<string>("BTC");

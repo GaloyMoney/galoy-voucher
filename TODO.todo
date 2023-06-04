@@ -1,7 +1,3 @@
-need to fix environment variables
-    keep them in single file 
-    make them more secure for sensitive data 
-
 change params to named params
 
 need to setup eslint and github actions  
@@ -14,54 +10,3 @@ add return types
 
 
 
-interface ApiResponse {
-  data: {
-    realtimePrice: {
-      id: string;
-      timestamp: number;
-      denominatorCurrency: string;
-      usdCentPrice: {
-        base: number;
-        offset: number;
-        currencyUnit: string;
-      };
-      btcSatPrice: {
-        base: number;
-        offset: number;
-        currencyUnit: string;
-      };
-    };
-  };
-}
-
-function convertCentsToSats(response: ApiResponse, cents: number): number {
-    const usdCentBase = response.data.realtimePrice.usdCentPrice.base;
-    const btcSatBase = response.data.realtimePrice.btcSatPrice.base;
-
-    return (cents * usdCentBase) / (btcSatBase / 1000000);
-}
-
-const response = {
-    "data": {
-        "realtimePrice": {
-            "id": "bca0e92b-6c76-5905-8d26-ab24fbedcfd5",
-            "timestamp": 1685827312,
-            "denominatorCurrency": "USD",
-            "usdCentPrice": {
-                "base": 1000000,
-                "offset": 6,
-                "currencyUnit": "MINOR"
-            },
-            "btcSatPrice": {
-                "base": 27024150391,
-                "offset": 12,
-                "currencyUnit": "MINOR"
-            }
-        }
-    }
-};
-
-const cents = 1; // Replace with your desired number of cents
-
-const sats = convertCentsToSats(response, cents);
-console.log(sats); // Output the converted BTC sats value

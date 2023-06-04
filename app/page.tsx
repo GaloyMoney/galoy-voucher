@@ -6,7 +6,7 @@ import { useEffect } from "react";
 //TODO home page or welcome screen needed to be created gere
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col mt-36 items-center  h-screen">
       <h1 className="text-4xl font-bold">Galoy Withdraw</h1>
       <p className="mt-1">Start creating withdraw links</p>
       <div className="flex flex-col mt-8 space-y-4">

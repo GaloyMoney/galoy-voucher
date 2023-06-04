@@ -7,7 +7,7 @@ import { useCreateWithdrawLinkMutation } from "@/utils/generated/graphql";
 import {
   NEXT_PUBLIC_ESCROW_WALLET_BTC,
   NEXT_PUBLIC_ESCROW_WALLET_USD,
-} from "@/variables";
+} from "@/config/variables";
 import { useCreateInvoice } from "@/hooks/useCreateInvoice";
 
 //TODO need to fix loading in this compoent
@@ -91,14 +91,8 @@ export default function HomePage() {
                 ? `${NEXT_PUBLIC_ESCROW_WALLET_BTC}`
                 : `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
             title: memo || "LNURLw",
-            min_withdrawable:
-              currency === "BTC"
-                ? satoshis
-                : amount,
-            max_withdrawable:
-              currency === "BTC"
-                ? satoshis
-                : amount,
+            min_withdrawable: currency === "BTC" ? satoshis : amount,
+            max_withdrawable: currency === "BTC" ? satoshis : amount,
             unique_hash: generateRandomHash(),
             k1: generateRandomHash(),
           },
@@ -131,7 +125,7 @@ export default function HomePage() {
 
   //TODO need to create a separate component for this and also for input fields
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col mt-36 items-center h-screen">
       <div className="flex flex-col">
         <div className="flex mt-2 py-2 w-full">
           <button

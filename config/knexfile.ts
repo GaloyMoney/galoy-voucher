@@ -1,4 +1,4 @@
-import { PGDATABASE, PGHOST, PGPASSWORD, PGUSER } from "@/variables";
+import { PGDATABASE, PGHOST, PGPASSWORD, PGUSER } from "@/config/variables";
 import type { Knex } from "knex";
 const env = require("dotenv").config({ path: "../.env" });
 

@@ -112,7 +112,10 @@ export default function UserLinks({ params: { user_id } }: Params) {
                           : ""}
                       </span>
                     </div>
-                    <p>Withdrawable amount: {withdrawLink.min_withdrawable}</p>
+                    <p>
+                      Withdrawable amount: {withdrawLink.min_withdrawable}{" "}
+                      {withdrawLink.account_type === "BTC" ? "sats" : "cents"}
+                    </p>
                     <p>Account Type: {withdrawLink.account_type}</p>
                     <p
                       className="

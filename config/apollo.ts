@@ -1,4 +1,7 @@
-import { NEXT_PUBLIC_GALOY_URL, NEXT_PUBLIC_LOCAL_URL } from "@/variables";
+import {
+  NEXT_PUBLIC_GALOY_URL,
+  NEXT_PUBLIC_LOCAL_URL,
+} from "@/config/variables";
 import {
   ApolloClient,
   InMemoryCache,

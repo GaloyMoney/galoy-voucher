@@ -79,7 +79,7 @@ export async function getWithdrawLinksByUserIdQuery(
   return withdrawLinks;
 }
 
-export async function updateWithdrawLink(id: string, status: string) {
+export async function updateWithdrawLinkStatus(id: string, status: string) {
   return knex.transaction(async (trx: any) => {
     await trx("withdraw_links").update({ status }).where({ id });
   });

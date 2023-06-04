@@ -1,4 +1,4 @@
-import { NEXT_PUBLIC_LOCAL_URL } from "@/variables";
+import { NEXT_PUBLIC_LOCAL_URL } from "@/config/variables";
 import { getWithdrawLinkByUniqueHashQuery } from "../../../../utils/crud";
 import { getRealtimePrice } from "@/services/galoy";
 import { convertCentsToSats } from "@/utils/helpers";

@@ -1,7 +1,7 @@
 // pages/api/lnurlw/callback/[id].js
 import {
   getWithdrawLinkByK1Query,
-  updateWithdrawLink,
+  updateWithdrawLinkStatus,
 } from "../../../../../utils/crud";
 import { sendPaymentRequest, getRealtimePrice } from "@/services/galoy";
 import { decode } from "light-bolt11-decoder";
@@ -67,7 +67,7 @@ export default async function handler(req: any, res: any) {
         }
       }
 
-      await updateWithdrawLink(id, "PAID");
+      await updateWithdrawLinkStatus(id, "PAID");
 
       const sendPaymentResponse = await sendPaymentRequest(
         withdrawLink.escrow_wallet,
@@ -80,7 +80,7 @@ export default async function handler(req: any, res: any) {
 
       if (sendPaymentErrors) {
         console.error(sendPaymentErrors);
-        await updateWithdrawLink(id, "FUNDED");
+        await updateWithdrawLinkStatus(id, "FUNDED");
         return res
           .status(500)
           .json({ status: "ERROR", reason: "Internal Server Error" });

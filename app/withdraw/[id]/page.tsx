@@ -4,7 +4,7 @@ import { QRCode } from "react-qrcode-logo";
 import { encodeURLToLNURL } from "@/utils/helpers";
 import LoadingComponent from "@/components/LoadingComponent";
 import { useGetWithdrawLinkQuery } from "@/utils/generated/graphql";
-import { NEXT_PUBLIC_LOCAL_URL } from "@/variables";
+import { NEXT_PUBLIC_LOCAL_URL } from "@/config/variables";
 
 interface Params {
   params: {
