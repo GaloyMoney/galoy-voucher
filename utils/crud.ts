@@ -70,16 +70,17 @@ export async function getWithdrawLinksByUserIdQuery(
   user_id: string,
   status?: string
 ) {
-  let query = knex
-    .select()
-    .from("withdraw_links")
-    .where({ user_id: user_id })
-    ;
-
+  let query = knex.select().from("withdraw_links").where({ user_id: user_id });
   if (status) {
     query = query.andWhere({ status: status });
   }
 
   const withdrawLinks = await query.orderBy("created_at", "desc");
   return withdrawLinks;
+}
+
+export async function updateWithdrawLink(id: string, status: string) {
+  return knex.transaction(async (trx: any) => {
+    await trx("withdraw_links").update({ status }).where({ id });
+  });
 }

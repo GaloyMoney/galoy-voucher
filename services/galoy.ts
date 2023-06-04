@@ -40,3 +40,37 @@ export async function sendPaymentRequest(
 
   return { data: sendPaymentData, errors: sendPaymentErrors };
 }
+
+export async function getRealtimePrice() {
+  const response = await fetch(`https://${NEXT_PUBLIC_GALOY_URL}/graphql`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${ESCROW_TOKEN}`,
+    },
+    body: JSON.stringify({
+      query: `
+        query RealtimePrice {
+          realtimePrice {
+            id
+            timestamp
+            denominatorCurrency
+            usdCentPrice {
+              base
+              offset
+              currencyUnit
+            }
+            btcSatPrice {
+              base
+              offset
+              currencyUnit
+            }
+          }
+        }
+      `,
+    }),
+  });
+
+  const { data, errors } = await response.json();
+  return { data, errors };
+}
