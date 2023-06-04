@@ -3,9 +3,7 @@ import React from "react";
 import { QRCode } from "react-qrcode-logo";
 import { encodeURLToLNURL } from "@/utils/helpers";
 import LoadingComponent from "@/components/LoadingComponent";
-import {
-  useGetWithdrawLinkQuery,
-} from "@/utils/generated/graphql";
+import { useGetWithdrawLinkQuery } from "@/utils/generated/graphql";
 import { NEXT_PUBLIC_LOCAL_URL } from "@/variables";
 
 interface Params {
@@ -52,11 +50,13 @@ export default function Page({ params: { id } }: Params) {
 
       <button className="bg-zinc-700  text-white py-2 px-4 rounded w-80">
         <span>Min Withdrawable : </span>{" "}
-        {data.getWithdrawLink?.min_withdrawable} sats
+        {data.getWithdrawLink?.min_withdrawable}{" "}
+        {data.getWithdrawLink?.account_type === "BTC" ? "sats" : "cents"}
       </button>
       <button className="bg-zinc-700  text-white py-2 px-4 rounded w-80">
         <span>Max Withdrawable : </span>{" "}
-        {data.getWithdrawLink?.max_withdrawable} sats
+        {data.getWithdrawLink?.max_withdrawable}{" "}
+        {data.getWithdrawLink?.account_type === "BTC" ? "sats" : "cents"}
       </button>
       <div>
         <QRCode size={300} value={url} />

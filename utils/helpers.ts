@@ -24,3 +24,11 @@ export function formatDate(timestamp: string) {
   );
   return formattedDate;
 }
+
+export function convertCentsToSats(response: any, cents: number): number {
+  const btcSatBase = response.data.realtimePrice.btcSatPrice.base;
+  const btcSatBaseOffset = response.data.realtimePrice.btcSatPrice.offset;
+  const current = btcSatBase / 10 ** btcSatBaseOffset;
+  const sats = cents / current;
+  return Math.floor(sats);
+}

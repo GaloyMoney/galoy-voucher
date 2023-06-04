@@ -33,7 +33,7 @@ export default function HomePage() {
   ] = useCreateWithdrawLinkMutation();
 
   const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setAmount(parseFloat(e.target.value));
+    setAmount(parseInt(e.target.value));
   };
 
   const handleMemoChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -91,8 +91,14 @@ export default function HomePage() {
                 ? `${NEXT_PUBLIC_ESCROW_WALLET_BTC}`
                 : `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
             title: memo || "LNURLw",
-            min_withdrawable: satoshis,
-            max_withdrawable: satoshis,
+            min_withdrawable:
+              currency === "BTC"
+                ? satoshis
+                : amount,
+            max_withdrawable:
+              currency === "BTC"
+                ? satoshis
+                : amount,
             unique_hash: generateRandomHash(),
             k1: generateRandomHash(),
           },
