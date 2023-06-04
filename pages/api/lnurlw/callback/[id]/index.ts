@@ -46,17 +46,12 @@ export default async function handler(req: any, res: any) {
           response,
           Number(withdrawLink.max_withdrawable)
         );
-      } else {
-        withdrawLink.min_withdrawable =
-          Number(withdrawLink.min_withdrawable) * 1000;
-        withdrawLink.max_withdrawable =
-          Number(withdrawLink.max_withdrawable) * 1000;
       }
 
       if (
         !(
-          amount >= withdrawLink.min_withdrawable &&
-          amount <= withdrawLink.max_withdrawable
+          amount >= withdrawLink.min_withdrawable * 1000 &&
+          amount <= withdrawLink.max_withdrawable * 1000
         )
       ) {
         if (withdrawLink.account_type === "USD") {

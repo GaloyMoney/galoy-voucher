@@ -23,19 +23,14 @@ export default async function handler(req: any, res: any) {
           response,
           Number(withdrawLink.max_withdrawable)
         );
-      } else {
-        withdrawLink.min_withdrawable =
-          Number(withdrawLink.min_withdrawable) * 1000;
-        withdrawLink.max_withdrawable =
-          Number(withdrawLink.max_withdrawable) * 1000;
       }
 
       res.status(200).json({
         tag: "withdrawRequest",
         callback: `${NEXT_PUBLIC_LOCAL_URL}/api/lnurlw/callback/${withdrawLink.id}`,
         k1: withdrawLink.k1,
-        minWithdrawable: withdrawLink.min_withdrawable,
-        maxWithdrawable: withdrawLink.max_withdrawable,
+        minWithdrawable: withdrawLink.min_withdrawable * 1000,
+        maxWithdrawable: withdrawLink.max_withdrawable * 1000,
         defaultDescription: withdrawLink.title,
       });
     } catch (error) {
