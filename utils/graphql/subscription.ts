@@ -12,3 +12,25 @@ export const LN_INVOCE_PAYMENT_STATUS = gql`
     }
   }
 `;
+
+export const REAL_TIME_WS = gql`
+  subscription realtimePriceWs($currency: DisplayCurrency!) {
+    realtimePrice(input: { currency: $currency }) {
+      errors {
+        message
+      }
+      realtimePrice {
+        timestamp
+        btcSatPrice {
+          base
+          offset
+        }
+        usdCentPrice {
+          base
+          offset
+        }
+        denominatorCurrency
+      }
+    }
+  }
+`;
