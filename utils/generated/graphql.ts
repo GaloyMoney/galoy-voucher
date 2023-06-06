@@ -21,6 +21,8 @@ export type Scalars = {
   CentAmount: { input: any; output: any; }
   /** An alias name that a user can set for a wallet (with which they have transactions) */
   ContactAlias: { input: any; output: any; }
+  /** A CCA2 country code (ex US, FR, etc) */
+  CountryCode: { input: any; output: any; }
   /** Display currency of an account */
   DisplayCurrency: { input: any; output: any; }
   /** Hex-encoded string of 32 bytes */
@@ -242,6 +244,12 @@ export type Coordinates = {
   longitude: Scalars['Float']['output'];
 };
 
+export type Country = {
+  __typename?: 'Country';
+  id: Scalars['CountryCode']['output'];
+  supportedAuthChannels: Array<PhoneCodeChannelType>;
+};
+
 export type CreateWithdrawLinkInput = {
   account_type: Scalars['String']['input'];
   amount: Scalars['Float']['input'];
@@ -296,6 +304,8 @@ export type Globals = {
    * This can be used to know if an invoice belongs to one of our nodes.
    */
   nodesIds: Array<Scalars['String']['output']>;
+  /** A list of countries and their supported auth channels */
+  supportedCountries: Array<Country>;
 };
 
 export type GraphQlApplicationError = Error & {
@@ -1572,12 +1582,31 @@ export type GetWithdrawLinksByUserIdQueryVariables = Exact<{
 
 export type GetWithdrawLinksByUserIdQuery = { __typename?: 'Query', getWithdrawLinksByUserId: Array<{ __typename?: 'WithdrawLink', title: string, account_type: string, min_withdrawable: number, amount: number, created_at: string, id: string, payment_hash: string, status: Status, updated_at: string, payment_request: string, user_id: string, max_withdrawable: number, unique_hash: string, k1?: string | null, payment_secret: string, escrow_wallet: string }> };
 
+export type CurrencyListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CurrencyListQuery = { __typename?: 'Query', currencyList: Array<{ __typename?: 'Currency', id: string, symbol: string, name: string, flag: string, fractionDigits: number }> };
+
+export type RealtimePriceInitialQueryVariables = Exact<{
+  currency: Scalars['DisplayCurrency']['input'];
+}>;
+
+
+export type RealtimePriceInitialQuery = { __typename?: 'Query', realtimePrice: { __typename?: 'RealtimePrice', timestamp: any, denominatorCurrency: any, btcSatPrice: { __typename?: 'PriceOfOneSatInMinorUnit', base: any, offset: number }, usdCentPrice: { __typename?: 'PriceOfOneUsdCentInMinorUnit', base: any, offset: number } } };
+
 export type LnInvoicePaymentStatusSubscriptionVariables = Exact<{
   payment_request: Scalars['LnPaymentRequest']['input'];
 }>;
 
 
 export type LnInvoicePaymentStatusSubscription = { __typename?: 'Subscription', lnInvoicePaymentStatus: { __typename?: 'LnInvoicePaymentStatusPayload', status?: InvoicePaymentStatus | null, errors: Array<{ __typename?: 'GraphQLApplicationError', message: string, path?: Array<string | null> | null, code?: string | null }> } };
+
+export type RealtimePriceWsSubscriptionVariables = Exact<{
+  currency: Scalars['DisplayCurrency']['input'];
+}>;
+
+
+export type RealtimePriceWsSubscription = { __typename?: 'Subscription', realtimePrice: { __typename?: 'RealtimePricePayload', errors: Array<{ __typename?: 'GraphQLApplicationError', message: string }>, realtimePrice?: { __typename?: 'RealtimePrice', timestamp: any, denominatorCurrency: any, btcSatPrice: { __typename?: 'PriceOfOneSatInMinorUnit', base: any, offset: number }, usdCentPrice: { __typename?: 'PriceOfOneUsdCentInMinorUnit', base: any, offset: number } } | null } };
 
 
 export const CreateWithdrawLinkDocument = gql`
@@ -1864,6 +1893,88 @@ export function useGetWithdrawLinksByUserIdLazyQuery(baseOptions?: Apollo.LazyQu
 export type GetWithdrawLinksByUserIdQueryHookResult = ReturnType<typeof useGetWithdrawLinksByUserIdQuery>;
 export type GetWithdrawLinksByUserIdLazyQueryHookResult = ReturnType<typeof useGetWithdrawLinksByUserIdLazyQuery>;
 export type GetWithdrawLinksByUserIdQueryResult = Apollo.QueryResult<GetWithdrawLinksByUserIdQuery, GetWithdrawLinksByUserIdQueryVariables>;
+export const CurrencyListDocument = gql`
+    query CurrencyList {
+  currencyList {
+    id
+    symbol
+    name
+    flag
+    fractionDigits
+  }
+}
+    `;
+
+/**
+ * __useCurrencyListQuery__
+ *
+ * To run a query within a React component, call `useCurrencyListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrencyListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCurrencyListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCurrencyListQuery(baseOptions?: Apollo.QueryHookOptions<CurrencyListQuery, CurrencyListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CurrencyListQuery, CurrencyListQueryVariables>(CurrencyListDocument, options);
+      }
+export function useCurrencyListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CurrencyListQuery, CurrencyListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CurrencyListQuery, CurrencyListQueryVariables>(CurrencyListDocument, options);
+        }
+export type CurrencyListQueryHookResult = ReturnType<typeof useCurrencyListQuery>;
+export type CurrencyListLazyQueryHookResult = ReturnType<typeof useCurrencyListLazyQuery>;
+export type CurrencyListQueryResult = Apollo.QueryResult<CurrencyListQuery, CurrencyListQueryVariables>;
+export const RealtimePriceInitialDocument = gql`
+    query realtimePriceInitial($currency: DisplayCurrency!) {
+  realtimePrice(currency: $currency) {
+    timestamp
+    btcSatPrice {
+      base
+      offset
+    }
+    usdCentPrice {
+      base
+      offset
+    }
+    denominatorCurrency
+  }
+}
+    `;
+
+/**
+ * __useRealtimePriceInitialQuery__
+ *
+ * To run a query within a React component, call `useRealtimePriceInitialQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRealtimePriceInitialQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRealtimePriceInitialQuery({
+ *   variables: {
+ *      currency: // value for 'currency'
+ *   },
+ * });
+ */
+export function useRealtimePriceInitialQuery(baseOptions: Apollo.QueryHookOptions<RealtimePriceInitialQuery, RealtimePriceInitialQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RealtimePriceInitialQuery, RealtimePriceInitialQueryVariables>(RealtimePriceInitialDocument, options);
+      }
+export function useRealtimePriceInitialLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RealtimePriceInitialQuery, RealtimePriceInitialQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RealtimePriceInitialQuery, RealtimePriceInitialQueryVariables>(RealtimePriceInitialDocument, options);
+        }
+export type RealtimePriceInitialQueryHookResult = ReturnType<typeof useRealtimePriceInitialQuery>;
+export type RealtimePriceInitialLazyQueryHookResult = ReturnType<typeof useRealtimePriceInitialLazyQuery>;
+export type RealtimePriceInitialQueryResult = Apollo.QueryResult<RealtimePriceInitialQuery, RealtimePriceInitialQueryVariables>;
 export const LnInvoicePaymentStatusDocument = gql`
     subscription LnInvoicePaymentStatus($payment_request: LnPaymentRequest!) {
   lnInvoicePaymentStatus(input: {paymentRequest: $payment_request}) {
@@ -1899,3 +2010,47 @@ export function useLnInvoicePaymentStatusSubscription(baseOptions: Apollo.Subscr
       }
 export type LnInvoicePaymentStatusSubscriptionHookResult = ReturnType<typeof useLnInvoicePaymentStatusSubscription>;
 export type LnInvoicePaymentStatusSubscriptionResult = Apollo.SubscriptionResult<LnInvoicePaymentStatusSubscription>;
+export const RealtimePriceWsDocument = gql`
+    subscription realtimePriceWs($currency: DisplayCurrency!) {
+  realtimePrice(input: {currency: $currency}) {
+    errors {
+      message
+    }
+    realtimePrice {
+      timestamp
+      btcSatPrice {
+        base
+        offset
+      }
+      usdCentPrice {
+        base
+        offset
+      }
+      denominatorCurrency
+    }
+  }
+}
+    `;
+
+/**
+ * __useRealtimePriceWsSubscription__
+ *
+ * To run a query within a React component, call `useRealtimePriceWsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useRealtimePriceWsSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRealtimePriceWsSubscription({
+ *   variables: {
+ *      currency: // value for 'currency'
+ *   },
+ * });
+ */
+export function useRealtimePriceWsSubscription(baseOptions: Apollo.SubscriptionHookOptions<RealtimePriceWsSubscription, RealtimePriceWsSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<RealtimePriceWsSubscription, RealtimePriceWsSubscriptionVariables>(RealtimePriceWsDocument, options);
+      }
+export type RealtimePriceWsSubscriptionHookResult = ReturnType<typeof useRealtimePriceWsSubscription>;
+export type RealtimePriceWsSubscriptionResult = Apollo.SubscriptionResult<RealtimePriceWsSubscription>;

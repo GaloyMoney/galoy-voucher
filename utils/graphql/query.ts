@@ -45,3 +45,33 @@ export const GET_WITHDRAW_LINKS_BY_USER_ID = gql`
     }
   }
 `;
+
+export const GET_CURRENCY_LIST = gql`
+  query CurrencyList {
+    currencyList {
+      id
+      symbol
+      name
+      flag
+      fractionDigits
+    }
+  }
+`;
+
+
+export const GET_REAL_TIME_PRICE = gql`
+  query realtimePriceInitial($currency: DisplayCurrency!) {
+    realtimePrice(currency: $currency) {
+      timestamp
+      btcSatPrice {
+        base
+        offset
+      }
+      usdCentPrice {
+        base
+        offset
+      }
+      denominatorCurrency
+    }
+  }
+`;
