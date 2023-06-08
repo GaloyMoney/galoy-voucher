@@ -72,8 +72,8 @@ export default function HomePage() {
       alert("Amount must be greater than 0");
       return;
     }
-    if (commissionPercentage <= 0 || isNaN(commissionPercentage)) {
-      alert("Commission percentage must be greater than or equal to 0");
+    if (commissionPercentage < 0 || isNaN(commissionPercentage)) {
+      alert("Commission cannot be negative 0");
       return;
     }
 
