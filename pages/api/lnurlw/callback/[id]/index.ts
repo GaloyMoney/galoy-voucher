@@ -6,6 +6,7 @@ import {
 import { sendPaymentRequest, getRealtimePrice } from "@/services/galoy";
 import { decode } from "light-bolt11-decoder";
 import { convertCentsToSats } from "@/utils/helpers";
+import { NEXT_PUBLIC_GALOY_URL } from "@/config/variables";
 
 export default async function handler(req: any, res: any) {
   if (req.method === "GET") {
@@ -14,10 +15,24 @@ export default async function handler(req: any, res: any) {
 
     try {
       const withdrawLink = await getWithdrawLinkByK1Query(k1);
-      const amount = decode(pr).sections.find(
-        (section: any) => section.name === "amount"
-      )?.value;
-
+      let amount;
+      if (NEXT_PUBLIC_GALOY_URL === "api.staging.galoy.io") {
+        amount = withdrawLink.min_withdrawable * 1000;
+      } else {
+        /* `amount` is a variable that is being assigned the value of the Bitcoin amount specified in
+        the Lightning invoice (`pr`) that was scanned by the user. If the `NEXT_PUBLIC_GALOY_URL` is
+        not the staging environment, the value of `amount` is obtained by decoding the `pr` and
+        finding the section with the name "amount". If the `NEXT_PUBLIC_GALOY_URL` is the staging
+        environment, the value of `amount` is calculated by multiplying the minimum withdrawable
+        amount specified in the withdraw link by 1000. */
+        /* `amount` is a variable that is being assigned the value of the Bitcoin amount specified in
+        the Lightning invoice (`pr`) that was decoded using the `light-bolt11-decoder` library. It
+        is then used to check if the amount falls within the minimum and maximum withdrawable
+        amounts specified in the `withdrawLink` object. */
+        amount = decode(pr).sections.find(
+          (section: any) => section.name === "amount"
+        )?.value;
+      }
       if (!withdrawLink) {
         return res
           .status(404)
