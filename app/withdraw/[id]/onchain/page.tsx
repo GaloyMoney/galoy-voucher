@@ -123,6 +123,19 @@ export default function Page({ params: { id } }: Params) {
                 <div className="bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   please wait..
                 </div>
+              ) : successModal ? (
+                <div className="bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <p className="text-green-500">
+                    Success! Withdrawal confirmed.
+                  </p>
+                  <Button
+                    type="button"
+                    onClick={handleClose}
+                    disabled={sendPaymentOnChainLoading}
+                  >
+                    Close
+                  </Button>
+                </div>
               ) : error || sendPaymentOnChainError ? (
                 <div>
                   <div className="bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
@@ -145,30 +158,15 @@ export default function Page({ params: { id } }: Params) {
                           Confirm withdraw
                         </h3>
                         <div className="mt-2">
-                          {successModal ? (
-                            <div>
-                              <p className="text-green-500">
-                                Success! Withdrawal confirmed.
-                              </p>
-                              <Button
-                                type="button"
-                                onClick={handleClose}
-                                disabled={sendPaymentOnChainLoading}
-                              >
-                                Close
-                              </Button>
-                            </div>
-                          ) : (
-                            <p className="text-sm">
-                              {isNaN(withdrawLink?.amount as number) ||
-                              (withdrawLink?.amount as number) <= 0
-                                ? "CANNOT USE ON CHAIN"
-                                : `Confirm the payment with fees: ${fees}`}{" "}
-                              {withdrawLink?.account_type === "BTC"
-                                ? "sats"
-                                : "cents"}
-                            </p>
-                          )}
+                          <p className="text-sm">
+                            {isNaN(withdrawLink?.amount as number) ||
+                            (withdrawLink?.amount as number) <= 0
+                              ? "CANNOT USE ON CHAIN"
+                              : `Confirm the payment with fees: ${fees}`}{" "}
+                            {withdrawLink?.account_type === "BTC"
+                              ? "sats"
+                              : "cents"}
+                          </p>
                         </div>
                       </div>
                     </div>
