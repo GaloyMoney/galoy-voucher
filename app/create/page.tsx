@@ -11,6 +11,8 @@ import {
   NEXT_PUBLIC_ESCROW_WALLET_USD,
 } from "@/config/variables";
 import { useCreateInvoice } from "@/hooks/useCreateInvoice";
+import Button from "@/components/Button";
+import Input from "@/components/Input";
 
 //TODO need to fix loading in this compoent
 export default function HomePage() {
@@ -123,7 +125,7 @@ export default function HomePage() {
             payment_request: paymentRequest, //ln invoice
             payment_hash: paymentHash,
             payment_secret: paymentSecret,
-            amount: satoshis, //this will be used if we charge fees and also if multiple links at once this will store their sum
+            amount: currency === "BTC" ? satoshis : withdrawAmount, //this will be used if we charge fees and also if multiple links at once this will store their sum
             account_type: currency, //this can be BTC or USD
             escrow_wallet:
               currency === "BTC"
@@ -165,65 +167,57 @@ export default function HomePage() {
   //TODO need to create a separate component for this and also for input fields
   return (
     <div className="flex flex-col mt-36 items-center h-screen">
-      <button className="text-white px-4 py-6 mt-2 rounded-3xl w-full text-3xl font-bold">
+      <Button className="text-white px-4 py-6 mt-2 rounded-3xl w-full text-3xl font-bold">
         {currency === "BTC" ? (
           <>$ {isNaN(amount) ? 0 : convertedCurrencyAmountSat.toFixed(2)}</>
         ) : (
           <> {isNaN(amount) ? 0 : convertedCurrencyAmountUSD.toFixed()} sats</>
         )}
-      </button>
-      <div className="flex flex-col">
+      </Button>
+      <div className="flex flex-col gap-1">
         <div className="flex mt-2 py-2 w-full">
-          <button
+          <Button
             onClick={() => handleCurrencyChange("USD")}
             className={`bg-zinc-700 text-white px-4 py-2  rounded-md hover:bg-zinc-900 ${
               currency === "USD" ? "border bg-zinc-900" : ""
             }`}
           >
             USD Wallet (cents)
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => handleCurrencyChange("BTC")}
             className={`bg-zinc-700 text-white px-4 py-2 ml-1 rounded-md hover:bg-zinc-900 ${
               currency === "BTC" ? "border bg-zinc-900" : ""
             }`}
           >
             BTC Wallet (sats)
-          </button>
+          </Button>
         </div>
 
-        <input
+        <Input
           type="number"
           placeholder={`Enter amount`}
           value={amount.toString()}
           onChange={handleAmountChange}
-          className="border border-stone-700 rounded-md px-4 py-2 bg-neutral-900 w-full"
           required
         />
-        <input
+        <Input
           type="text"
           placeholder="Enter memo"
           value={memo}
           onChange={handleMemoChange}
-          className="border border-stone-700 rounded-md px-4 py-2 mt-2 bg-neutral-900 w-full"
         />
-        <input
+        <Input
           type="number"
           placeholder="Enter commission percentage"
           value={commissionPercentage.toString()}
           onChange={handleCommissionPercentageChange}
-          className="border border-stone-700 rounded-md px-4 py-2 mt-2 bg-neutral-900 w-full"
           required
         />
-        <button className="bg-zinc-700 text-white px-4 py-2 mt-2 rounded-md w-full">
+        <Button className="bg-zinc-700 text-white px-4 py-2 mt-2 rounded-md w-full">
           {isNaN(withdrawAmount) ? "Total Amount" : withdrawAmount}
-        </button>
-        <button
-          onClick={handleSubmit}
-          className="bg-zinc-700 text-white px-4 py-2 mt-2 rounded-md hover:bg-zinc-900 w-full"
-        >
-          Create LNURLw
-        </button>
+        </Button>
+        <Button onClick={handleSubmit}>Create LNURLw</Button>
       </div>
     </div>
   );

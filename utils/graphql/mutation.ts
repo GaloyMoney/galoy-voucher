@@ -92,3 +92,19 @@ export const LN_INVOICE_CREATE_USD = gql`
     }
   }
 `;
+
+
+export const ON_CHAIN_PAYMENT =  gql`
+  mutation SendPaymentOnChain(
+    $sendPaymentOnChainId: ID!
+    $btcWalletAddress: String!
+  ) {
+    sendPaymentOnChain(
+      id: $sendPaymentOnChainId
+      btc_wallet_address: $btcWalletAddress
+    ) {
+      amount
+      status
+    }
+  }
+`;

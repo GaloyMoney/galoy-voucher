@@ -1,6 +1,5 @@
 //TODO need to add error fields
 const typeDefs = `#graphql
-
 type WithdrawLink {
   id: ID!
   user_id: ID!
@@ -20,6 +19,15 @@ type WithdrawLink {
   updated_at: String!
 }
 
+type FeesResult {
+  fees: Float!
+}
+
+type sendPaymentOnChainResult {
+  status: String!
+  amount: Float!
+}
+
 enum Status {
   FUNDED
   UNFUNDED
@@ -30,13 +38,14 @@ type Query {
   getWithdrawLink(id: ID, unique_hash: String, k1: String, payment_hash: String): WithdrawLink
   getAllWithdrawLinks: [WithdrawLink!]!
   getWithdrawLinksByUserId(user_id: ID!, status: Status): [WithdrawLink!]!
+  getOnChainPaymentFees(id: ID!, btc_wallet_address: String!): FeesResult!
 }
-
 
 type Mutation {
   createWithdrawLink(input: CreateWithdrawLinkInput!): WithdrawLink!
   updateWithdrawLink(id: ID!, input: UpdateWithdrawLinkInput!): WithdrawLink!
   deleteWithdrawLink(id: ID!): ID!
+  sendPaymentOnChain(id: ID!, btc_wallet_address: String!): sendPaymentOnChainResult!
 }
 
 input CreateWithdrawLinkInput {

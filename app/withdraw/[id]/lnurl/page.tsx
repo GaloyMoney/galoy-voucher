@@ -1,12 +1,11 @@
 "use client";
 import React from "react";
+import { QRCode } from "react-qrcode-logo";
 import { encodeURLToLNURL } from "@/utils/helpers";
 import LoadingComponent from "@/components/LoadingComponent";
 import { useGetWithdrawLinkQuery } from "@/utils/generated/graphql";
 import { NEXT_PUBLIC_LOCAL_URL } from "@/config/variables";
-import Link from "next/link";
-import Button from "@/components/Button";
-import Input from "@/components/Input";
+
 interface Params {
   params: {
     id: string;
@@ -45,17 +44,29 @@ export default function Page({ params: { id } }: Params) {
   //TODO need to add this to septate component
   return (
     <div className="flex flex-col gap-3 items-center justify-center h-screen">
-      <Link href={`${NEXT_PUBLIC_LOCAL_URL}/withdraw/${id}/lnurl`}>
-        <Button>
-          <span>LNURLw Link</span>{" "}
-        </Button>
-      </Link>
+      <button className="bg-zinc-700  text-white py-2 px-4 rounded w-80">
+        <span>Account Type : </span> {data.getWithdrawLink?.account_type}
+      </button>
 
-      <Link href={`${NEXT_PUBLIC_LOCAL_URL}/withdraw/${id}/onchain`}>
-        <Button>
-          <span>On Chain</span>{" "}
-        </Button>
-      </Link>
+      <button className="bg-zinc-700  text-white py-2 px-4 rounded w-80">
+        <span>Min Withdrawable : </span>{" "}
+        {data.getWithdrawLink?.min_withdrawable}{" "}
+        {data.getWithdrawLink?.account_type === "BTC" ? "sats" : "cents"}
+      </button>
+      <button className="bg-zinc-700  text-white py-2 px-4 rounded w-80">
+        <span>Max Withdrawable : </span>{" "}
+        {data.getWithdrawLink?.max_withdrawable}{" "}
+        {data.getWithdrawLink?.account_type === "BTC" ? "sats" : "cents"}
+      </button>
+      <div>
+        <QRCode size={300} value={url} />
+      </div>
+      <button
+        onClick={copyToClipboard}
+        className="bg-zinc-700 hover:bg-zinc-900 text-white py-2 px-4 rounded w-80"
+      >
+        Copy URL
+      </button>
     </div>
   );
 }

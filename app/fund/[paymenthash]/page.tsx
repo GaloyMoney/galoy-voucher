@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import { QRCode } from "react-qrcode-logo";
 import { useRouter } from "next/navigation";
 import LoadingComponent from "@/components/LoadingComponent";
+import Button from "@/components/Button";
+import Input from "@/components/Input";
 import {
   Status,
   useGetWithdrawLinkQuery,
@@ -68,8 +70,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
                 updateWithdrawLinkInput: { status: Status.Funded },
               },
             });
-            const updatedWithdrawLink = response.data?.updateWithdrawLink;
-            router.replace(`/withdraw/${response.data?.updateWithdrawLink.id}`);
+            router.replace(`/withdraw/${response.data?.updateWithdrawLink.id}/lnurl`);
           } catch (error) {
             alert(error);
           }

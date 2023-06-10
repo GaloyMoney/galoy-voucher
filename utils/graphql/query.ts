@@ -58,7 +58,6 @@ export const GET_CURRENCY_LIST = gql`
   }
 `;
 
-
 export const GET_REAL_TIME_PRICE = gql`
   query realtimePriceInitial($currency: DisplayCurrency!) {
     realtimePrice(currency: $currency) {
@@ -72,6 +71,20 @@ export const GET_REAL_TIME_PRICE = gql`
         offset
       }
       denominatorCurrency
+    }
+  }
+`;
+
+export const GET_ON_CHAIN_PAYMENT_FEES = gql`
+  query GetOnChainPaymentFees(
+    $getOnChainPaymentFeesId: ID!
+    $btcWalletAddress: String!
+  ) {
+    getOnChainPaymentFees(
+      id: $getOnChainPaymentFeesId
+      btc_wallet_address: $btcWalletAddress
+    ) {
+      fees
     }
   }
 `;
