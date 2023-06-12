@@ -3,13 +3,13 @@ import React, { useEffect } from "react";
 import { QRCode } from "react-qrcode-logo";
 import { useRouter } from "next/navigation";
 import LoadingComponent from "@/components/LoadingComponent";
-import Button from "@/components/Button";
+import Button from "@/components/Button/Button";
 import Input from "@/components/Input";
 import {
   Status,
   useGetWithdrawLinkQuery,
   useUpdateWithdrawLinkMutation,
-  useLnInvoicePaymentStatusSubscription
+  useLnInvoicePaymentStatusSubscription,
 } from "@/utils/generated/graphql";
 
 interface Params {
@@ -17,7 +17,6 @@ interface Params {
     paymenthash: string;
   };
 }
-
 
 //this Screen is used to take funds from user for withdraw links
 //TODO need to fix loading in this
@@ -48,7 +47,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
     data: paymentStatusData,
     loading: paymentStatusLoading,
     error: paymentStatusDataError,
-  } = useLnInvoicePaymentStatusSubscription( {
+  } = useLnInvoicePaymentStatusSubscription({
     variables: {
       payment_request: paymentRequest || "",
     },
@@ -70,7 +69,9 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
                 updateWithdrawLinkInput: { status: Status.Funded },
               },
             });
-            router.replace(`/withdraw/${response.data?.updateWithdrawLink.id}/lnurl`);
+            router.replace(
+              `/withdraw/${response.data?.updateWithdrawLink.id}/lnurl`
+            );
           } catch (error) {
             alert(error);
           }

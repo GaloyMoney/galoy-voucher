@@ -11,7 +11,7 @@ import {
   NEXT_PUBLIC_ESCROW_WALLET_USD,
 } from "@/config/variables";
 import { useCreateInvoice } from "@/hooks/useCreateInvoice";
-import Button from "@/components/Button";
+import Button from "@/components/Button/Button";
 import Input from "@/components/Input";
 
 //TODO need to fix loading in this compoent
@@ -167,7 +167,7 @@ export default function HomePage() {
   //TODO need to create a separate component for this and also for input fields
   return (
     <div className="flex flex-col mt-36 items-center h-screen">
-      <Button className="text-white px-4 py-6 mt-2 rounded-3xl w-full text-3xl font-bold">
+      <Button className=" px-4 py-6 mt-2 rounded-3xl w-full text-3xl font-bold">
         {currency === "BTC" ? (
           <>$ {isNaN(amount) ? 0 : convertedCurrencyAmountSat.toFixed(2)}</>
         ) : (
@@ -178,22 +178,24 @@ export default function HomePage() {
         <div className="flex mt-2 py-2 w-full">
           <Button
             onClick={() => handleCurrencyChange("USD")}
-            className={`bg-zinc-700 text-white px-4 py-2  rounded-md hover:bg-zinc-900 ${
-              currency === "USD" ? "border bg-zinc-900" : ""
+            className={`  px-4 py-2  rounded-md hover:bg-slate-100 ${
+              currency === "USD" ? "border bg-slate-200" : ""
             }`}
           >
             USD Wallet (cents)
           </Button>
           <Button
             onClick={() => handleCurrencyChange("BTC")}
-            className={`bg-zinc-700 text-white px-4 py-2 ml-1 rounded-md hover:bg-zinc-900 ${
-              currency === "BTC" ? "border bg-zinc-900" : ""
+            className={`  px-4 py-2 ml-1 rounded-md hover:bg-slate-100 ${
+              currency === "BTC" ? "border bg-slate-200" : ""
             }`}
           >
             BTC Wallet (sats)
           </Button>
         </div>
-
+        <Button className="  px-4 py-2 mt-2 rounded-md w-full">
+          {isNaN(withdrawAmount) ? "Total Amount" : withdrawAmount}
+        </Button>
         <Input
           type="number"
           placeholder={`Enter amount`}
@@ -213,10 +215,9 @@ export default function HomePage() {
           value={commissionPercentage.toString()}
           onChange={handleCommissionPercentageChange}
           required
+          min={0}
         />
-        <Button className="bg-zinc-700 text-white px-4 py-2 mt-2 rounded-md w-full">
-          {isNaN(withdrawAmount) ? "Total Amount" : withdrawAmount}
-        </Button>
+
         <Button onClick={handleSubmit}>Create LNURLw</Button>
       </div>
     </div>

@@ -5,7 +5,7 @@ import LoadingComponent from "@/components/LoadingComponent";
 import { useGetWithdrawLinkQuery } from "@/utils/generated/graphql";
 import { NEXT_PUBLIC_LOCAL_URL } from "@/config/variables";
 import Link from "next/link";
-import Button from "@/components/Button";
+import Button from "@/components/Button/Button";
 import Input from "@/components/Input";
 interface Params {
   params: {

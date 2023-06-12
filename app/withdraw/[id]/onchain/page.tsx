@@ -6,7 +6,7 @@ import {
   useGetWithdrawLinkQuery,
 } from "@/utils/generated/graphql";
 import LoadingComponent from "@/components/LoadingComponent";
-import Button from "@/components/Button";
+import Button from "@/components/Button/Button";
 import Input from "@/components/Input";
 
 interface Params {
