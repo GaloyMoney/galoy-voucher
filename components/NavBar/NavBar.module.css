@@ -1,3 +1,17 @@
+.mobile_menu {
+  display: none;
+}
+
+.responsive_nav {
+  display: none;
+}
+
+.root {
+  width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -123,26 +137,42 @@
 
 @media screen and (max-width: 768px) {
   .header {
-    flex-direction: column;
-    align-items: flex-start;
     width: 90vw;
   }
 
-  .logo,
+  .logo {
+    width: 50%;
+    justify-content: flex-start;
+  }
+
   .nav,
   .right_section {
-    width: 100%;
-    margin-bottom: 1em;
+    display: none;
   }
 
-  .nav_item,
-  .add_new_button {
-    width: 100%;
+  .mobile_menu {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 50%;
   }
 
-  .dropdown_content {
-    left: auto;
-    right: 0;
+  .responsive_nav {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    background-color: #fff;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+      rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+  }
+  .nav_item {
+    padding: 0.5em 1em;
+    width: 100%;
+    justify-content: flex-start;
+    
   }
 }
 
@@ -167,4 +197,3 @@
     left: -3.8em;
   }
 }
-
