@@ -23,6 +23,9 @@ const useRealtimePrice = (
 
   const { data: initialData } = useRealtimePriceInitialQuery({
     variables: { currency },
+    context: {
+      endpoint: "MAINNET",
+    },
     onCompleted(initData) {
       if (initData?.realtimePrice?.btcSatPrice) {
         const { base, offset } = initData.realtimePrice.btcSatPrice;

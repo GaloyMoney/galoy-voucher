@@ -4,7 +4,7 @@ import { Inter_Tight } from "next/font/google";
 import { ApolloProvider } from "@apollo/client";
 import apolloClient from "@/config/apollo";
 import Navigation from "@/components/NavBar/Navigation";
-const inter = Inter_Tight({ subsets: ["latin"], display: "swap" });
+const inter = Inter_Tight({ subsets: ["latin"], display: "auto" });
 
 export default function RootLayout({
   children,

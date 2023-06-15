@@ -1,7 +1,6 @@
 import Navbar from "./NavBar";
 import React from "react";
 
-
 const Navigation = () => {
   const nav_items = {
     loged_in: [

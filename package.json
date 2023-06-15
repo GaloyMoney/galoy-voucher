@@ -52,6 +52,7 @@
     "pg": "^8.11.0",
     "postcss": "8.4.23",
     "react": "18.2.0",
+    "react-currency-input-field": "^3.6.10",
     "react-dom": "18.2.0",
     "react-qrcode-logo": "^2.9.0",
     "subscriptions-transport-ws": "^0.11.0",

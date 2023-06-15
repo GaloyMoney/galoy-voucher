@@ -1,0 +1,44 @@
+.numpad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.display {
+  width: 100%;
+  margin-bottom: 1em;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.grid {
+  display: grid;
+  font-weight: 700;
+
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.button {
+  padding: 1rem;
+  font-size: 1.5rem;
+  border-radius: 2em;
+}
+
+.button:hover {
+  background-color: #e6e6e6;
+  cursor: pointer;
+}
+
+.clearAll {
+  background-color: rgb(35, 35, 35);
+  width: 85%;
+  text-align: center;
+  color: white;
+  padding: 0.8em;
+  font-size: 1em;
+  border-radius: 2em;
+  font-weight: 500;
+margin-top: 1em;
+}
