@@ -19,7 +19,7 @@ const useRealtimePrice = (
       if (onSubscriptionDataCallback)
         onSubscriptionDataCallback(subscriptionData);
     },
-  });
+  }); 
 
   const { data: initialData } = useRealtimePriceInitialQuery({
     variables: { currency },
