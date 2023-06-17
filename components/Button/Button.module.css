@@ -1,5 +1,5 @@
 .Button {
-  border-radius: 2em;
+  border-radius: 0.5em;
   border-width: 0.13em;
   border-color: #fe7434;
   text-align: center;
@@ -11,8 +11,6 @@
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   width: 100%;
-
-  /* Add the transition property */
   transition: background-color 0.3s, color 0.3s;
 }
 

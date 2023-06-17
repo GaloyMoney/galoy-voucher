@@ -32,11 +32,13 @@ const formatCurrencyHelper = ({
 };
 
 export const useDisplayCurrency = () => {
-  const { data: dataCurrencyList } = useCurrencyListQuery({
-    context: {
-      endpoint: "MAINNET",
-    },
-  });
+  const { data: dataCurrencyList, loading } = useCurrencyListQuery(
+    {
+      context: {
+        endpoint: "MAINNET",
+      },
+    }
+  );
 
   const displayCurrencyDictionary = useMemo(() => {
     const currencyList = dataCurrencyList?.currencyList || [];
@@ -73,5 +75,6 @@ export const useDisplayCurrency = () => {
   return {
     formatCurrency,
     currencyList: dataCurrencyList?.currencyList || [],
+    loading,
   };
 };

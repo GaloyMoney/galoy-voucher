@@ -8,3 +8,4 @@ export const PGDATABASE = process.env.PGDATABASE;
 export const PGUSER = process.env.PGUSER;
 export const PGPASSWORD = process.env.PGPASSWORD;
 export const ENDPOINT_ID = process.env.ENDPOINT_ID;
+export const MAX_INPUT_VALUE_LENGTH = 14;
