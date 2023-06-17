@@ -199,23 +199,13 @@ export default function HomePage() {
         <Input
           type="number"
           label="amount"
-          placeholder={`Enter amount`}
-          value={amount.toString()}
           onChange={handleAmountChange}
           required
         />
-        <Input
-          type="text"
-          label="memo"
-          placeholder="Enter memo"
-          value={memo}
-          onChange={handleMemoChange}
-        />
+        <Input type="text" label="memo" onChange={handleMemoChange} />
         <Input
           label="commission %"
           type="number"
-          placeholder="Enter commission percentage"
-          value={commissionPercentage.toString()}
           onChange={handleCommissionPercentageChange}
           required
           min={0}
