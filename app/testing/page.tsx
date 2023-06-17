@@ -18,6 +18,7 @@ import LoadingComponent from "@/components/LoadingComponent";
 import Input from "@/components/Input";
 import Button from "@/components/Button/Button";
 import Tooltip from "@mui/material/Tooltip";
+import TextField from "@mui/material/TextField";
 
 const DEFAULT_CURRENCY: any = {
   __typename: "Currency",
@@ -193,6 +194,7 @@ export default function HomePage() {
             min={0}
             onChange={handleCommissionPercentage}
           />
+          
         </div>
         <div className={styles.account_type}>
           <Tooltip
@@ -253,7 +255,7 @@ export default function HomePage() {
                 ).toString()
               )}
             </p>
-            <p> ≈ {formatOperand(amountSATS)} sats</p>
+            {/* <p> ≈ {formatOperand(amountSATS)} sats</p> */}
             <p>Commission {commissionPercentage}%</p>
             <p>
               Account Type:{" "}
