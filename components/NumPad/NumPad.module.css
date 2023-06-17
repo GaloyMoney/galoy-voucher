@@ -1,0 +1,50 @@
+.numpad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}
+
+.display {
+  width: 100%;
+  margin-bottom: 1em;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.grid {
+  display: grid;
+  font-weight: 700;
+
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
+}
+
+.button {
+  padding: 1rem;
+  font-size: 1.5rem;
+  border-radius: 2em;
+}
+
+.button:hover {
+  background-color: #e6e6e6;
+  cursor: pointer;
+}
+
+.clearAll {
+  border-width: 0.13em;
+  border-color: #fe7434;
+  width: 6rem;
+  text-align: center;
+  padding: 0.5em;
+  font-size: 1em;
+  border-radius: 2em;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+    linear-gradient(45deg, #ffbe0b 0%, #fb5607 100%);
+  color: rgb(255, 255, 255);
+}

@@ -19,7 +19,10 @@ const useRealtimePrice = (
       if (onSubscriptionDataCallback)
         onSubscriptionDataCallback(subscriptionData);
     },
-  });
+    context: {
+      endpoint: "MAINNET",
+    },
+  }); 
 
   const { data: initialData } = useRealtimePriceInitialQuery({
     variables: { currency },
@@ -28,6 +31,9 @@ const useRealtimePrice = (
         const { base, offset } = initData.realtimePrice.btcSatPrice;
         priceRef.current = base / 10 ** offset;
       }
+    },
+    context: {
+      endpoint: "MAINNET",
     },
   });
 

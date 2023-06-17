@@ -69,7 +69,9 @@
 }
 
 .add_new_button {
-  border-radius: 2em;
+  border-radius: 0.5em;
+  border-width: 0.13em;
+  border-color: #fe7434;
   text-align: center;
   text-decoration: none;
   font-weight: 500;

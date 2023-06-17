@@ -174,7 +174,7 @@ export default function HomePage() {
           <> {isNaN(amount) ? 0 : convertedCurrencyAmountUSD.toFixed()} sats</>
         )}
       </Button>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-4">
         <div className="flex mt-2 py-2 w-full">
           <Button
             onClick={() => handleCurrencyChange("USD")}
@@ -198,6 +198,7 @@ export default function HomePage() {
         </Button>
         <Input
           type="number"
+          label="amount"
           placeholder={`Enter amount`}
           value={amount.toString()}
           onChange={handleAmountChange}
@@ -205,11 +206,13 @@ export default function HomePage() {
         />
         <Input
           type="text"
+          label="memo"
           placeholder="Enter memo"
           value={memo}
           onChange={handleMemoChange}
         />
         <Input
+          label="commission %"
           type="number"
           placeholder="Enter commission percentage"
           value={commissionPercentage.toString()}
