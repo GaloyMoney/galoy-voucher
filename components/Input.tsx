@@ -28,7 +28,7 @@ const Input = ({ label, onChange, min, max, ...props } : any) => {
       <label
         htmlFor={props.id}
         className={`absolute top-1/2 left-3 px-1 py-0.5 transition-all duration-300 ease-in-out bg-white transform -translate-y-1/2 pointer-events-none ${
-          (isFocused || value) && "-top-1 text-xs"
+          (isFocused || value) && "-top-2 text-xs"
         }`}
       >
         {label}
