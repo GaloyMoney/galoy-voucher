@@ -2701,53 +2701,6 @@
         "possibleTypes": null
       },
       {
-        "kind": "OBJECT",
-        "name": "JwtPayload",
-        "description": null,
-        "fields": [
-          {
-            "name": "authToken",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "errors",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INTERFACE",
-                    "name": "Error",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
         "kind": "SCALAR",
         "name": "Language",
         "description": null,
@@ -5144,39 +5097,6 @@
             "deprecationReason": null
           },
           {
-            "name": "userLoginDevice",
-            "description": null,
-            "args": [
-              {
-                "name": "input",
-                "description": null,
-                "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "UserLoginDeviceInput",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "JwtPayload",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "userLoginUpgrade",
             "description": null,
             "args": [
@@ -5202,7 +5122,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "AuthTokenPayload",
+                "name": "UpgradePayload",
                 "ofType": null
               }
             },
@@ -5620,14 +5540,14 @@
             "deprecationReason": null
           },
           {
-            "name": "targetConfirmations",
+            "name": "speed",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "TargetConfirmations",
+              "kind": "ENUM",
+              "name": "PayoutSpeed",
               "ofType": null
             },
-            "defaultValue": "1",
+            "defaultValue": "FAST",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -5703,14 +5623,14 @@
             "deprecationReason": null
           },
           {
-            "name": "targetConfirmations",
+            "name": "speed",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "TargetConfirmations",
+              "kind": "ENUM",
+              "name": "PayoutSpeed",
               "ofType": null
             },
-            "defaultValue": "1",
+            "defaultValue": "FAST",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -5769,8 +5689,8 @@
                 "ofType": null
               }
             },
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "Ignored - will be removed"
           }
         ],
         "inputFields": null,
@@ -5946,14 +5866,14 @@
             "deprecationReason": null
           },
           {
-            "name": "targetConfirmations",
+            "name": "speed",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "TargetConfirmations",
+              "kind": "ENUM",
+              "name": "PayoutSpeed",
               "ofType": null
             },
-            "defaultValue": "1",
+            "defaultValue": "FAST",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -6029,14 +5949,14 @@
             "deprecationReason": null
           },
           {
-            "name": "targetConfirmations",
+            "name": "speed",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "TargetConfirmations",
+              "kind": "ENUM",
+              "name": "PayoutSpeed",
               "ofType": null
             },
-            "defaultValue": "1",
+            "defaultValue": "FAST",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -6095,8 +6015,8 @@
                 "ofType": null
               }
             },
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "Ignored - will be removed"
           }
         ],
         "inputFields": null,
@@ -6323,6 +6243,23 @@
           },
           {
             "name": "SUCCESS",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "PayoutSpeed",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "FAST",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -7406,14 +7343,14 @@
                 "deprecationReason": null
               },
               {
-                "name": "targetConfirmations",
+                "name": "speed",
                 "description": null,
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "TargetConfirmations",
+                  "kind": "ENUM",
+                  "name": "PayoutSpeed",
                   "ofType": null
                 },
-                "defaultValue": "1",
+                "defaultValue": "FAST",
                 "isDeprecated": false,
                 "deprecationReason": null
               },
@@ -7483,14 +7420,14 @@
                 "deprecationReason": null
               },
               {
-                "name": "targetConfirmations",
+                "name": "speed",
                 "description": null,
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "TargetConfirmations",
+                  "kind": "ENUM",
+                  "name": "PayoutSpeed",
                   "ofType": null
                 },
-                "defaultValue": "1",
+                "defaultValue": "FAST",
                 "isDeprecated": false,
                 "deprecationReason": null
               },
@@ -7560,14 +7497,14 @@
                 "deprecationReason": null
               },
               {
-                "name": "targetConfirmations",
+                "name": "speed",
                 "description": null,
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "TargetConfirmations",
+                  "kind": "ENUM",
+                  "name": "PayoutSpeed",
                   "ofType": null
                 },
-                "defaultValue": "1",
+                "defaultValue": "FAST",
                 "isDeprecated": false,
                 "deprecationReason": null
               },
@@ -8233,13 +8170,9 @@
             "description": null,
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "OnChainTxHash",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "OnChainTxHash",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -9103,6 +9036,69 @@
       },
       {
         "kind": "OBJECT",
+        "name": "UpgradePayload",
+        "description": null,
+        "fields": [
+          {
+            "name": "authToken",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "AuthToken",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "errors",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INTERFACE",
+                    "name": "Error",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "success",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
         "name": "UsdWallet",
         "description": "A wallet belonging to an account which contains a USD balance and a list of transactions.",
         "fields": [
@@ -9735,29 +9731,6 @@
         ],
         "inputFields": null,
         "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "UserLoginDeviceInput",
-        "description": null,
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "jwt",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
