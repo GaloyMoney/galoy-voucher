@@ -5,7 +5,8 @@ import NumPad from "@/components/NumPad/NumPad";
 import { formatOperand } from "@/utils/helpers";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 import styles from "../CreateLink.module.css";
-import LoadingComponent from "@/components/LoadingComponent";
+import LoadingComponent from "@/components/Loading/LoadingComponent";
+import PageLoadingComponent from "@/components/Loading/PageLoadingComponet";
 import Tooltip from "@mui/material/Tooltip";
 import Button from "@/components/Button/Button";
 import ModalComponent from "@/components/ModalComponent";
@@ -61,11 +62,7 @@ export default function HomePage({
   };
 
   if (currencyLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <LoadingComponent></LoadingComponent>
-      </div>
-    );
+    return <PageLoadingComponent></PageLoadingComponent>;
   }
 
   const handelPageChange = () => {
@@ -128,7 +125,7 @@ export default function HomePage({
           onClick={() => (unit === "FIAT" ? setUnit("SATS") : setUnit("FIAT"))}
         />
       </div>
-      {loading || currencyLoading ? (
+      {loading ? (
         <LoadingComponent></LoadingComponent>
       ) : (
         <div className="text-xl">
@@ -163,7 +160,7 @@ export default function HomePage({
           </button>
         </Tooltip>
         <Tooltip
-          placement="bottom-end"
+          placement="top-start"
           title="Withdraw link will be created that will have a stable price. Sats will automatically adjust based on the price."
         >
           <button

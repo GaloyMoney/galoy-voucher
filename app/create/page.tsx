@@ -10,7 +10,7 @@ import {
 } from "@/utils/generated/graphql";
 import useSatsPrice from "@/hooks/useSatsPrice";
 import { useCreateInvoice } from "@/hooks/useCreateInvoice";
-import LoadingComponent from "@/components/LoadingComponent";
+import PageLoadingComponent from "@/components/Loading/PageLoadingComponet";
 import {
   NEXT_PUBLIC_ESCROW_WALLET_BTC,
   NEXT_PUBLIC_ESCROW_WALLET_USD,
@@ -18,6 +18,7 @@ import {
 import { generateRandomHash } from "@/utils/helpers";
 import ModalComponent from "@/components/ModalComponent";
 import { useRouter } from "next/navigation";
+import ConfirmModal from "@/components/Create/ConifrmModal/ConfirmModal";
 
 const DEFAULT_CURRENCY: any = {
   __typename: "Currency",
@@ -39,7 +40,9 @@ export default function CreatePage() {
   const { usdToSats, satsToUsd } = useSatsPrice();
   const [fiatAfterCommission, setFiatAfterCommission] = useState(amountFIAT);
   const [satsAfterCommission, setSatsAfterCommission] = useState(amountSATS);
-  const [loadingPageChagne, setLoadingPageChagne] = useState(false);
+  const [loadingPageChange, setLoadingPageChange] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false);
+
   const router = useRouter();
 
   const [alert, setAlert] = useState({
@@ -113,62 +116,92 @@ export default function CreatePage() {
     refetch();
   }, [wsData]);
 
-  const handelSubmit = async () => {
-    let amount;
-    if (accountType === "BTC") {
-      amount = Number(satsAfterCommission);
-    } else {
-      amount = (
-        Number(satsToUsd(Number(satsAfterCommission)).toFixed(2)) * 100
-      ).toFixed();
-    }
-    console.log("amount ====", amount);
-
-    const result = await handleCreateInvoice(Number(amount), "TEST");
-
-    if (result?.error?.length != 0 && result.error) {
-      const errorMessage = result?.error
-        .map((error) => error.message)
-        .join(", ");
+  const handelConfirmModal = () => {
+    const cent_sats = (usdToSats(1) / 100).toFixed();
+    if (Number(satsAfterCommission) < Number(cent_sats)) {
       setAlert({
-        message: errorMessage,
+        message: "Amount is very small",
         modal: true,
       });
-    }
-
-    setLoadingPageChagne(true);
-    if (result.data) {
-      const { paymentRequest, paymentHash, paymentSecret, satoshis } =
-        result.data;
-      const createWithdrawLinkResult = await createWithdrawLink({
-        variables: {
-          input: {
-            payment_hash: paymentHash,
-            user_id: "aaaaaaaa-e098-4a16-932b-e4f4abc24366",
-            payment_request: paymentRequest,
-            payment_secret: paymentSecret,
-            amount: unit === "BTC" ? satoshis : Number(amount),
-            account_type: unit,
-            escrow_wallet:
-              unit === "BTC"
-                ? `${NEXT_PUBLIC_ESCROW_WALLET_BTC}`
-                : `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
-            title: "LNURLw",
-            min_withdrawable: unit === "BTC" ? satoshis : Number(amount),
-            max_withdrawable: unit === "BTC" ? satoshis : Number(amount),
-            unique_hash: generateRandomHash(),
-            k1: generateRandomHash(),
-          },
-        },
-      });
-      router.push(
-        `/fund/${createWithdrawLinkResult.data?.createWithdrawLink.id}`
-      );
+    } else {
+      setConfirmModal(true);
     }
   };
 
-  if (CreateInvoiceLoading || withdrawLinkLoading || loadingPageChagne) {
-    return <LoadingComponent></LoadingComponent>;
+// 50%
+// $ 25.00
+// ≈ 83,103 sats
+  const handelSubmit = async () => {
+    setConfirmModal(false);
+    try {
+      let amount;
+      const auto_memo = `Galoy withdraw Link - for ${
+        accountType === "BTC" ? "Regular sats" : "Stable sats"
+      } ${
+        Number(commissionPercentage) === 0
+          ? ""
+          : `@${Number(commissionPercentage)}% commission"`
+      }`;
+      if (accountType === "BTC") {
+        amount = Number(satsAfterCommission);
+      } else {
+        amount = (
+          Number(satsToUsd(Number(satsAfterCommission)).toFixed(2)) * 100
+        ).toFixed();
+      }
+
+      const result = await handleCreateInvoice(Number(amount), auto_memo);
+      if (result?.error?.length != 0 && result.error) {
+        const errorMessage = result?.error
+          .map((error) => error.message)
+          .join(", ");
+        return setAlert({
+          message: errorMessage,
+          modal: true,
+        });
+      }
+
+      setLoadingPageChange(true);
+      if (result.data) {
+        const { paymentRequest, paymentHash, paymentSecret, satoshis } =
+          result.data;
+        const createWithdrawLinkResult = await createWithdrawLink({
+          variables: {
+            input: {
+              payment_hash: paymentHash,
+              user_id: "aaaaaaaa-e098-4a16-932b-e4f4abc24366",
+              payment_request: paymentRequest,
+              payment_secret: paymentSecret,
+              amount: unit === "BTC" ? satoshis : Number(amount),
+              account_type: unit,
+              escrow_wallet:
+                unit === "BTC"
+                  ? `${NEXT_PUBLIC_ESCROW_WALLET_BTC}`
+                  : `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
+              title: auto_memo,
+              min_withdrawable: unit === "BTC" ? satoshis : Number(amount),
+              max_withdrawable: unit === "BTC" ? satoshis : Number(amount),
+              unique_hash: generateRandomHash(),
+              k1: generateRandomHash(),
+            },
+          },
+        });
+        router.push(
+          `/fund/${createWithdrawLinkResult.data?.createWithdrawLink.id}`
+        );
+      }
+    } catch (e) {
+      console.log(e);
+      setLoadingPageChange(false);
+      setAlert({
+        message: String(e),
+        modal: true,
+      });
+    }
+  };
+
+  if (CreateInvoiceLoading || withdrawLinkLoading || loadingPageChange) {
+    return <PageLoadingComponent />;
   }
 
   if (currentPage === "AMOUNT") {
@@ -204,7 +237,28 @@ export default function CreatePage() {
           }
         >
           {alert.message}
+          <Button
+            onClick={() =>
+              setAlert({
+                message: "",
+                modal: false,
+              })
+            }
+          >
+            {" "}
+            Ok{" "}
+          </Button>
         </ModalComponent>
+        <ConfirmModal
+          open={confirmModal}
+          onClose={() => setConfirmModal(false)}
+          handleSubmit={handelSubmit}
+          fiatAfterCommission={fiatAfterCommission}
+          satsAfterCommission={satsAfterCommission}
+          currency={currency}
+          accountType={accountType}
+          commissionPercentage={commissionPercentage}
+        />
         <div className="create_page_container">
           <CreatePagePercentage
             commissionPercentage={commissionPercentage}
@@ -219,7 +273,7 @@ export default function CreatePage() {
             setFiatAfterCommission={setFiatAfterCommission}
             setSatsAfterCommission={setSatsAfterCommission}
           />
-          <Button onClick={handelSubmit}>Submit</Button>
+          <Button onClick={handelConfirmModal}>Submit</Button>
         </div>
       </>
     );

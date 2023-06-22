@@ -28,13 +28,11 @@
   gap: 1em;
   padding: 10px;
   border-radius: 1em;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
-    rgb(209, 213, 219) 0px 0px 0px 1px inset;
 }
 
 .account_type_button {
   border-radius: 0.5em;
-  border-width: 0.13em;
+  border-width: 0.124em;
   border-color: #fe7434;
   text-align: center;
   text-decoration: none;
@@ -58,7 +56,7 @@
 
 .account_type_button_selected {
   border-radius: 0.5em;
-  border-width: 0.13em;
+  border-width: 0.124em;
   border-color: #fe7434;
   text-align: center;
   text-decoration: none;

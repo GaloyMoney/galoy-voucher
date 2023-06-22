@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { encodeURLToLNURL } from "@/utils/helpers";
-import LoadingComponent from "@/components/LoadingComponent";
+import LoadingComponent from "@/components/Loading/LoadingComponent";
 import { useGetWithdrawLinkQuery } from "@/utils/generated/graphql";
 import { NEXT_PUBLIC_LOCAL_URL } from "@/config/variables";
 import Link from "next/link";

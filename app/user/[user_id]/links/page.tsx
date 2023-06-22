@@ -6,7 +6,7 @@ import {
   useGetWithdrawLinksByUserIdQuery,
 } from "@/utils/generated/graphql";
 import { formatDate } from "@/utils/helpers";
-import LoadingComponent from "@/components/LoadingComponent";
+import LoadingComponent from "@/components/Loading/LoadingComponent";
 import Link from "next/link";
 
 interface Params {
