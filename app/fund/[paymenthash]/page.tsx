@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { QRCode } from "react-qrcode-logo";
 import { useRouter } from "next/navigation";
-import LoadingComponent from "@/components/LoadingComponent";
+import LoadingComponent from "@/components/Loading/LoadingComponent";
 import Button from "@/components/Button/Button";
 import Input from "@/components/Input";
 import {

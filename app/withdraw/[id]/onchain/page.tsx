@@ -5,7 +5,7 @@ import {
   useSendPaymentOnChainMutation,
   useGetWithdrawLinkQuery,
 } from "@/utils/generated/graphql";
-import LoadingComponent from "@/components/LoadingComponent";
+import LoadingComponent from "@/components/Loading/LoadingComponent";
 import Button from "@/components/Button/Button";
 import Input from "@/components/Input";
 

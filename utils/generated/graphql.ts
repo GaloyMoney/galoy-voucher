@@ -381,12 +381,6 @@ export enum InvoicePaymentStatus {
   Pending = 'PENDING'
 }
 
-export type JwtPayload = {
-  __typename?: 'JwtPayload';
-  authToken?: Maybe<Scalars['String']['output']>;
-  errors: Array<Error>;
-};
-
 export type LnInvoice = {
   __typename?: 'LnInvoice';
   paymentHash: Scalars['PaymentHash']['output'];
@@ -649,8 +643,7 @@ export type Mutation = {
   /** @deprecated will be moved to AccountContact */
   userContactUpdateAlias: UserContactUpdateAliasPayload;
   userLogin: AuthTokenPayload;
-  userLoginDevice: JwtPayload;
-  userLoginUpgrade: AuthTokenPayload;
+  userLoginUpgrade: UpgradePayload;
   userLogout: AuthTokenPayload;
   /** @deprecated Use QuizCompletedMutation instead */
   userQuizQuestionUpdateCompleted: UserQuizQuestionUpdateCompletedPayload;
@@ -823,11 +816,6 @@ export type MutationUserLoginArgs = {
 };
 
 
-export type MutationUserLoginDeviceArgs = {
-  input: UserLoginDeviceInput;
-};
-
-
 export type MutationUserLoginUpgradeArgs = {
   input: UserLoginUpgradeInput;
 };
@@ -888,7 +876,7 @@ export type OnChainAddressPayload = {
 export type OnChainPaymentSendAllInput = {
   address: Scalars['OnChainAddress']['input'];
   memo?: InputMaybe<Scalars['Memo']['input']>;
-  targetConfirmations?: InputMaybe<Scalars['TargetConfirmations']['input']>;
+  speed?: InputMaybe<PayoutSpeed>;
   walletId: Scalars['WalletId']['input'];
 };
 
@@ -896,13 +884,14 @@ export type OnChainPaymentSendInput = {
   address: Scalars['OnChainAddress']['input'];
   amount: Scalars['SatAmount']['input'];
   memo?: InputMaybe<Scalars['Memo']['input']>;
-  targetConfirmations?: InputMaybe<Scalars['TargetConfirmations']['input']>;
+  speed?: InputMaybe<PayoutSpeed>;
   walletId: Scalars['WalletId']['input'];
 };
 
 export type OnChainTxFee = {
   __typename?: 'OnChainTxFee';
   amount: Scalars['SatAmount']['output'];
+  /** @deprecated Ignored - will be removed */
   targetConfirmations: Scalars['TargetConfirmations']['output'];
 };
 
@@ -921,7 +910,7 @@ export type OnChainUsdPaymentSendAsBtcDenominatedInput = {
   address: Scalars['OnChainAddress']['input'];
   amount: Scalars['SatAmount']['input'];
   memo?: InputMaybe<Scalars['Memo']['input']>;
-  targetConfirmations?: InputMaybe<Scalars['TargetConfirmations']['input']>;
+  speed?: InputMaybe<PayoutSpeed>;
   walletId: Scalars['WalletId']['input'];
 };
 
@@ -929,13 +918,14 @@ export type OnChainUsdPaymentSendInput = {
   address: Scalars['OnChainAddress']['input'];
   amount: Scalars['CentAmount']['input'];
   memo?: InputMaybe<Scalars['Memo']['input']>;
-  targetConfirmations?: InputMaybe<Scalars['TargetConfirmations']['input']>;
+  speed?: InputMaybe<PayoutSpeed>;
   walletId: Scalars['WalletId']['input'];
 };
 
 export type OnChainUsdTxFee = {
   __typename?: 'OnChainUsdTxFee';
   amount: Scalars['CentAmount']['output'];
+  /** @deprecated Ignored - will be removed */
   targetConfirmations: Scalars['TargetConfirmations']['output'];
 };
 
@@ -973,6 +963,10 @@ export enum PaymentSendResult {
   Failure = 'FAILURE',
   Pending = 'PENDING',
   Success = 'SUCCESS'
+}
+
+export enum PayoutSpeed {
+  Fast = 'FAST'
 }
 
 export enum PhoneCodeChannelType {
@@ -1133,7 +1127,7 @@ export type QueryLnInvoicePaymentStatusArgs = {
 export type QueryOnChainTxFeeArgs = {
   address: Scalars['OnChainAddress']['input'];
   amount: Scalars['SatAmount']['input'];
-  targetConfirmations?: InputMaybe<Scalars['TargetConfirmations']['input']>;
+  speed?: InputMaybe<PayoutSpeed>;
   walletId: Scalars['WalletId']['input'];
 };
 
@@ -1141,7 +1135,7 @@ export type QueryOnChainTxFeeArgs = {
 export type QueryOnChainUsdTxFeeArgs = {
   address: Scalars['OnChainAddress']['input'];
   amount: Scalars['CentAmount']['input'];
-  targetConfirmations?: InputMaybe<Scalars['TargetConfirmations']['input']>;
+  speed?: InputMaybe<PayoutSpeed>;
   walletId: Scalars['WalletId']['input'];
 };
 
@@ -1149,7 +1143,7 @@ export type QueryOnChainUsdTxFeeArgs = {
 export type QueryOnChainUsdTxFeeAsBtcDenominatedArgs = {
   address: Scalars['OnChainAddress']['input'];
   amount: Scalars['SatAmount']['input'];
-  targetConfirmations?: InputMaybe<Scalars['TargetConfirmations']['input']>;
+  speed?: InputMaybe<PayoutSpeed>;
   walletId: Scalars['WalletId']['input'];
 };
 
@@ -1237,7 +1231,7 @@ export type SettlementViaLn = {
 
 export type SettlementViaOnChain = {
   __typename?: 'SettlementViaOnChain';
-  transactionHash: Scalars['OnChainTxHash']['output'];
+  transactionHash?: Maybe<Scalars['OnChainTxHash']['output']>;
   vout?: Maybe<Scalars['Int']['output']>;
 };
 
@@ -1361,6 +1355,13 @@ export type UpdateWithdrawLinkInput = {
   user_id?: InputMaybe<Scalars['ID']['input']>;
 };
 
+export type UpgradePayload = {
+  __typename?: 'UpgradePayload';
+  authToken?: Maybe<Scalars['AuthToken']['output']>;
+  errors: Array<Error>;
+  success: Scalars['Boolean']['output'];
+};
+
 /** A wallet belonging to an account which contains a USD balance and a list of transactions. */
 export type UsdWallet = Wallet & {
   __typename?: 'UsdWallet';
@@ -1466,10 +1467,6 @@ export type UserContactUpdateAliasPayload = {
   __typename?: 'UserContactUpdateAliasPayload';
   contact?: Maybe<UserContact>;
   errors: Array<Error>;
-};
-
-export type UserLoginDeviceInput = {
-  jwt?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UserLoginInput = {
@@ -1683,6 +1680,15 @@ export type RealtimePriceWsSubscriptionVariables = Exact<{
 
 
 export type RealtimePriceWsSubscription = { __typename?: 'Subscription', realtimePrice: { __typename?: 'RealtimePricePayload', errors: Array<{ __typename?: 'GraphQLApplicationError', message: string }>, realtimePrice?: { __typename?: 'RealtimePrice', timestamp: any, denominatorCurrency: any, btcSatPrice: { __typename?: 'PriceOfOneSatInMinorUnit', base: any, offset: number }, usdCentPrice: { __typename?: 'PriceOfOneUsdCentInMinorUnit', base: any, offset: number } } | null } };
+
+export type PriceSubscriptionVariables = Exact<{
+  amount: Scalars['SatAmount']['input'];
+  amountCurrencyUnit: ExchangeCurrencyUnit;
+  priceCurrencyUnit: ExchangeCurrencyUnit;
+}>;
+
+
+export type PriceSubscription = { __typename?: 'Subscription', price: { __typename?: 'PricePayload', errors: Array<{ __typename?: 'GraphQLApplicationError', message: string }>, price?: { __typename?: 'Price', base: any, offset: number, currencyUnit: string, formattedAmount: string } | null } };
 
 
 export const CreateWithdrawLinkDocument = gql`
@@ -2207,3 +2213,45 @@ export function useRealtimePriceWsSubscription(baseOptions: Apollo.SubscriptionH
       }
 export type RealtimePriceWsSubscriptionHookResult = ReturnType<typeof useRealtimePriceWsSubscription>;
 export type RealtimePriceWsSubscriptionResult = Apollo.SubscriptionResult<RealtimePriceWsSubscription>;
+export const PriceDocument = gql`
+    subscription price($amount: SatAmount!, $amountCurrencyUnit: ExchangeCurrencyUnit!, $priceCurrencyUnit: ExchangeCurrencyUnit!) {
+  price(
+    input: {amount: $amount, amountCurrencyUnit: $amountCurrencyUnit, priceCurrencyUnit: $priceCurrencyUnit}
+  ) {
+    errors {
+      message
+    }
+    price {
+      base
+      offset
+      currencyUnit
+      formattedAmount
+    }
+  }
+}
+    `;
+
+/**
+ * __usePriceSubscription__
+ *
+ * To run a query within a React component, call `usePriceSubscription` and pass it any options that fit your needs.
+ * When your component renders, `usePriceSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePriceSubscription({
+ *   variables: {
+ *      amount: // value for 'amount'
+ *      amountCurrencyUnit: // value for 'amountCurrencyUnit'
+ *      priceCurrencyUnit: // value for 'priceCurrencyUnit'
+ *   },
+ * });
+ */
+export function usePriceSubscription(baseOptions: Apollo.SubscriptionHookOptions<PriceSubscription, PriceSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<PriceSubscription, PriceSubscriptionVariables>(PriceDocument, options);
+      }
+export type PriceSubscriptionHookResult = ReturnType<typeof usePriceSubscription>;
+export type PriceSubscriptionResult = Apollo.SubscriptionResult<PriceSubscription>;

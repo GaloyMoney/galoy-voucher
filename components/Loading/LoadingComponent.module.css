@@ -11,7 +11,15 @@
   justify-content: center;
   align-items: center;
   margin: auto;
+}
 
+.full_page {
+  position: absolute;
+  left: 50%;
+  top: 35%;
+  z-index: 1000;
+  height: 31px;
+  width: 31px;
 }
 
 @keyframes rotation {

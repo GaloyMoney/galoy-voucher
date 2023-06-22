@@ -8,22 +8,54 @@ interface Props {
   currentAmount: string;
   setCurrentAmount: (amount: string) => void;
   unit: string;
-  secondaryAmount: string;
 }
 
-const Numpad = ({
-  currentAmount,
-  setCurrentAmount,
-  unit,
-  secondaryAmount,
-}: Props) => {
-  const handleChange = (digit: string) => {
-    if (digit == "0" && currentAmount == "0") return;
-    if (digit === "." && currentAmount.includes(".")) return;
-    if (currentAmount.match(/(\.[0-9]{2,}$|\..*\.)/)) return;
-    if (currentAmount.length > 14 || secondaryAmount.length > 14) return;
-
+const Numpad = ({ currentAmount, setCurrentAmount, unit }: Props) => {
+  const handelAmountChange = (digit: string) => {
+    if (digit == "0" && currentAmount == "0") {
+      return;
+    }
+    if (digit === "." && currentAmount.includes(".")) {
+      return;
+    }
+    if (currentAmount.match(/(\.[0-9]{2,}$|\..*\.)/)) {
+      return;
+    }
+    if (currentAmount.length > 14) {
+      return;
+    }
     setCurrentAmount(currentAmount + digit);
+  };
+
+  const handelPercentageChange = (digit: string) => {
+    let newPercentage = currentAmount + digit;
+    if (newPercentage === "99.") {
+      return;
+    }
+    if (digit === "0" && currentAmount === "0") {
+      return;
+    }
+    if (digit === "." && currentAmount.includes(".")) {
+      return;
+    }
+    if (currentAmount.match(/(\.[0-9]{2,}$|\..*\.)/)) {
+      return;
+    }
+    if (parseFloat(newPercentage) > 99) {
+      return;
+    }
+    if (newPercentage.length > 6) {
+      return;
+    }
+    setCurrentAmount(currentAmount + digit);
+  };
+
+  const handleChange = (digit: string) => {
+    if (unit === "PERCENTAGE") {
+      handelPercentageChange(digit);
+    } else {
+      handelAmountChange(digit);
+    }
   };
 
   const handleBackspace = () => {

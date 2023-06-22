@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   gap: 1em;
-  max-width: 20em;
+  max-width: 30em;
 }
 
 .currency_drop_down_option {
@@ -23,17 +23,16 @@
 }
 
 .account_type {
+  width: 100%;
   display: flex;
   gap: 1em;
   padding: 10px;
   border-radius: 1em;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
-    rgb(209, 213, 219) 0px 0px 0px 1px inset;
 }
 
 .account_type_button {
   border-radius: 0.5em;
-  border-width: 0.13em;
+  border-width: 0.124em;
   border-color: #fe7434;
   text-align: center;
   text-decoration: none;
@@ -47,9 +46,17 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
+.percentage_amount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2em;
+}
+
 .account_type_button_selected {
   border-radius: 0.5em;
-  border-width: 0.13em;
+  border-width: 0.124em;
   border-color: #fe7434;
   text-align: center;
   text-decoration: none;
@@ -64,4 +71,12 @@
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
     linear-gradient(45deg, #ffbe0b 0%, #fb5607 100%);
   color: rgb(255, 255, 255);
+}
+
+.alert_box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
 }

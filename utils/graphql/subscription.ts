@@ -34,3 +34,30 @@ export const REAL_TIME_WS = gql`
     }
   }
 `;
+
+
+export  const QUERY_PRICE = gql`
+  subscription price(
+    $amount: SatAmount!
+    $amountCurrencyUnit: ExchangeCurrencyUnit!
+    $priceCurrencyUnit: ExchangeCurrencyUnit!
+  ) {
+    price(
+      input: {
+        amount: $amount
+        amountCurrencyUnit: $amountCurrencyUnit
+        priceCurrencyUnit: $priceCurrencyUnit
+      }
+    ) {
+      errors {
+        message
+      }
+      price {
+        base
+        offset
+        currencyUnit
+        formattedAmount
+      }
+    }
+  }
+`;
