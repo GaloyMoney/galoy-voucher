@@ -130,7 +130,7 @@ export default function CreatePage() {
 
 // 50%
 // $ 25.00
-// ≈ 83,103 sats
+// ≈ 83,002 sats
   const handelSubmit = async () => {
     setConfirmModal(false);
     try {
@@ -149,7 +149,7 @@ export default function CreatePage() {
           Number(satsToUsd(Number(satsAfterCommission)).toFixed(2)) * 100
         ).toFixed();
       }
-
+      console.log("amount", amount);
       const result = await handleCreateInvoice(Number(amount), auto_memo);
       if (result?.error?.length != 0 && result.error) {
         const errorMessage = result?.error
@@ -172,15 +172,15 @@ export default function CreatePage() {
               user_id: "aaaaaaaa-e098-4a16-932b-e4f4abc24366",
               payment_request: paymentRequest,
               payment_secret: paymentSecret,
-              amount: unit === "BTC" ? satoshis : Number(amount),
-              account_type: unit,
+              amount: accountType === "BTC" ? satoshis : Number(amount),
+              account_type: accountType,
               escrow_wallet:
-                unit === "BTC"
+                accountType === "BTC"
                   ? `${NEXT_PUBLIC_ESCROW_WALLET_BTC}`
                   : `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
               title: auto_memo,
-              min_withdrawable: unit === "BTC" ? satoshis : Number(amount),
-              max_withdrawable: unit === "BTC" ? satoshis : Number(amount),
+              min_withdrawable: accountType === "BTC" ? satoshis : Number(amount),
+              max_withdrawable: accountType === "BTC" ? satoshis : Number(amount),
               unique_hash: generateRandomHash(),
               k1: generateRandomHash(),
             },
