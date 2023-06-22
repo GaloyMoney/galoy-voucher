@@ -12,6 +12,10 @@ interface Props {
   currency: any;
   usdToSats: any;
   setCurrentPage: any;
+  fiatAfterCommission: any;
+  satsAfterCommission: any;
+  setFiatAfterCommission: any;
+  setSatsAfterCommission: any;
 }
 
 export default function CreatePagePercentage({
@@ -20,16 +24,12 @@ export default function CreatePagePercentage({
   amountSATS,
   amountFIAT,
   currency,
-  usdToSats,
   setCurrentPage,
+  fiatAfterCommission,
+  satsAfterCommission,
+  setFiatAfterCommission,
+  setSatsAfterCommission,
 }: Props) {
-  const [fiatAfterCommission, setFiatAfterCommission] = useState(amountFIAT);
-  const [satsAfterCommission, setSatsAfterCommission] = useState(amountSATS);
-
-  const handelSubmit = () => {
-    
-
-  };
 
   useEffect(() => {
     setFiatAfterCommission(
@@ -72,8 +72,7 @@ export default function CreatePagePercentage({
         setCurrentAmount={setCommissionPercentage}
         unit="PERCENTAGE"
       />
-      <Button onClick={handelSubmit}>Previous</Button>
-      <Button onClick={() => setCurrentPage("AMOUNT")}>Submit</Button>
+      <Button onClick={() => setCurrentPage("AMOUNT")}>Previous</Button>
     </>
   );
 }

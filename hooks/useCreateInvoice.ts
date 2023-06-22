@@ -8,30 +8,26 @@ import {
   NEXT_PUBLIC_ESCROW_WALLET_USD,
 } from "@/config/variables";
 
-export const useCreateInvoice = () => {
-  const [currency, setCurrency] = useState<string>("BTC");
+interface Props {
+  recipientWalletCurrency: string;
+}
+
+export const useCreateInvoice = ({ recipientWalletCurrency }: Props) => {
+  const currency = recipientWalletCurrency;
+
   const [
     createLnInvoice,
-    { loading: lnInvoiceLoading, error: lnInvoiceError, data: lnInvoiceData },
+    { loading: lnBTCInvoiceLoading, error: lnBTCInvoiceError },
   ] = useLnInvoiceCreateOnBehalfOfRecipientMutation();
 
   const [
     createLnUsdInvoice,
-    {
-      loading: lnUsdInvoiceLoading,
-      error: lnUsdInvoiceError,
-      data: lnUsdInvoiceData,
-    },
+    { loading: lnUSDInvoiceLoading, error: lnUSDInvoiceError },
   ] = useLnUsdInvoiceCreateOnBehalfOfRecipientMutation();
 
-  const handleCurrencyChange = (currency: string) => {
-    setCurrency(currency);
-  };
-
   const handleCreateInvoice = async (amount: number, memo: string) => {
-    let result;
     if (currency === "USD") {
-      result = await createLnUsdInvoice({
+      const result = await createLnUsdInvoice({
         variables: {
           input: {
             recipientWalletId: `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
@@ -43,8 +39,13 @@ export const useCreateInvoice = () => {
           endpoint: "MAINNET",
         },
       });
+
+      return {
+        data: result.data?.lnUsdInvoiceCreateOnBehalfOfRecipient.invoice,
+        error: result.data?.lnUsdInvoiceCreateOnBehalfOfRecipient.errors,
+      };
     } else {
-      result = await createLnInvoice({
+      const result = await createLnInvoice({
         variables: {
           input: {
             recipientWalletId: `${NEXT_PUBLIC_ESCROW_WALLET_BTC}`,
@@ -56,19 +57,16 @@ export const useCreateInvoice = () => {
           endpoint: "MAINNET",
         },
       });
+      return {
+        data: result.data?.lnInvoiceCreateOnBehalfOfRecipient.invoice,
+        error: result.data?.lnInvoiceCreateOnBehalfOfRecipient.errors,
+      };
     }
-
-    return result;
   };
 
   return {
-    currency,
-    handleCurrencyChange,
     handleCreateInvoice,
-    lnInvoiceLoading,
-    lnUsdInvoiceLoading,
-    lnInvoiceError,
-    lnUsdInvoiceError,
-    lnInvoiceData: currency === "USD" ? lnUsdInvoiceData : lnInvoiceData,
+    loading: currency === "BTC" ? lnBTCInvoiceLoading : lnUSDInvoiceLoading,
+    error: currency === "BTC" ? lnBTCInvoiceError : lnUSDInvoiceError,
   };
 };
