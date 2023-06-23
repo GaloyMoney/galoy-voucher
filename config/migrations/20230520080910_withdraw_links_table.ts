@@ -21,6 +21,12 @@ export async function up(knex: Knex): Promise<void> {
     table.text("k1"); 
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
+    table
+      .float("commission_percentage")
+      .notNullable()
+      .unsigned()
+      .defaultTo(0)
+      .comment("min = 0 and max = 100");
   });
 }
 
