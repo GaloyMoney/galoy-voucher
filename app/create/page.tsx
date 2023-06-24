@@ -20,6 +20,7 @@ import ModalComponent from "@/components/ModalComponent";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/Create/ConifrmModal/ConfirmModal";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
+import Heading from "@/components/Heading";
 
 const DEFAULT_CURRENCY: any = {
   __typename: "Currency",
@@ -247,7 +248,6 @@ export default function CreatePage() {
                 })
               }
             >
-              
               Ok{" "}
             </Button>
           </ModalComponent>

@@ -15,6 +15,7 @@ import styles from "./OnchainPage.module.css";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import FundsPaid from "@/components/FundsPaid";
 import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
+import Heading from "@/components/Heading";
 
 interface Params {
   params: {
@@ -131,8 +132,7 @@ export default function Page({ params: { id } }: Params) {
         </>
       ) : (
         <>
-          <h1 className={styles.heading}>On chain fund withdraw</h1>
-
+          <Heading>On chain fund withdraw</Heading>
           <ModalComponent
             open={successModal}
             onClose={() => setSuccessModal(false)}

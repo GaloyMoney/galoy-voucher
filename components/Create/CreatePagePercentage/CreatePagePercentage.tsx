@@ -4,6 +4,7 @@ import { formatOperand } from "@/utils/helpers";
 import styles from "../CreateLink.module.css";
 import Button from "@/components/Button/Button";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
+import Heading from "@/components/Heading";
 
 interface Props {
   setCommissionPercentage: any;
@@ -58,6 +59,7 @@ export default function CreatePagePercentage({
 
   return (
     <>
+      <Heading>Please Enter Commission</Heading>
       <div className="text-3xl font-semibold">
         {formatOperand(commissionPercentage)}%
       </div>

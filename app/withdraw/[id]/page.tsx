@@ -9,6 +9,7 @@ import styles from "./withdraw.module.css";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import FundsPaid from "@/components/FundsPaid";
 import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
+import Heading from "@/components/Heading";
 
 interface Params {
   params: {
@@ -43,7 +44,7 @@ export default function Page({ params: { id } }: Params) {
         </>
       ) : (
         <>
-          <h1 className={styles.heading}>Please Withdraw your funds</h1>
+          <Heading>Please Withdraw your funds</Heading>
           <LinkDetails withdrawLink={data.getWithdrawLink}></LinkDetails>
           <Link
             style={{ width: "90%" }}

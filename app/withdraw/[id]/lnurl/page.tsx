@@ -10,6 +10,7 @@ import LinkDetails from "@/components/LinkDetails/LinkDetails";
 import styles from "./LnurlPage.module.css";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import FundsPaid from "@/components/FundsPaid";
+import Heading from "@/components/Heading";
 interface Params {
   params: {
     id: string;
@@ -49,7 +50,7 @@ export default function Page({ params: { id } }: Params) {
         <FundsPaid></FundsPaid>
       ) : (
         <>
-          <div className={styles.heading}>LNURL fund withdraw</div>
+          <Heading>LNURL fund withdraw</Heading>
           <LinkDetails withdrawLink={data.getWithdrawLink}></LinkDetails>
           <div>
             <QRCode size={300} value={url} />

@@ -11,6 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Button from "@/components/Button/Button";
 import ModalComponent from "@/components/ModalComponent";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
+import Heading from "@/components/Heading";
 
 const DEFAULT_CURRENCY: any = {
   __typename: "Currency",
@@ -96,6 +97,7 @@ export default function HomePage({
           </Button>
         </div>
       </ModalComponent>
+      <Heading>Please Enter Amount</Heading>
       <select
         id="currency"
         value={currency.id}
