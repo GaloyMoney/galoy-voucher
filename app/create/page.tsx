@@ -247,7 +247,7 @@ export default function CreatePage() {
                 })
               }
             >
-              {" "}
+              
               Ok{" "}
             </Button>
           </ModalComponent>

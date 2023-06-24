@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { QRCode } from "react-qrcode-logo";
-import LoadingComponent from "@/components/Loading/LoadingComponent";
 import Button from "@/components/Button/Button";
 import {
   Status,
@@ -15,6 +14,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import styles from "./fundPage.module.css";
 import Link from "next/link";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
+import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 
 interface Params {
   params: {
@@ -79,7 +79,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
   }, [paymentStatusData]);
 
   if (loadingWithdrawLink || updatingWithdrawLink) {
-    return <LoadingComponent />;
+    return <PageLoadingComponent />;
   }
 
   if (errorWithdrawLink || paymentStatusDataError) {

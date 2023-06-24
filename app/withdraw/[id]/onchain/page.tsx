@@ -14,6 +14,7 @@ import ModalComponent from "@/components/ModalComponent";
 import styles from "./OnchainPage.module.css";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import FundsPaid from "@/components/FundsPaid";
+import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 
 interface Params {
   params: {
@@ -119,7 +120,7 @@ export default function Page({ params: { id } }: Params) {
   };
 
   if (loadingWithdrawLink) {
-    return <LoadingComponent />;
+    return <PageLoadingComponent />;
   }
   console.log("sendPaymentOnChainLoading", sendPaymentOnChainLoading);
   return (

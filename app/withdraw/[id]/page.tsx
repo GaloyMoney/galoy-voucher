@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import LoadingComponent from "@/components/Loading/LoadingComponent";
 import { useGetWithdrawLinkQuery } from "@/utils/generated/graphql";
 import { NEXT_PUBLIC_LOCAL_URL } from "@/config/variables";
 import Link from "next/link";
@@ -9,6 +8,7 @@ import LinkDetails from "@/components/LinkDetails/LinkDetails";
 import styles from "./withdraw.module.css";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import FundsPaid from "@/components/FundsPaid";
+import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 
 interface Params {
   params: {
@@ -26,7 +26,7 @@ export default function Page({ params: { id } }: Params) {
   });
 
   if (loading) {
-    return <LoadingComponent />;
+    return <PageLoadingComponent />;
   }
   if (error) {
     return <div>Error: {error.message}</div>;

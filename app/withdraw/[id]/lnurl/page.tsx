@@ -9,7 +9,6 @@ import Button from "@/components/Button/Button";
 import LinkDetails from "@/components/LinkDetails/LinkDetails";
 import styles from "./LnurlPage.module.css";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import FundsPaid from "@/components/FundsPaid";
 interface Params {
   params: {
@@ -30,14 +29,12 @@ export default function Page({ params: { id } }: Params) {
     return <PageLoadingComponet />;
   }
   if (error) {
-    //TODO need to add septate component for error section here
     return <div>Error: {error.message}</div>;
   }
   if (!data) {
     return <div>No data</div>;
   }
 
-  //LNURLw URL this will be encoded in LNURL format
   const lnurl = encodeURLToLNURL(
     `${NEXT_PUBLIC_LOCAL_URL}/api/lnurlw/${data.getWithdrawLink?.unique_hash}`
   );
@@ -46,7 +43,6 @@ export default function Page({ params: { id } }: Params) {
     navigator.clipboard.writeText(lnurl);
   };
 
-  //TODO need to add this to septate component
   return (
     <div className="top_page_container">
       {data.getWithdrawLink?.status === "PAID" ? (
