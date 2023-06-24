@@ -1,12 +1,15 @@
 "use client";
 import React from "react";
-import { encodeURLToLNURL } from "@/utils/helpers";
 import LoadingComponent from "@/components/Loading/LoadingComponent";
 import { useGetWithdrawLinkQuery } from "@/utils/generated/graphql";
 import { NEXT_PUBLIC_LOCAL_URL } from "@/config/variables";
 import Link from "next/link";
 import Button from "@/components/Button/Button";
-import Input from "@/components/Input";
+import LinkDetails from "@/components/LinkDetails/LinkDetails";
+import styles from "./withdraw.module.css";
+import InfoComponent from "@/components/InfoComponent/InfoComponent";
+import FundsPaid from "@/components/FundsPaid";
+
 interface Params {
   params: {
     id: string;
@@ -26,36 +29,47 @@ export default function Page({ params: { id } }: Params) {
     return <LoadingComponent />;
   }
   if (error) {
-    //TODO need to add septate component for error section here
     return <div>Error: {error.message}</div>;
   }
   if (!data) {
     return <div>No data</div>;
   }
 
-  //LNURLw URL this will be encoded in LNURL format
-  const lnurl = encodeURLToLNURL(
-    `${NEXT_PUBLIC_LOCAL_URL}/api/lnurlw/${data.getWithdrawLink?.unique_hash}`
-  );
-  const url = `${NEXT_PUBLIC_LOCAL_URL}/withdraw/${id}?lightning=${lnurl}`;
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(lnurl);
-  };
-
-  //TODO need to add this to septate component
   return (
-    <div className="flex flex-col gap-3 items-center justify-center h-screen">
-      <Link href={`${NEXT_PUBLIC_LOCAL_URL}/withdraw/${id}/lnurl`}>
-        <Button>
-          <span>LNURLw Link</span>{" "}
-        </Button>
-      </Link>
+    <div className="create_page_container">
+      {data.getWithdrawLink?.status === "PAID" ? (
+        <>
+          <FundsPaid></FundsPaid>
+        </>
+      ) : (
+        <>
+          <h1 className={styles.heading}>Please Withdraw your funds</h1>
+          <LinkDetails withdrawLink={data.getWithdrawLink}></LinkDetails>
+          <Link
+            style={{ width: "90%" }}
+            href={`${NEXT_PUBLIC_LOCAL_URL}/withdraw/${id}/lnurl`}
+          >
+            <Button>
+              <span>LNURLw Link</span>{" "}
+            </Button>
+          </Link>
 
-      <Link href={`${NEXT_PUBLIC_LOCAL_URL}/withdraw/${id}/onchain`}>
-        <Button>
-          <span>On Chain</span>{" "}
-        </Button>
-      </Link>
+          <Link
+            style={{ width: "90%" }}
+            href={`${NEXT_PUBLIC_LOCAL_URL}/withdraw/${id}/onchain`}
+          >
+            <Button>
+              <span>On Chain</span>{" "}
+            </Button>
+          </Link>
+
+          <InfoComponent>
+            You can withdraw funds from supported LNURL wallets or through
+            on-chain transactions. However, please note that on-chain
+            transactions will incur transaction fees.
+          </InfoComponent>
+        </>
+      )}
     </div>
   );
 }

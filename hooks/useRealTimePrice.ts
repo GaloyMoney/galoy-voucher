@@ -1,116 +1,63 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 import {
   useRealtimePriceInitialQuery,
   useRealtimePriceWsSubscription,
 } from "@/utils/generated/graphql";
 import { useDisplayCurrency } from "./useDisplayCurrency";
 
-const useRealtimePrice = (
-  currency: string,
-  onSubscriptionDataCallback?: (subscriptionData: any) => void
-) => {
-  const priceRef = React.useRef<number>(0);
-  const { formatCurrency } = useDisplayCurrency();
-  const hasLoaded = React.useRef<boolean>(false);
+interface Currency {
+  __typename: string;
+  id: string;
+  symbol: string;
+  name: string;
+  flag: string;
+  fractionDigits: number;
+}
 
-  const { data } = useRealtimePriceWsSubscription({
-    variables: { currency },
-    onSubscriptionData({ subscriptionData }) {
-      if (onSubscriptionDataCallback)
-        onSubscriptionDataCallback(subscriptionData);
-    },
-    context: {
-      endpoint: "MAINNET",
-    },
-  }); 
+export default function useRealTimePrice(currencyId: string) {
+  const [priceData, setPriceData] = useState(null);
 
-  const { data: initialData } = useRealtimePriceInitialQuery({
-    variables: { currency },
-    onCompleted(initData) {
-      if (initData?.realtimePrice?.btcSatPrice) {
-        const { base, offset } = initData.realtimePrice.btcSatPrice;
-        priceRef.current = base / 10 ** offset;
-      }
-    },
+  const {
+    data: initialData,
+    loading,
+    refetch,
+  } = useRealtimePriceInitialQuery({
+    variables: { currency: currencyId },
     context: {
       endpoint: "MAINNET",
     },
   });
 
-  React.useEffect(() => {
-    if ((data || initialData) && !hasLoaded.current) {
-      hasLoaded.current = true;
+  const { data: wsData, loading: wsLoading } = useRealtimePriceWsSubscription({
+    variables: { currency: currencyId },
+    context: {
+      endpoint: "MAINNET",
+    },
+  });
+
+  useEffect(() => {
+    if (initialData?.realtimePrice?.btcSatPrice) {
+      setPriceData(initialData?.realtimePrice?.btcSatPrice);
     }
-  }, [data, initialData]);
+  }, [initialData]);
 
-  const conversions = React.useMemo(
-    () => ({
-      satsToCurrency: (
-        sats: number,
-        display: string,
-        fractionDigits: number
-      ) => {
-        const convertedCurrencyAmount =
-          fractionDigits === 2
-            ? (sats * priceRef.current) / 100
-            : sats * priceRef.current;
-        const formattedCurrency = formatCurrency({
-          amountInMajorUnits: convertedCurrencyAmount,
-          currency: display,
-          withSign: true,
-        });
-        return {
-          convertedCurrencyAmount,
-          formattedCurrency,
-        };
-      },
-      currencyToSats: (
-        currency: number,
-        display: string,
-        fractionDigits: number
-      ) => {
-        const convertedCurrencyAmount =
-          fractionDigits === 2
-            ? (100 * currency) / priceRef.current
-            : currency / priceRef.current;
-        const formattedCurrency = formatCurrency({
-          amountInMajorUnits: convertedCurrencyAmount,
-          currency: display,
-          withSign: true,
-        });
-        return {
-          convertedCurrencyAmount,
-          formattedCurrency,
-        };
-      },
-      hasLoaded: hasLoaded,
-    }),
-    [priceRef, formatCurrency]
-  );
+  useEffect(() => {
+    refetch();
+  }, [wsData]);
 
-  if (data?.realtimePrice?.realtimePrice?.btcSatPrice) {
-    const { base, offset } = data.realtimePrice.realtimePrice.btcSatPrice;
-    priceRef.current = base / 10 ** offset;
-  }
+  const satsToFiat = (sats: number) => {
+    if (!priceData) return null;
+    const { base, offset } = priceData;
+    const priceRef = base / 10 ** offset;
+    return (sats * priceRef).toFixed(2);
+  };
 
-  if (priceRef.current === 0) {
-    return {
-      satsToCurrency: () => {
-        return {
-          convertedCurrencyAmount: NaN,
-          formattedCurrency: "0",
-        };
-      },
-      currencyToSats: () => {
-        return {
-          convertedCurrencyAmount: NaN,
-          formattedCurrency: "0",
-        };
-      },
-      hasLoaded: hasLoaded,
-    };
-  }
+  const fiatToSats = (fiat: number) => {
+    if (!priceData) return null;
+    const { base, offset } = priceData;
+    const priceRef = base / 10 ** offset;
+    return (fiat / priceRef).toFixed();
+  };
 
-  return conversions;
-};
-export default useRealtimePrice;
+  return { priceData, satsToFiat, fiatToSats };
+}

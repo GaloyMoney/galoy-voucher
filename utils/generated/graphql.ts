@@ -260,6 +260,7 @@ export type Country = {
 export type CreateWithdrawLinkInput = {
   account_type: Scalars['String']['input'];
   amount: Scalars['Float']['input'];
+  commission_percentage?: InputMaybe<Scalars['Float']['input']>;
   escrow_wallet: Scalars['String']['input'];
   k1?: InputMaybe<Scalars['String']['input']>;
   max_withdrawable: Scalars['Float']['input'];
@@ -1342,6 +1343,7 @@ export enum TxStatus {
 export type UpdateWithdrawLinkInput = {
   account_type?: InputMaybe<Scalars['String']['input']>;
   amount?: InputMaybe<Scalars['Float']['input']>;
+  commission_percentage?: InputMaybe<Scalars['Float']['input']>;
   escrow_wallet?: InputMaybe<Scalars['String']['input']>;
   k1?: InputMaybe<Scalars['String']['input']>;
   max_withdrawable?: InputMaybe<Scalars['Float']['input']>;
@@ -1573,6 +1575,7 @@ export type WithdrawLink = {
   __typename?: 'WithdrawLink';
   account_type: Scalars['String']['output'];
   amount: Scalars['Float']['output'];
+  commission_percentage?: Maybe<Scalars['Float']['output']>;
   created_at: Scalars['String']['output'];
   escrow_wallet: Scalars['String']['output'];
   id: Scalars['ID']['output'];
@@ -1600,7 +1603,7 @@ export type CreateWithdrawLinkMutationVariables = Exact<{
 }>;
 
 
-export type CreateWithdrawLinkMutation = { __typename?: 'Mutation', createWithdrawLink: { __typename?: 'WithdrawLink', id: string, user_id: string, payment_request: string, payment_hash: string, payment_secret: string, amount: number, account_type: string, escrow_wallet: string, status: Status, title: string, min_withdrawable: number, max_withdrawable: number, unique_hash: string, k1?: string | null, created_at: string, updated_at: string } };
+export type CreateWithdrawLinkMutation = { __typename?: 'Mutation', createWithdrawLink: { __typename?: 'WithdrawLink', id: string, user_id: string, payment_request: string, payment_hash: string, payment_secret: string, amount: number, account_type: string, escrow_wallet: string, status: Status, title: string, min_withdrawable: number, max_withdrawable: number, unique_hash: string, k1?: string | null, created_at: string, updated_at: string, commission_percentage?: number | null } };
 
 export type UpdateWithdrawLinkMutationVariables = Exact<{
   updateWithdrawLinkId: Scalars['ID']['input'];
@@ -1608,7 +1611,7 @@ export type UpdateWithdrawLinkMutationVariables = Exact<{
 }>;
 
 
-export type UpdateWithdrawLinkMutation = { __typename?: 'Mutation', updateWithdrawLink: { __typename?: 'WithdrawLink', account_type: string, amount: number, created_at: string, escrow_wallet: string, id: string, k1?: string | null, max_withdrawable: number, min_withdrawable: number, payment_hash: string, payment_request: string, payment_secret: string, status: Status, title: string, unique_hash: string, user_id: string, updated_at: string } };
+export type UpdateWithdrawLinkMutation = { __typename?: 'Mutation', updateWithdrawLink: { __typename?: 'WithdrawLink', account_type: string, amount: number, created_at: string, escrow_wallet: string, id: string, k1?: string | null, max_withdrawable: number, min_withdrawable: number, payment_hash: string, payment_request: string, payment_secret: string, status: Status, title: string, unique_hash: string, user_id: string, updated_at: string, commission_percentage?: number | null } };
 
 export type LnInvoiceCreateOnBehalfOfRecipientMutationVariables = Exact<{
   input: LnInvoiceCreateOnBehalfOfRecipientInput;
@@ -1637,7 +1640,7 @@ export type GetWithdrawLinkQueryVariables = Exact<{
 }>;
 
 
-export type GetWithdrawLinkQuery = { __typename?: 'Query', getWithdrawLink?: { __typename?: 'WithdrawLink', id: string, user_id: string, payment_request: string, payment_hash: string, payment_secret: string, amount: number, account_type: string, escrow_wallet: string, status: Status, title: string, min_withdrawable: number, max_withdrawable: number, unique_hash: string, k1?: string | null, created_at: string, updated_at: string } | null };
+export type GetWithdrawLinkQuery = { __typename?: 'Query', getWithdrawLink?: { __typename?: 'WithdrawLink', id: string, user_id: string, payment_request: string, payment_hash: string, payment_secret: string, amount: number, account_type: string, escrow_wallet: string, status: Status, title: string, min_withdrawable: number, max_withdrawable: number, unique_hash: string, k1?: string | null, created_at: string, updated_at: string, commission_percentage?: number | null } | null };
 
 export type GetWithdrawLinksByUserIdQueryVariables = Exact<{
   user_id: Scalars['ID']['input'];
@@ -1645,7 +1648,7 @@ export type GetWithdrawLinksByUserIdQueryVariables = Exact<{
 }>;
 
 
-export type GetWithdrawLinksByUserIdQuery = { __typename?: 'Query', getWithdrawLinksByUserId: Array<{ __typename?: 'WithdrawLink', title: string, account_type: string, min_withdrawable: number, amount: number, created_at: string, id: string, payment_hash: string, status: Status, updated_at: string, payment_request: string, user_id: string, max_withdrawable: number, unique_hash: string, k1?: string | null, payment_secret: string, escrow_wallet: string }> };
+export type GetWithdrawLinksByUserIdQuery = { __typename?: 'Query', getWithdrawLinksByUserId: Array<{ __typename?: 'WithdrawLink', title: string, account_type: string, min_withdrawable: number, amount: number, created_at: string, id: string, payment_hash: string, status: Status, updated_at: string, payment_request: string, user_id: string, max_withdrawable: number, unique_hash: string, k1?: string | null, payment_secret: string, escrow_wallet: string, commission_percentage?: number | null }> };
 
 export type CurrencyListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1710,6 +1713,7 @@ export const CreateWithdrawLinkDocument = gql`
     k1
     created_at
     updated_at
+    commission_percentage
   }
 }
     `;
@@ -1758,6 +1762,7 @@ export const UpdateWithdrawLinkDocument = gql`
     unique_hash
     user_id
     updated_at
+    commission_percentage
   }
 }
     `;
@@ -1931,6 +1936,7 @@ export const GetWithdrawLinkDocument = gql`
     k1
     created_at
     updated_at
+    commission_percentage
   }
 }
     `;
@@ -1981,6 +1987,7 @@ export const GetWithdrawLinksByUserIdDocument = gql`
     k1
     payment_secret
     escrow_wallet
+    commission_percentage
   }
 }
     `;

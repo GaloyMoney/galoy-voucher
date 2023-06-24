@@ -6,7 +6,7 @@ import { formatOperand } from "@/utils/helpers";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 import styles from "../CreateLink.module.css";
 import LoadingComponent from "@/components/Loading/LoadingComponent";
-import PageLoadingComponent from "@/components/Loading/PageLoadingComponet";
+import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 import Tooltip from "@mui/material/Tooltip";
 import Button from "@/components/Button/Button";
 import ModalComponent from "@/components/ModalComponent";

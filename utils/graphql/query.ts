@@ -19,6 +19,7 @@ export const GET_WITHDRAW_LINK = gql`
       k1
       created_at
       updated_at
+      commission_percentage
     }
   }
 `;
@@ -42,6 +43,7 @@ export const GET_WITHDRAW_LINKS_BY_USER_ID = gql`
       k1
       payment_secret
       escrow_wallet
+      commission_percentage
     }
   }
 `;

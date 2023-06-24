@@ -17,6 +17,7 @@ type WithdrawLink {
   k1: String
   created_at: String!
   updated_at: String!
+  commission_percentage: Float
 }
 
 type FeesResult {
@@ -62,6 +63,7 @@ input CreateWithdrawLinkInput {
   max_withdrawable: Float!
   unique_hash: String!
   k1: String
+  commission_percentage: Float
 }
 
 input UpdateWithdrawLinkInput {
@@ -78,6 +80,7 @@ input UpdateWithdrawLinkInput {
   max_withdrawable: Float
   unique_hash: String
   k1: String
+  commission_percentage: Float
 }
 `;
 

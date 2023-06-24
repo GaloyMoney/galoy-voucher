@@ -10,7 +10,7 @@ import {
 } from "@/utils/generated/graphql";
 import useSatsPrice from "@/hooks/useSatsPrice";
 import { useCreateInvoice } from "@/hooks/useCreateInvoice";
-import PageLoadingComponent from "@/components/Loading/PageLoadingComponet";
+import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 import {
   NEXT_PUBLIC_ESCROW_WALLET_BTC,
   NEXT_PUBLIC_ESCROW_WALLET_USD,
@@ -128,9 +128,6 @@ export default function CreatePage() {
     }
   };
 
-// 50%
-// $ 25.00
-// ≈ 83,002 sats
   const handelSubmit = async () => {
     setConfirmModal(false);
     try {
@@ -179,10 +176,13 @@ export default function CreatePage() {
                   ? `${NEXT_PUBLIC_ESCROW_WALLET_BTC}`
                   : `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
               title: auto_memo,
-              min_withdrawable: accountType === "BTC" ? satoshis : Number(amount),
-              max_withdrawable: accountType === "BTC" ? satoshis : Number(amount),
+              min_withdrawable:
+                accountType === "BTC" ? satoshis : Number(amount),
+              max_withdrawable:
+                accountType === "BTC" ? satoshis : Number(amount),
               unique_hash: generateRandomHash(),
               k1: generateRandomHash(),
+              commission_percentage: Number(commissionPercentage),
             },
           },
         });

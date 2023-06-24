@@ -19,6 +19,7 @@ export const CREATE_WITHDRAW_LINK = gql`
       k1
       created_at
       updated_at
+      commission_percentage
     }
   }
 `;
@@ -48,6 +49,7 @@ export const UPDATE_WITHDRAW_LINK = gql`
       unique_hash
       user_id
       updated_at
+      commission_percentage
     }
   }
 `;
