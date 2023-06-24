@@ -36,7 +36,7 @@ export default function Page({ params: { id } }: Params) {
   }
 
   return (
-    <div className="create_page_container">
+    <div className="top_page_container">
       {data.getWithdrawLink?.status === "PAID" ? (
         <>
           <FundsPaid></FundsPaid>

@@ -111,7 +111,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
           </Link>
         </div>
       </ModalComponent>
-      <div className="create_page_container">
+      <div className="top_page_container">
         <div className={styles.heading}>
           {withdrawLink?.status === "UNFUNDED" ? (
             <h1>
@@ -143,7 +143,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
             }}
             href={`/withdraw/${withdrawLink?.id}/lnurl`}
           >
-            <Button>Next </Button>
+            <Button >Next </Button>
           </Link>
         )}
 

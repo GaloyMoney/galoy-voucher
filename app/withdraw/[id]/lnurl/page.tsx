@@ -48,7 +48,7 @@ export default function Page({ params: { id } }: Params) {
 
   //TODO need to add this to septate component
   return (
-    <div className="create_page_container">
+    <div className="top_page_container">
       {data.getWithdrawLink?.status === "PAID" ? (
         <FundsPaid></FundsPaid>
       ) : (

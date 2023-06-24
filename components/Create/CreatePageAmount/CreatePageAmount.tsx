@@ -10,6 +10,7 @@ import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 import Tooltip from "@mui/material/Tooltip";
 import Button from "@/components/Button/Button";
 import ModalComponent from "@/components/ModalComponent";
+import InfoComponent from "@/components/InfoComponent/InfoComponent";
 
 const DEFAULT_CURRENCY: any = {
   __typename: "Currency",
@@ -175,7 +176,19 @@ export default function HomePage({
           </button>
         </Tooltip>
       </div>
-      <Button onClick={handelPageChange}>Next</Button>
+      <Button
+        style={{
+          width: "90%",
+        }}
+        onClick={handelPageChange}
+      >
+        Next
+      </Button>
+      <InfoComponent>
+        Regular sats refer to BTC sats, which can fluctuate in value over time,
+        either increasing or decreasing. On the other hand, stable sats are USD
+        sats that maintain a fixed value and do not change their values.
+      </InfoComponent>
     </>
   );
 }

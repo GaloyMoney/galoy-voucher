@@ -7,7 +7,7 @@ import Button from "@/components/Button/Button";
 //TODO home page or welcome screen needed to be created gere
 export default function Home() {
   return (
-    <div className="flex flex-col mt-36 items-center">
+    <div className="flex flex-col mt-36 items-center text-center">
       <h1 className="text-7xl font-bold">Galoy Withdraw</h1>
       <p className="mt-1 text-6xl">Start creating withdraw links</p>
       <div className="flex flex-col mt-8 space-y-4">

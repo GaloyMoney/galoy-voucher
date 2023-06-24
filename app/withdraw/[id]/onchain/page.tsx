@@ -123,7 +123,7 @@ export default function Page({ params: { id } }: Params) {
   }
   console.log("sendPaymentOnChainLoading", sendPaymentOnChainLoading);
   return (
-    <div className="create_page_container">
+    <div className="top_page_container">
       {withdrawLink?.status === "PAID" ? (
         <>
           <FundsPaid></FundsPaid>

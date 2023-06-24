@@ -31,7 +31,7 @@ body {
   background-color: rgb(255, 255, 255);
 }
 
-.create_page_container {
+.top_page_container {
   margin: 0 auto;
   margin-top: 5em;
   display: flex;

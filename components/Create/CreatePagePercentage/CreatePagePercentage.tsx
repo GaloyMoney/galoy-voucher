@@ -3,6 +3,7 @@ import Numpad from "@/components/NumPad/NumPad";
 import { formatOperand } from "@/utils/helpers";
 import styles from "../CreateLink.module.css";
 import Button from "@/components/Button/Button";
+import InfoComponent from "@/components/InfoComponent/InfoComponent";
 
 interface Props {
   setCommissionPercentage: any;
@@ -30,7 +31,6 @@ export default function CreatePagePercentage({
   setFiatAfterCommission,
   setSatsAfterCommission,
 }: Props) {
-
   useEffect(() => {
     setFiatAfterCommission(
       currency.fractionDigits === 0
@@ -72,7 +72,10 @@ export default function CreatePagePercentage({
         setCurrentAmount={setCommissionPercentage}
         unit="PERCENTAGE"
       />
-      <Button onClick={() => setCurrentPage("AMOUNT")}>Previous</Button>
+
+      <Button style={{ width: "90%" }} onClick={() => setCurrentPage("AMOUNT")}>
+        Previous
+      </Button>
     </>
   );
 }

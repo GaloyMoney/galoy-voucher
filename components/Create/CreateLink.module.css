@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   gap: 1em;
-  max-width: 30em;
+  max-width: 90%;
 }
 
 .currency_drop_down_option {
@@ -15,7 +15,7 @@
 }
 
 .currency_drop_down {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   border-radius: 0.5em;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
@@ -23,7 +23,7 @@
 }
 
 .account_type {
-  width: 100%;
+  width: 90%;
   display: flex;
   gap: 1em;
   padding: 10px;

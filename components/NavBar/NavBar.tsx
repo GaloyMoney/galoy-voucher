@@ -50,10 +50,12 @@ const Navbar: React.FC<NavigationProps> = ({ nav_items }) => {
           ))}
         </nav>
         <div className={styles.right_section}>
-          <button className={styles.add_new_button}>
-            <AddIcon />
-            New Link
-          </button>
+          <Link href={`/create`}>
+            <button className={styles.add_new_button}>
+              <AddIcon />
+              New Link
+            </button>
+          </Link>
           {login ? (
             <div>
               <div className={styles.dropdown}>
@@ -86,6 +88,15 @@ const Navbar: React.FC<NavigationProps> = ({ nav_items }) => {
       </header>
       {mobileMenuOpen ? (
         <div ref={mobileMenuRef} className={styles.responsive_nav}>
+          <Link
+            key="Create Link"
+            className={styles.nav_item}
+            onClick={showNavbar}
+            href={`/create`}
+          >
+            {"Create Link"}
+          </Link>
+
           {defaultLinks.map((link) => (
             <Link
               key={link.name}
@@ -96,6 +107,7 @@ const Navbar: React.FC<NavigationProps> = ({ nav_items }) => {
               {link.name}
             </Link>
           ))}
+
           {login ? (
             <div>
               {navLinks.map((link) => (

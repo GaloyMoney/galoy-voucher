@@ -19,6 +19,7 @@ import { generateRandomHash } from "@/utils/helpers";
 import ModalComponent from "@/components/ModalComponent";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/Create/ConifrmModal/ConfirmModal";
+import InfoComponent from "@/components/InfoComponent/InfoComponent";
 
 const DEFAULT_CURRENCY: any = {
   __typename: "Currency",
@@ -206,7 +207,7 @@ export default function CreatePage() {
 
   if (currentPage === "AMOUNT") {
     return (
-      <div className="create_page_container">
+      <div className="top_page_container">
         <CreatePageAmount
           amountSATS={amountSATS}
           amountFIAT={amountFIAT}
@@ -227,39 +228,39 @@ export default function CreatePage() {
   } else {
     return (
       <>
-        <ModalComponent
-          open={alert.modal}
-          onClose={() =>
-            setAlert({
-              message: "",
-              modal: false,
-            })
-          }
-        >
-          {alert.message}
-          <Button
-            onClick={() =>
+        <div className="top_page_container">
+          <ModalComponent
+            open={alert.modal}
+            onClose={() =>
               setAlert({
                 message: "",
                 modal: false,
               })
             }
           >
-            {" "}
-            Ok{" "}
-          </Button>
-        </ModalComponent>
-        <ConfirmModal
-          open={confirmModal}
-          onClose={() => setConfirmModal(false)}
-          handleSubmit={handelSubmit}
-          fiatAfterCommission={fiatAfterCommission}
-          satsAfterCommission={satsAfterCommission}
-          currency={currency}
-          accountType={accountType}
-          commissionPercentage={commissionPercentage}
-        />
-        <div className="create_page_container">
+            {alert.message}
+            <Button
+              onClick={() =>
+                setAlert({
+                  message: "",
+                  modal: false,
+                })
+              }
+            >
+              {" "}
+              Ok{" "}
+            </Button>
+          </ModalComponent>
+          <ConfirmModal
+            open={confirmModal}
+            onClose={() => setConfirmModal(false)}
+            handleSubmit={handelSubmit}
+            fiatAfterCommission={fiatAfterCommission}
+            satsAfterCommission={satsAfterCommission}
+            currency={currency}
+            accountType={accountType}
+            commissionPercentage={commissionPercentage}
+          />
           <CreatePagePercentage
             commissionPercentage={commissionPercentage}
             setCommissionPercentage={setCommissionPercentage}
@@ -273,7 +274,13 @@ export default function CreatePage() {
             setFiatAfterCommission={setFiatAfterCommission}
             setSatsAfterCommission={setSatsAfterCommission}
           />
-          <Button onClick={handelConfirmModal}>Submit</Button>
+          <Button style={{ width: "90%" }} onClick={handelConfirmModal}>
+            Submit
+          </Button>
+          <InfoComponent>
+            Please enter the commission percentage that will be deducted from
+            the original Link amount. The maximum commission is 99 percent.
+          </InfoComponent>
         </div>
       </>
     );
