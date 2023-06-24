@@ -8,6 +8,12 @@ import {
 import LoadingComponent from "@/components/Loading/LoadingComponent";
 import Button from "@/components/Button/Button";
 import Input from "@/components/Input";
+import InfoComponent from "@/components/InfoComponent/InfoComponent";
+import LinkDetails from "@/components/LinkDetails/LinkDetails";
+import ModalComponent from "@/components/ModalComponent";
+import styles from "./OnchainPage.module.css";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import FundsPaid from "@/components/FundsPaid";
 
 interface Params {
   params: {
@@ -18,9 +24,13 @@ interface Params {
 export default function Page({ params: { id } }: Params) {
   const [btcWalletAddress, setBtcWalletAddress] = useState("");
   const [fetchingFees, setFetchingFees] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const [fees, setFees] = useState(0);
+  const [confirmModal, setConfirmModal] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
+  const [errorModal, setErrorModal] = useState({
+    message: "",
+    open: false,
+  });
 
   const [
     sendPaymentOnChain,
@@ -43,7 +53,7 @@ export default function Page({ params: { id } }: Params) {
     context: {
       endpoint: "SELF",
     },
-    skip: !fetchingFees, // Skip the initial fetch until fetchingFees is set to true
+    skip: !fetchingFees,
   });
 
   useEffect(() => {
@@ -52,151 +62,195 @@ export default function Page({ params: { id } }: Params) {
     }
   }, [fetchingFees]);
 
-  const handleOpen = () => {
-    setIsOpen(true);
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-
   const handleConfirm = async () => {
-    const response = await sendPaymentOnChain({
-      variables: {
-        sendPaymentOnChainId: id,
-        btcWalletAddress,
-      },
-    });
+    try {
+      const response = await sendPaymentOnChain({
+        variables: {
+          sendPaymentOnChainId: id,
+          btcWalletAddress,
+        },
+      });
 
-    if (response.data?.sendPaymentOnChain.status === "SUCCESS") {
-      setSuccessModal(true);
+      if (response.data?.sendPaymentOnChain.status === "SUCCESS") {
+        setSuccessModal(true);
+      } else if (response.errors) {
+        throw new Error(response.errors[0].message);
+      }
+    } catch (error) {
+      setConfirmModal(false);
+      if (error instanceof Error) {
+        setErrorModal({
+          message: error.message,
+          open: true,
+        });
+      } else {
+        setErrorModal({
+          message: "Internal Error please Try later",
+          open: true,
+        });
+      }
     }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBtcWalletAddress(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    setFetchingFees(true);
-    handleOpen();
   };
 
   useEffect(() => {
     if (data) {
-      setFees(data.getOnChainPaymentFees.fees);
+      console.log("data", data);
+      if (data.getOnChainPaymentFees.fees) {
+        setFees(data.getOnChainPaymentFees.fees);
+        setConfirmModal(true);
+      }
+    } else if (error) {
+      setErrorModal({
+        message: error.message,
+        open: true,
+      });
     }
   }, [data]);
+
+  const handelGetFees = () => {
+    if (btcWalletAddress) {
+      setFetchingFees(true);
+    } else {
+      setErrorModal({
+        message: "Please enter a valid BTC wallet address",
+        open: true,
+      });
+    }
+  };
 
   if (loadingWithdrawLink) {
     return <LoadingComponent />;
   }
-
+  console.log("sendPaymentOnChainLoading", sendPaymentOnChainLoading);
   return (
-    <div className="flex flex-col mt-36 items-center h-screen">
-      <div className="flex flex-col gap-6">
-        <Input
-          type="text"
-          value={btcWalletAddress}
-          onChange={handleInputChange}
-          placeholder="Enter BTC Wallet Address"
-          className="border border-stone-700 rounded-md px-4 py-2 bg-neutral-900 w-full"
-        />
-        <Button
-          className="bg-zinc-700 text-white px-4 py-2 border rounded-md bg-zinc-900 hover:bg-zinc-600"
-          onClick={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? "Loading..." : "Get Fees"}
-        </Button>
-      </div>
+    <div className="create_page_container">
+      {withdrawLink?.status === "PAID" ? (
+        <>
+          <FundsPaid></FundsPaid>
+        </>
+      ) : (
+        <>
+          <h1 className={styles.heading}>On chain fund withdraw</h1>
 
-      {isOpen && (
-        <div className="fixed z-10 inset-0 overflow-y-auto">
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity">
-              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
-            <div className="inline-block align-bottom bg-zinc-900 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              {loading || sendPaymentOnChainLoading ? (
-                <div className="bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                  please wait..
-                </div>
-              ) : successModal ? (
-                <div className="bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                  <p className="text-green-500">
-                    Success! Withdrawal confirmed.
-                  </p>
-                  <Button
-                    type="button"
-                    onClick={handleClose}
-                    disabled={sendPaymentOnChainLoading}
-                  >
-                    Close
-                  </Button>
-                </div>
-              ) : error || sendPaymentOnChainError ? (
-                <div>
-                  <div className="bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    {"ERROR"}
-                  </div>
-                  <Button
-                    type="button"
-                    onClick={handleClose}
-                    disabled={sendPaymentOnChainLoading}
-                  >
-                    Close
-                  </Button>
-                </div>
-              ) : data ? (
-                <div>
-                  <div className="bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div className="sm:flex sm:items-start">
-                      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                        <h3 className="text-lg leading-6 font-medium">
-                          Confirm withdraw
-                        </h3>
-                        <div className="mt-2">
-                          <p className="text-sm">
-                            {isNaN(withdrawLink?.amount as number) ||
-                            (withdrawLink?.amount as number) <= 0
-                              ? "CANNOT USE ON CHAIN"
-                              : `Confirm the payment with fees: ${fees}`}{" "}
-                            {withdrawLink?.account_type === "BTC"
-                              ? "sats"
-                              : "cents"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-zinc-900 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <Button
-                      type="button"
-                      onClick={handleConfirm}
-                      disabled={sendPaymentOnChainLoading}
-                    >
-                      {sendPaymentOnChainLoading ? "Confirming..." : "Confirm"}
-                    </Button>
-                    <Button
-                      type="button"
-                      onClick={handleClose}
-                      disabled={sendPaymentOnChainLoading}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      )}
+          <ModalComponent
+            open={successModal}
+            onClose={() => setSuccessModal(false)}
+          >
+            <div className={styles.modal_container_success}>
+              <CheckCircleIcon style={{ fontSize: 60, color: "#16ca40" }} />
+              <h1 className={styles.modal_heading}>Successfully Paid</h1>
 
-      {error && <p>Error: {error.message}</p>}
-      {sendPaymentOnChainError && (
-        <p>Error: {sendPaymentOnChainError.message}</p>
+              <Button
+                style={{ width: "9em" }}
+                onClick={() => setSuccessModal(false)}
+              >
+                OK
+              </Button>
+            </div>
+          </ModalComponent>
+
+          <ModalComponent
+            open={confirmModal}
+            onClose={() => setConfirmModal(false)}
+          >
+            <div className={styles.modal_container}>
+              {!sendPaymentOnChainLoading ? (
+                <>
+                  <h1 className={styles.modal_heading}>Confirm Withdraw</h1>
+                  <div>
+                    <h2 className={styles.modal_sub_heading}>Fees</h2>
+                    <p>{fees} sats</p>
+                  </div>
+                  <div>
+                    <h2 className={styles.modal_sub_heading}>
+                      Original amount{" "}
+                    </h2>
+                    <p>{withdrawLink?.max_withdrawable} sats</p>
+                  </div>
+                  <div>
+                    <h2 className={styles.modal_sub_heading}>
+                      Total amount after fees
+                    </h2>
+                    <p>{Number(withdrawLink?.max_withdrawable) - fees} sats </p>
+                  </div>
+                  <div className={styles.modal_button_container}>
+                    <Button
+                      onClick={() => {
+                        setConfirmModal(false);
+                        setFetchingFees(false);
+                      }}
+                    >
+                      {" "}
+                      Cancel{" "}
+                    </Button>
+                    <Button onClick={handleConfirm}> Confirm </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <LoadingComponent />
+                </>
+              )}
+            </div>
+          </ModalComponent>
+
+          <ModalComponent
+            open={errorModal.open}
+            onClose={() =>
+              setErrorModal({
+                message: "",
+                open: false,
+              })
+            }
+          >
+            <div className={styles.modal_container}>
+              <h1 className={styles.modal_heading}>ERROR</h1>
+              <h2 className={styles.modal_description}>{errorModal.message}</h2>
+              <div className={styles.modal_button_container}>
+                <Button
+                  style={{
+                    width: "10em",
+                  }}
+                  onClick={() =>
+                    setErrorModal({
+                      message: "",
+                      open: false,
+                    })
+                  }
+                >
+                  ok
+                </Button>
+              </div>
+            </div>
+          </ModalComponent>
+
+          <LinkDetails withdrawLink={withdrawLink}></LinkDetails>
+          <Input
+            label="BTC Wallet Address"
+            type="text"
+            value={btcWalletAddress}
+            style={{
+              width: "90%",
+            }}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setBtcWalletAddress(e.target.value)
+            }
+          />
+          <Button
+            style={{
+              width: "90%",
+            }}
+            onClick={handelGetFees}
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Get Fees"}
+          </Button>
+          <InfoComponent>
+            Please note that on-chain transactions are slower and come with
+            transaction fees. If your wallet supports LNURL withdrawal, it is
+            recommended to use that option instead
+          </InfoComponent>
+        </>
       )}
     </div>
   );

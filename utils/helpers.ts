@@ -81,3 +81,14 @@ export function timeSince(date: number) {
 
   return Math.floor(seconds) + " seconds ago";
 }
+interface Error {
+  message: string;
+}
+
+export function errorArrayToString(errors: Error[] | undefined): string | null {
+  if (errors) {
+    return errors.map((error) => error.message).join(", ");
+  } else {
+    return null;
+  }
+}

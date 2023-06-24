@@ -14,7 +14,8 @@ import ModalComponent from "@/components/ModalComponent";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import styles from "./fundPage.module.css";
 import Link from "next/link";
-import InfoIcon from "@mui/icons-material/Info";
+import InfoComponent from "@/components/InfoComponent/InfoComponent";
+
 interface Params {
   params: {
     paymenthash: string;
@@ -147,12 +148,11 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
         )}
 
         {withdrawLink?.status === "UNFUNDED" ? (
-          <div className={styles.buttom_info}>
-            <InfoIcon style={{ fontSize: 25, color: "#2f2f2f" }} /> Please note
-            that a Stable sats invoice is only valid for 5 minutes, while a
-            Regular sats invoice is valid for 24 hours from the point of
+          <InfoComponent>
+            Please note that a Stable sats invoice is only valid for 5 minutes,
+            while a Regular sats invoice is valid for 24 hours from the point of
             creation.
-          </div>
+          </InfoComponent>
         ) : null}
       </div>
     </>

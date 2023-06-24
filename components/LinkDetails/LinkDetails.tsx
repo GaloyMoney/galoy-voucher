@@ -26,13 +26,15 @@ export default function LinkDetails({ withdrawLink }: LinkDetailsProps) {
         {withdrawLink?.status === "UNFUNDED"
           ? "Not funded and inactive"
           : withdrawLink?.status === "FUNDED"
-          ? "Already funded and active"
-          : ""}
+          ? "LNURLw Funded and active"
+          : null}
       </div>
-      <div>
+      <div className={styles.amount}>
         {withdrawLink?.account_type === "BTC"
           ? `${withdrawLink?.max_withdrawable} sats`
-          : `${usdToSats(withdrawLink?.max_withdrawable / 100).toFixed()} sats`}
+          : `≈ ${usdToSats(
+              withdrawLink?.max_withdrawable / 100
+            ).toFixed()} sats`}
       </div>
 
       <div>

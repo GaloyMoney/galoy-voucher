@@ -10,7 +10,7 @@ import {
 } from "@/utils/generated/graphql";
 import useSatsPrice from "@/hooks/useSatsPrice";
 import { useCreateInvoice } from "@/hooks/useCreateInvoice";
-import PageLoadingComponent from "@/components/Loading/PageLoadingComponet";
+import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 import {
   NEXT_PUBLIC_ESCROW_WALLET_BTC,
   NEXT_PUBLIC_ESCROW_WALLET_USD,

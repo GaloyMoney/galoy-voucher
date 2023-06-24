@@ -10,3 +10,92 @@ add return types
 
 
 
+
+
+ {isOpen && (
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 transition-opacity">
+              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
+            <div className="inline-block align-bottom bg-zinc-900 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              {loading || sendPaymentOnChainLoading ? (
+                <div className="bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  please wait..
+                </div>
+              ) : successModal ? (
+                <div className="bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <p className="text-green-500">
+                    Success! Withdrawal confirmed.
+                  </p>
+                  <Button
+                    type="button"
+                    onClick={handleClose}
+                    disabled={sendPaymentOnChainLoading}
+                  >
+                    Close
+                  </Button>
+                </div>
+              ) : error || sendPaymentOnChainError ? (
+                <div>
+                  <div className="bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    {"ERROR"}
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={handleClose}
+                    disabled={sendPaymentOnChainLoading}
+                  >
+                    Close
+                  </Button>
+                </div>
+              ) : data ? (
+                <div>
+                  <div className="bg-zinc-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div className="sm:flex sm:items-start">
+                      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <h3 className="text-lg leading-6 font-medium">
+                          Confirm withdraw
+                        </h3>
+                        <div className="mt-2">
+                          <p className="text-sm">
+                            {isNaN(withdrawLink?.amount as number) ||
+                            (withdrawLink?.amount as number) <= 0
+                              ? "CANNOT USE ON CHAIN"
+                              : `Confirm the payment with fees: ${fees}`}{" "}
+                            {withdrawLink?.account_type === "BTC"
+                              ? "sats"
+                              : "cents"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-zinc-900 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <Button
+                      type="button"
+                      onClick={handleConfirm}
+                      disabled={sendPaymentOnChainLoading}
+                    >
+                      {sendPaymentOnChainLoading ? "Confirming..." : "Confirm"}
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={handleClose}
+                      disabled={sendPaymentOnChainLoading}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {error && <p>Error: {error.message}</p>}
+      {sendPaymentOnChainError && (
+        <p>Error: {sendPaymentOnChainError.message}</p>
+      )}

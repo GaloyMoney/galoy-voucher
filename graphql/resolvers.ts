@@ -1,3 +1,4 @@
+import { errorArrayToString } from "@/utils/helpers";
 import {
   getAllWithdrawLinksQuery,
   createWithdrawLinkMutation,
@@ -46,13 +47,16 @@ const resolvers = {
       const { id, btc_wallet_address } = args;
       const data = await getWithdrawLinkByIdQuery(id);
       const { escrow_wallet, account_type, amount } = data;
-
       if (account_type === "BTC") {
         const result = await getOnChainTxFeeBTC(
           escrow_wallet,
           btc_wallet_address,
           amount
         );
+        const errorMessage = errorArrayToString(result.errors);
+        if (errorMessage) {
+          throw new Error(errorMessage);
+        }
         return { fees: result.data.onChainTxFee.amount };
       } else {
         console.log("USD");
@@ -61,6 +65,10 @@ const resolvers = {
           btc_wallet_address,
           amount
         );
+        const errorMessage = errorArrayToString(result.errors);
+        if (errorMessage) {
+          throw new Error(errorMessage);
+        }
         return { fees: result.data.onChainUsdTxFee.amount };
       }
     },
@@ -104,6 +112,10 @@ const resolvers = {
           final_amount,
           title
         );
+        const errorMessage = errorArrayToString(result.errors);
+        if (errorMessage) {
+          throw new Error(errorMessage);
+        }
         return {
           status: result.data.onChainPaymentSend.status,
           amount: final_amount,
@@ -128,6 +140,10 @@ const resolvers = {
           final_amount,
           title
         );
+        const errorMessage = errorArrayToString(result.errors);
+        if (errorMessage) {
+          throw new Error(errorMessage);
+        }
         return {
           status: result.data.onChainUsdPaymentSend.status,
           amount: final_amount,
