@@ -33,7 +33,7 @@
 .account_type_button {
   border-radius: 0.5em;
   border-width: 0.124em;
-  border-color: #fe7434;
+  border-color: var(--orange);;
   text-align: center;
   text-decoration: none;
   font-weight: 500;
@@ -57,7 +57,7 @@
 .account_type_button_selected {
   border-radius: 0.5em;
   border-width: 0.124em;
-  border-color: #fe7434;
+  border-color: var(--orange);
   text-align: center;
   text-decoration: none;
   font-weight: 500;
@@ -68,8 +68,7 @@
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   width: 100%;
   transition: background-color 0.3s, color 0.3s;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
-    linear-gradient(45deg, #ffbe0b 0%, #fb5607 100%);
+  background: var(--gradient-orange);
   color: rgb(255, 255, 255);
 }
 

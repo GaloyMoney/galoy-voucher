@@ -1,7 +1,7 @@
 .Button {
   border-radius: 0.5em;
   border-width: 0.124em;
-  border-color: #fe7434;
+  border-color: var(--orange);
   text-align: center;
   text-decoration: none;
   font-weight: 500;
@@ -15,7 +15,6 @@
 }
 
 .Button:hover {
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
-    linear-gradient(45deg, #ffbe0b 0%, #fb5607 100%);
+  background: var(--gradient-orange);
   color: rgb(255, 255, 255);
 }

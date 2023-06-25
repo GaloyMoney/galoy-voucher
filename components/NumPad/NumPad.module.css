@@ -33,8 +33,8 @@
 }
 
 .clearAll {
-  border-width: 0.13em;
-  border-color: #fe7434;
+  border-width: 0.124em;
+  border-color: var(--orange);;
   width: 10rem;
   text-align: center;
   padding: 0.5em;
@@ -44,7 +44,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
-    linear-gradient(45deg, #ffbe0b 0%, #fb5607 100%);
+  background: var(--gradient-orange);
   color: rgb(255, 255, 255);
 }
