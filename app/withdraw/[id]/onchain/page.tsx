@@ -16,7 +16,6 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import FundsPaid from "@/components/FundsPaid";
 import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 import Heading from "@/components/Heading";
-
 interface Params {
   params: {
     id: string;
@@ -74,7 +73,9 @@ export default function Page({ params: { id } }: Params) {
       });
 
       if (response.data?.sendPaymentOnChain.status === "SUCCESS") {
+        setConfirmModal(false);
         setSuccessModal(true);
+        window.location.href = `/withdraw/${withdrawLink?.id}`;
       } else if (response.errors) {
         throw new Error(response.errors[0].message);
       }
@@ -152,7 +153,10 @@ export default function Page({ params: { id } }: Params) {
 
           <ModalComponent
             open={confirmModal}
-            onClose={() => setConfirmModal(false)}
+            onClose={() => {
+              setConfirmModal(false);
+              setFetchingFees(false);
+            }}
           >
             <div className={styles.modal_container}>
               {!sendPaymentOnChainLoading ? (

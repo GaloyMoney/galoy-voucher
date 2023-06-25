@@ -46,4 +46,5 @@
   align-items: center;
   background: var(--gradient-orange);
   color: rgb(255, 255, 255);
+  gap:0.15em
 }

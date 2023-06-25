@@ -4,7 +4,7 @@
 
 :root {
   --gradient-orange: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
-    linear-gradient(45deg, #ffbe0b 0%, #fb5607 100%);
+    linear-gradient(45deg, #f6a139 0%, #fb5607 100%);
   --orange: #fe7434;
 
 }

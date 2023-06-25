@@ -3,7 +3,7 @@ import styles from "./NumPad.module.css";
 import BackspaceIcon from "@mui/icons-material/Backspace";
 import Button from "../Button/Button";
 import ClearIcon from "@mui/icons-material/Clear";
-
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 interface Props {
   currentAmount: string;
   setCurrentAmount: (amount: string) => void;
@@ -69,7 +69,7 @@ const Numpad = ({ currentAmount, setCurrentAmount, unit }: Props) => {
   return (
     <div className={styles.numpad}>
       <Button className={styles.clearAll} onClick={handleClearAll}>
-        <ClearIcon></ClearIcon> clear
+        <RestartAltIcon></RestartAltIcon> clear
       </Button>
       <div className={styles.grid}>
         <button className={styles.button} onClick={() => handleChange("1")}>
