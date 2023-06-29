@@ -25,6 +25,13 @@ export async function getWithdrawLinkByK1Query(k1: string) {
   return withdrawLink;
 }
 
+export async function GetWithdrawLinkBySecret(secret_code: string) {
+  const query = knex.select().from("withdraw_links").where({ secret_code });
+  const withdrawLink = await query.first();
+  return withdrawLink;
+}
+
+
 export async function getWithdrawLinkByPaymentHashQuery(paymentHash: string) {
   const query = knex
     .select()

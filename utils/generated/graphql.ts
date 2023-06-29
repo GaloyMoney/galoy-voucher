@@ -25,6 +25,8 @@ export type Scalars = {
   CountryCode: { input: any; output: any; }
   /** Display currency of an account */
   DisplayCurrency: { input: any; output: any; }
+  /** Feedback shared with our user */
+  Feedback: { input: any; output: any; }
   /** Hex-encoded string of 32 bytes */
   Hex32Bytes: { input: any; output: any; }
   Language: { input: any; output: any; }
@@ -34,6 +36,8 @@ export type Scalars = {
   LnPaymentSecret: { input: any; output: any; }
   /** Text field in a lightning payment transaction */
   Memo: { input: any; output: any; }
+  /** (Positive) amount of minutes */
+  Minutes: { input: any; output: any; }
   /** An address for an on-chain bitcoin destination */
   OnChainAddress: { input: any; output: any; }
   OnChainTxHash: { input: any; output: any; }
@@ -307,6 +311,10 @@ export enum ExchangeCurrencyUnit {
   Usdcent = 'USDCENT'
 }
 
+export type FeedbackSubmitInput = {
+  feedback: Scalars['Feedback']['input'];
+};
+
 export type FeesInformation = {
   __typename?: 'FeesInformation';
   deposit: DepositFeesInformation;
@@ -408,6 +416,8 @@ export type LnInvoice = {
 export type LnInvoiceCreateInput = {
   /** Amount in satoshis. */
   amount: Scalars['SatAmount']['input'];
+  /** Optional invoice expiration time in minutes. */
+  expiresIn?: InputMaybe<Scalars['Minutes']['input']>;
   /** Optional memo for the lightning invoice. */
   memo?: InputMaybe<Scalars['Memo']['input']>;
   /** Wallet ID for a BTC wallet belonging to the current account. */
@@ -418,6 +428,8 @@ export type LnInvoiceCreateOnBehalfOfRecipientInput = {
   /** Amount in satoshis. */
   amount: Scalars['SatAmount']['input'];
   descriptionHash?: InputMaybe<Scalars['Hex32Bytes']['input']>;
+  /** Optional invoice expiration time in minutes. */
+  expiresIn?: InputMaybe<Scalars['Minutes']['input']>;
   /** Optional memo for the lightning invoice. */
   memo?: InputMaybe<Scalars['Memo']['input']>;
   /** Wallet ID for a BTC wallet which belongs to any account. */
@@ -462,6 +474,8 @@ export type LnNoAmountInvoice = {
 };
 
 export type LnNoAmountInvoiceCreateInput = {
+  /** Optional invoice expiration time in minutes. */
+  expiresIn?: InputMaybe<Scalars['Minutes']['input']>;
   /** Optional memo for the lightning invoice. */
   memo?: InputMaybe<Scalars['Memo']['input']>;
   /** ID for either a USD or BTC wallet belonging to the account of the current user. */
@@ -469,6 +483,8 @@ export type LnNoAmountInvoiceCreateInput = {
 };
 
 export type LnNoAmountInvoiceCreateOnBehalfOfRecipientInput = {
+  /** Optional invoice expiration time in minutes. */
+  expiresIn?: InputMaybe<Scalars['Minutes']['input']>;
   /** Optional memo for the lightning invoice. */
   memo?: InputMaybe<Scalars['Memo']['input']>;
   /** ID for either a USD or BTC wallet which belongs to the account of any user. */
@@ -525,6 +541,8 @@ export type LnUpdate = {
 export type LnUsdInvoiceCreateInput = {
   /** Amount in USD cents. */
   amount: Scalars['CentAmount']['input'];
+  /** Optional invoice expiration time in minutes. */
+  expiresIn?: InputMaybe<Scalars['Minutes']['input']>;
   /** Optional memo for the lightning invoice. */
   memo?: InputMaybe<Scalars['Memo']['input']>;
   /** Wallet ID for a USD wallet belonging to the current user. */
@@ -535,6 +553,8 @@ export type LnUsdInvoiceCreateOnBehalfOfRecipientInput = {
   /** Amount in USD cents. */
   amount: Scalars['CentAmount']['input'];
   descriptionHash?: InputMaybe<Scalars['Hex32Bytes']['input']>;
+  /** Optional invoice expiration time in minutes. */
+  expiresIn?: InputMaybe<Scalars['Minutes']['input']>;
   /** Optional memo for the lightning invoice. Acts as a note to the recipient. */
   memo?: InputMaybe<Scalars['Memo']['input']>;
   /** Wallet ID for a USD wallet which belongs to the account of any user. */
@@ -575,6 +595,7 @@ export type Mutation = {
   createWithdrawLink: WithdrawLink;
   deleteWithdrawLink: Scalars['ID']['output'];
   deviceNotificationTokenCreate: SuccessPayload;
+  feedbackSubmit: SuccessPayload;
   /**
    * Actions a payment which is internal to the ledger e.g. it does
    * not use onchain/lightning. Returns payment status (success,
@@ -590,13 +611,13 @@ export type Mutation = {
   /**
    * Returns a lightning invoice for an associated wallet.
    * When invoice is paid the value will be credited to a BTC wallet.
-   * Expires after 24 hours.
+   * Expires after 'expiresIn' or 24 hours.
    */
   lnInvoiceCreate: LnInvoicePayload;
   /**
    * Returns a lightning invoice for an associated wallet.
    * When invoice is paid the value will be credited to a BTC wallet.
-   * Expires after 24 hours.
+   * Expires after 'expiresIn' or 24 hours.
    */
   lnInvoiceCreateOnBehalfOfRecipient: LnInvoicePayload;
   lnInvoiceFeeProbe: SatAmountPayload;
@@ -609,13 +630,13 @@ export type Mutation = {
   /**
    * Returns a lightning invoice for an associated wallet.
    * Can be used to receive any supported currency value (currently USD or BTC).
-   * Expires after 24 hours.
+   * Expires after 'expiresIn' or 24 hours for BTC invoices or 5 minutes for USD invoices.
    */
   lnNoAmountInvoiceCreate: LnNoAmountInvoicePayload;
   /**
    * Returns a lightning invoice for an associated wallet.
    * Can be used to receive any supported currency value (currently USD or BTC).
-   * Expires after 24 hours.
+   * Expires after 'expiresIn' or 24 hours for BTC invoices or 5 minutes for USD invoices.
    */
   lnNoAmountInvoiceCreateOnBehalfOfRecipient: LnNoAmountInvoicePayload;
   lnNoAmountInvoiceFeeProbe: SatAmountPayload;
@@ -635,14 +656,14 @@ export type Mutation = {
   /**
    * Returns a lightning invoice denominated in satoshis for an associated wallet.
    * When invoice is paid the equivalent value at invoice creation will be credited to a USD wallet.
-   * Expires after 5 minutes (short expiry time because there is a USD/BTC exchange rate
+   * Expires after 'expiresIn' or 5 minutes (short expiry time because there is a USD/BTC exchange rate
    * associated with the amount).
    */
   lnUsdInvoiceCreate: LnInvoicePayload;
   /**
    * Returns a lightning invoice denominated in satoshis for an associated wallet.
    * When invoice is paid the equivalent value at invoice creation will be credited to a USD wallet.
-   * Expires after 5 minutes (short expiry time because there is a USD/BTC exchange rate
+   * Expires after 'expiresIn' or 5 minutes (short expiry time because there is a USD/BTC exchange rate
    *   associated with the amount).
    */
   lnUsdInvoiceCreateOnBehalfOfRecipient: LnInvoicePayload;
@@ -697,6 +718,11 @@ export type MutationDeleteWithdrawLinkArgs = {
 
 export type MutationDeviceNotificationTokenCreateArgs = {
   input: DeviceNotificationTokenCreateInput;
+};
+
+
+export type MutationFeedbackSubmitArgs = {
+  input: FeedbackSubmitInput;
 };
 
 
@@ -1697,6 +1723,13 @@ export type GetOnChainPaymentFeesQueryVariables = Exact<{
 
 export type GetOnChainPaymentFeesQuery = { __typename?: 'Query', getOnChainPaymentFees: { __typename?: 'FeesResult', fees: number } };
 
+export type GetWithdrawLinkBySecretQueryVariables = Exact<{
+  secret_code: Scalars['String']['input'];
+}>;
+
+
+export type GetWithdrawLinkBySecretQuery = { __typename?: 'Query', getWithdrawLink?: { __typename?: 'WithdrawLink', id: string } | null };
+
 export type LnInvoicePaymentStatusSubscriptionVariables = Exact<{
   payment_request: Scalars['LnPaymentRequest']['input'];
 }>;
@@ -2205,6 +2238,41 @@ export function useGetOnChainPaymentFeesLazyQuery(baseOptions?: Apollo.LazyQuery
 export type GetOnChainPaymentFeesQueryHookResult = ReturnType<typeof useGetOnChainPaymentFeesQuery>;
 export type GetOnChainPaymentFeesLazyQueryHookResult = ReturnType<typeof useGetOnChainPaymentFeesLazyQuery>;
 export type GetOnChainPaymentFeesQueryResult = Apollo.QueryResult<GetOnChainPaymentFeesQuery, GetOnChainPaymentFeesQueryVariables>;
+export const GetWithdrawLinkBySecretDocument = gql`
+    query GetWithdrawLinkBySecret($secret_code: String!) {
+  getWithdrawLink(secret_code: $secret_code) {
+    id
+  }
+}
+    `;
+
+/**
+ * __useGetWithdrawLinkBySecretQuery__
+ *
+ * To run a query within a React component, call `useGetWithdrawLinkBySecretQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetWithdrawLinkBySecretQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetWithdrawLinkBySecretQuery({
+ *   variables: {
+ *      secret_code: // value for 'secret_code'
+ *   },
+ * });
+ */
+export function useGetWithdrawLinkBySecretQuery(baseOptions: Apollo.QueryHookOptions<GetWithdrawLinkBySecretQuery, GetWithdrawLinkBySecretQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetWithdrawLinkBySecretQuery, GetWithdrawLinkBySecretQueryVariables>(GetWithdrawLinkBySecretDocument, options);
+      }
+export function useGetWithdrawLinkBySecretLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetWithdrawLinkBySecretQuery, GetWithdrawLinkBySecretQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetWithdrawLinkBySecretQuery, GetWithdrawLinkBySecretQueryVariables>(GetWithdrawLinkBySecretDocument, options);
+        }
+export type GetWithdrawLinkBySecretQueryHookResult = ReturnType<typeof useGetWithdrawLinkBySecretQuery>;
+export type GetWithdrawLinkBySecretLazyQueryHookResult = ReturnType<typeof useGetWithdrawLinkBySecretLazyQuery>;
+export type GetWithdrawLinkBySecretQueryResult = Apollo.QueryResult<GetWithdrawLinkBySecretQuery, GetWithdrawLinkBySecretQueryVariables>;
 export const LnInvoicePaymentStatusDocument = gql`
     subscription LnInvoicePaymentStatus($payment_request: LnPaymentRequest!) {
   lnInvoicePaymentStatus(input: {paymentRequest: $payment_request}) {

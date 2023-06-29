@@ -7,7 +7,7 @@ import { TimeBar } from "@/components/TimeBar/TimeBar";
 
 interface LinkDetailsProps {
   withdrawLink?: WithdrawLink | null;
-  setExpired: any;
+  setExpired?: any;
 }
 
 export default function LinkDetails({
@@ -52,7 +52,7 @@ export default function LinkDetails({
         Created {timeSince(Number(withdrawLink?.created_at))}{" "}
       </div>
       <div className={styles.expire_time}>
-        {withdrawLink.status === "UNFUNDED" ? (
+        {withdrawLink.status === "UNFUNDED" && setExpired ? (
           <>
             Invoice Expires in{" "}
             <TimeBar

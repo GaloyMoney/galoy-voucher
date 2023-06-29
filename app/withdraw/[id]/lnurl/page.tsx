@@ -76,7 +76,7 @@ export default function Page({ params: { id } }: Params) {
           </p>
           <p>
             voucher Amount $
-            {(Number(data.getWithdrawLink?.max_withdrawable) / 10).toFixed(2)}
+            {(Number(data.getWithdrawLink?.max_withdrawable) / 100).toFixed(2)}
           </p>
           {revelLNURL ? (
             <>

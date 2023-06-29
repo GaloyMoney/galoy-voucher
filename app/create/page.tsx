@@ -1,5 +1,5 @@
 "use client";
-import {  useState } from "react";
+import { useState } from "react";
 import CreatePageAmount from "@/components/Create/CreatePageAmount/CreatePageAmount";
 import CreatePagePercentage from "@/components/Create/CreatePagePercentage/CreatePagePercentage";
 import {
@@ -66,17 +66,18 @@ export default function CreatePage() {
     { loading: lnUSDInvoiceLoading, error: lnUSDInvoiceError },
   ] = useLnUsdInvoiceCreateOnBehalfOfRecipientMutation();
 
-
   const handleSubmit = async () => {
     setLoadingPageChange(true);
-
+    console.log(Number(commissionAmountInDollars));
+    console.log(Number(AmountInDollars));
+    console.log((Number(commissionAmountInDollars) * 100).toFixed());
     try {
       const result = await createLnUsdInvoice({
         variables: {
           input: {
             recipientWalletId: `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
-            amount: Number(commissionAmountInDollars) * 100,
-            memo: `Galoy withdraw ${Number(commissionAmountInDollars)} `,
+            amount: Number(Number(commissionAmountInDollars) * 100).toFixed(),
+            memo: `Galoy withdraw  $${Number(commissionAmountInDollars)} `,
           },
         },
         context: {
@@ -99,9 +100,9 @@ export default function CreatePage() {
               amount: Number(AmountInDollars),
               account_type: "USD",
               escrow_wallet: `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
-              title: `Galoy withdraw ${Number(commissionAmountInDollars)} `,
-              min_withdrawable: Number(commissionAmountInDollars) * 100,
-              max_withdrawable: Number(commissionAmountInDollars) * 100,
+              title: `Galoy withdraw $${Number(commissionAmountInDollars)} `,
+              min_withdrawable: Number((Number(commissionAmountInDollars) * 100).toFixed()),
+              max_withdrawable: Number((Number(commissionAmountInDollars) * 100).toFixed()),
               unique_hash: generateRandomHash(),
               k1: generateRandomHash(),
               commission_percentage: Number(commissionPercentage),

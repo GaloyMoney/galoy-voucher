@@ -96,3 +96,11 @@ export const GET_ON_CHAIN_PAYMENT_FEES = gql`
     }
   }
 `;
+
+export const GET_WITHDRAW_LINK_BY_VOUCHER_CODE = gql`
+  query GetWithdrawLinkBySecret($secret_code: String!) {
+    getWithdrawLink(secret_code: $secret_code) {
+      id
+    }
+  }
+`;
