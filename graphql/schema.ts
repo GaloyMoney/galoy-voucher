@@ -18,6 +18,9 @@ type WithdrawLink {
   created_at: String!
   updated_at: String!
   commission_percentage: Float
+  identifier_code: String
+  secret_code: String
+  invoice_expiration: String!
 }
 
 type FeesResult {
@@ -36,7 +39,7 @@ enum Status {
 }
 
 type Query {
-  getWithdrawLink(id: ID, unique_hash: String, k1: String, payment_hash: String): WithdrawLink
+  getWithdrawLink(id: ID, unique_hash: String, k1: String, payment_hash: String, secret_code: String, identifier_code: String  ): WithdrawLink
   getAllWithdrawLinks: [WithdrawLink!]!
   getWithdrawLinksByUserId(user_id: ID!, status: Status): [WithdrawLink!]!
   getOnChainPaymentFees(id: ID!, btc_wallet_address: String!): FeesResult!

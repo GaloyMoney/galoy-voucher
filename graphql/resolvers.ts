@@ -10,6 +10,7 @@ import {
   getWithdrawLinkByPaymentHashQuery,
   getWithdrawLinksByUserIdQuery,
   updateWithdrawLinkStatus,
+  GetWithdrawLinkBySecret,
 } from "../utils/crud";
 import {
   getOnChainTxFeeBTC,
@@ -22,7 +23,7 @@ import {
 const resolvers = {
   Query: {
     getWithdrawLink: async (parent: any, args: any, context: any) => {
-      const { id, unique_hash, k1, payment_hash } = args;
+      const { id, unique_hash, k1, payment_hash, secret_code } = args;
       if (id) {
         return getWithdrawLinkByIdQuery(id);
       }
@@ -34,6 +35,9 @@ const resolvers = {
       }
       if (payment_hash) {
         return getWithdrawLinkByPaymentHashQuery(payment_hash);
+      }
+      if (secret_code) {
+        return GetWithdrawLinkBySecret(secret_code);
       }
     },
     getAllWithdrawLinks: async (parent: any, args: any, context: any) => {

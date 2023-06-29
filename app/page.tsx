@@ -17,6 +17,9 @@ export default function Home() {
         <Link href="/create">
           <Button>Create new Link</Button>
         </Link>
+        <Link href="/voucher">
+          <Button>Redeem Voucher</Button>
+        </Link>
       </div>
     </div>
   );

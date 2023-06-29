@@ -7,7 +7,7 @@ interface HeadingProps {
 
 export default function Heading({ children, ...props }: HeadingProps) {
   return (
-    <h1 className="text-xl font-bold text-center w-9/10" {...props}>
+    <h1 className="text-2xl  text-center w-9/10" {...props}>
       {children}
     </h1>
   );

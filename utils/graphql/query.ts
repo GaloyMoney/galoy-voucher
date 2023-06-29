@@ -20,6 +20,9 @@ export const GET_WITHDRAW_LINK = gql`
       created_at
       updated_at
       commission_percentage
+      identifier_code
+      secret_code
+      invoice_expiration
     }
   }
 `;
@@ -44,6 +47,9 @@ export const GET_WITHDRAW_LINKS_BY_USER_ID = gql`
       payment_secret
       escrow_wallet
       commission_percentage
+      identifier_code
+      secret_code
+      invoice_expiration
     }
   }
 `;
@@ -87,6 +93,14 @@ export const GET_ON_CHAIN_PAYMENT_FEES = gql`
       btc_wallet_address: $btcWalletAddress
     ) {
       fees
+    }
+  }
+`;
+
+export const GET_WITHDRAW_LINK_BY_VOUCHER_CODE = gql`
+  query GetWithdrawLinkBySecret($secret_code: String!) {
+    getWithdrawLink(secret_code: $secret_code) {
+      id
     }
   }
 `;

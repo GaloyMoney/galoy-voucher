@@ -3,12 +3,17 @@ import styles from "./LinkDetails.module.css";
 import { timeSince } from "@/utils/helpers";
 import { WithdrawLink } from "@/utils/generated/graphql";
 import useSatPrice from "@/hooks/useSatsPrice";
+import { TimeBar } from "@/components/TimeBar/TimeBar";
 
 interface LinkDetailsProps {
   withdrawLink?: WithdrawLink | null;
+  setExpired?: any;
 }
 
-export default function LinkDetails({ withdrawLink }: LinkDetailsProps) {
+export default function LinkDetails({
+  withdrawLink,
+  setExpired,
+}: LinkDetailsProps) {
   const { usdToSats, satsToUsd } = useSatPrice();
 
   if (!withdrawLink) {
@@ -24,23 +29,20 @@ export default function LinkDetails({ withdrawLink }: LinkDetailsProps) {
         }
       >
         {withdrawLink?.status === "UNFUNDED"
-          ? "Not funded and inactive"
+          ? "Not Funded"
           : withdrawLink?.status === "FUNDED"
           ? "LNURLw Funded and active"
           : null}
       </div>
       <div className={styles.amount}>
+        Pay{" "}
         {withdrawLink?.account_type === "BTC"
           ? `${withdrawLink?.max_withdrawable} sats`
           : `≈ ${usdToSats(
               withdrawLink?.max_withdrawable / 100
-            ).toFixed()} sats`}
+            ).toFixed()} sats`}{" "}
+        to create withdraw link for ${withdrawLink?.max_withdrawable / 100}
       </div>
-
-      <div>
-        {withdrawLink?.account_type === "BTC" ? "Regular sats" : "Stable sats"}
-      </div>
-
       <div>
         {withdrawLink?.commission_percentage === 0
           ? `No commission`
@@ -48,6 +50,17 @@ export default function LinkDetails({ withdrawLink }: LinkDetailsProps) {
       </div>
       <div className={styles.time}>
         Created {timeSince(Number(withdrawLink?.created_at))}{" "}
+      </div>
+      <div className={styles.expire_time}>
+        {withdrawLink.status === "UNFUNDED" && setExpired ? (
+          <>
+            Invoice Expires in{" "}
+            <TimeBar
+              setExpired={setExpired}
+              expirationTimestamp={Number(withdrawLink?.invoice_expiration)}
+            ></TimeBar>
+          </>
+        ) : null}
       </div>
     </div>
   );
