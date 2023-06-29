@@ -172,7 +172,10 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
               >
                 Copy to Clipboard
               </Button>
-              <Link href={`bitcoin:${withdrawLink.payment_request}`}>
+              <Link
+                href={`bitcoin:${withdrawLink.payment_request}`}
+                target="_blank"
+              >
                 <Button
                   style={{
                     width: "20em",

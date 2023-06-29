@@ -51,8 +51,6 @@ export default function Page({ params: { id } }: Params) {
         title: document.title,
         url: window.location.href,
       });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
     }
   };
 
