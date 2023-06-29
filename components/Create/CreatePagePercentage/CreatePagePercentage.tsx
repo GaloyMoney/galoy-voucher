@@ -9,52 +9,21 @@ import Heading from "@/components/Heading";
 interface Props {
   commissionPercentage: any;
   setCommissionPercentage: any;
-  amount: any;
-  currency: any;
-  usdToSats: any;
   setCurrentPage: any;
-  fiatAfterCommission: any;
-  setFiatAfterCommission: any;
-  
 }
 
 export default function CreatePagePercentage({
   commissionPercentage,
   setCommissionPercentage,
-  amount,
-  currency,
   setCurrentPage,
-  fiatAfterCommission,
-  setFiatAfterCommission,
 }: Props) {
-  useEffect(() => {
-    setFiatAfterCommission(
-      currency.fractionDigits === 0
-        ? Number(
-            Number(amount) -
-              (Number(amount) * Number(commissionPercentage)) / 100
-          ).toFixed()
-        : Number(
-            Number(amount) -
-              (Number(amount) * Number(commissionPercentage)) / 100
-          )
-            .toFixed(currency.fractionDigits)
-            .toString()
-    );
-
-  }, [commissionPercentage, amount]);
-
   return (
     <>
       <Heading>Please Enter Commission</Heading>
       <div className="text-3xl font-semibold">
         {formatOperand(commissionPercentage)}%
       </div>
-      <div className={styles.percentage_amount}>
-        <div>
-          {currency.symbol} {formatOperand(fiatAfterCommission)}
-        </div>
-      </div>
+
       <Numpad
         currentAmount={commissionPercentage}
         setCurrentAmount={setCommissionPercentage}
@@ -65,9 +34,8 @@ export default function CreatePagePercentage({
           style={{ width: "90%" }}
           onClick={() => setCurrentPage("AMOUNT")}
         >
-          Previous
+          Set commission
         </Button>
-        <Button style={{ width: "90%" }}>Set commission</Button>
       </div>
     </>
   );

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styles from "./NumPad.module.css";
 import BackspaceIcon from "@mui/icons-material/Backspace";
 import Button from "../Button/Button";
-import ClearIcon from "@mui/icons-material/Clear";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 interface Props {
   currentAmount: string;
@@ -47,6 +46,7 @@ const Numpad = ({ currentAmount, setCurrentAmount, unit }: Props) => {
     if (newPercentage.length > 6) {
       return;
     }
+    localStorage.setItem("commission", currentAmount + digit);
     setCurrentAmount(currentAmount + digit);
   };
 

@@ -3,16 +3,13 @@ import { useRef, useState } from "react";
 import { useDisplayCurrency } from "@/hooks/useDisplayCurrency";
 import NumPad from "@/components/NumPad/NumPad";
 import { formatOperand } from "@/utils/helpers";
-import SwapVertIcon from "@mui/icons-material/SwapVert";
 import styles from "../CreateLink.module.css";
 import LoadingComponent from "@/components/Loading/LoadingComponent";
 import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
-import Tooltip from "@mui/material/Tooltip";
 import Button from "@/components/Button/Button";
 import ModalComponent from "@/components/ModalComponent";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import Heading from "@/components/Heading";
-import useRealtimePrice from "@/hooks/useRealTimePrice";
 
 const DEFAULT_CURRENCY: any = {
   __typename: "Currency",
@@ -34,7 +31,7 @@ interface Props {
   setConfirmModal: (currency: boolean) => void;
   AmountInDollars: string;
   commissionAmountInDollars: string;
-  hasLoaded:any;
+  hasLoaded: any;
 }
 
 export default function HomePage({
@@ -47,7 +44,7 @@ export default function HomePage({
   usdToSats,
   commissionPercentage,
   commissionAmountInDollars,
-  hasLoaded
+  hasLoaded,
 }: Props) {
   const { currencyList, loading: currencyLoading } = useDisplayCurrency();
   const [alerts, setAlerts] = useState(false);
@@ -56,6 +53,7 @@ export default function HomePage({
     const selectedCurrency = currencyList.find(
       (currency) => currency.id === event.target.value
     );
+    localStorage.setItem("currency", JSON.stringify(selectedCurrency));
     setCurrency(selectedCurrency || DEFAULT_CURRENCY);
   };
 
@@ -94,7 +92,6 @@ export default function HomePage({
           </Button>
         </div>
       </ModalComponent>
-      <div>{hasLoaded.current === false ? "LOADING" : null}</div>
       <Heading>Please Enter Amount</Heading>
       <select
         id="currency"
@@ -118,7 +115,11 @@ export default function HomePage({
         </div>
       </div>
       <div>{Number(commissionPercentage)}% commission</div>
-      <div>≈ ${commissionAmountInDollars}</div>
+      {hasLoaded.current === false ? (
+        <LoadingComponent></LoadingComponent>
+      ) : (
+        <div>≈ ${formatOperand(commissionAmountInDollars)}</div>
+      )}
       <NumPad currentAmount={amount} setCurrentAmount={setamount} unit="FIAT" />
       <div className={styles.account_type}></div>
       <div className={styles.commission_and_submit_buttons}>

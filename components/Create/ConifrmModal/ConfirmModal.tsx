@@ -12,8 +12,6 @@ interface ConfirmModalProps {
   currency: any;
   commissionPercentage: any;
   commissionAmountInDollars: any;
-  exchangeRateFiatUSD: any;
-  satsToUsd: any;
   usdToSats: any
 }
 
@@ -25,8 +23,6 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   currency,
   commissionPercentage,
   commissionAmountInDollars,
-  exchangeRateFiatUSD,
-  satsToUsd,
   usdToSats,
 }) => {
   return (
@@ -47,12 +43,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
           </p>
         </div>
 
-        {/* <div>
-          <h3 className={styles.modalSubtitle}>Exchange Rate USD/{currency.id}</h3>
-          <p className={styles.modalText}>
-            {formatOperand(exchangeRateFiatUSD)}
-          </p>
-        </div> */}
+
 
         <div>
           <h3 className={styles.modalSubtitle}>Funding Amount</h3>
@@ -60,11 +51,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
             ≈ {usdToSats(Number(commissionAmountInDollars)).toFixed()} sats
           </p>
         </div>
-        {/* <div>
-          <h3 className={styles.modalSubtitle}>Exchange Rate BTC/USD</h3>
-          <p className={styles.modalText}>
-          </p>
-        </div> */}
+
         <div>
           <h3 className={styles.modalSubtitle}>Escrow Currency</h3>
           <p className={styles.modalText}>US Dollar (Stablesats)</p>

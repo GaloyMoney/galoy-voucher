@@ -16,9 +16,10 @@ import styles from "./fundPage.module.css";
 import Link from "next/link";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
-import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 import Heading from "@/components/Heading";
+import Bold from "@/components/Bold";
+
 interface Params {
   params: {
     paymenthash: string;
@@ -75,7 +76,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
               id: withdrawLink?.id,
             },
           });
-          router.push("/create2");
+          router.push("/create");
         };
         deleteLink();
       } catch (e) {
@@ -120,35 +121,37 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
   }
 
   const handleCopyToClipboard = () => {
-    navigator.clipboard.writeText(withdrawLink?.payment_request || "");
+    navigator.clipboard?.writeText(withdrawLink?.payment_request || "");
   };
-  console.log("invoice_expiration", withdrawLink?.invoice_expiration);
 
   return (
     <>
-      <ModalComponent open={modalOpen}>
-        <div className={styles.modal_container}>
-          <CheckCircleIcon style={{ fontSize: 60, color: "#16ca40" }} />
-          <h1 className={styles.modal_heading}>Successfully Paid</h1>
-          <Link href={`/withdraw/${withdrawLink?.id}/lnurl`}>
-            <Button
-              style={{ width: "9em" }}
-              onClick={() => setModalOpen(false)}
-            >
-              OK
-            </Button>
-          </Link>
-        </div>
-      </ModalComponent>
       <div className="top_page_container">
-        <div className={styles.heading}>
+        <ModalComponent open={modalOpen}>
+          <div className={styles.modal_container}>
+            <CheckCircleIcon style={{ fontSize: 60, color: "#16ca40" }} />
+            <h1 className={styles.modal_heading}>Successfully Paid</h1>
+            <Link href={`/withdraw/${withdrawLink?.id}/lnurl`}>
+              <Button
+                style={{ width: "9em" }}
+                onClick={() => setModalOpen(false)}
+              >
+                OK
+              </Button>
+            </Link>
+          </div>
+        </ModalComponent>
+        <div>
           {withdrawLink?.status === "UNFUNDED" ? (
             <Heading>
-              Fund Voucher {withdrawLink.identifier_code} by paying the invoice
-              below{" "}
+              Fund Voucher <Bold>{withdrawLink.identifier_code}</Bold> by paying
+              the invoice below{" "}
             </Heading>
           ) : (
-            <Heading>Lighting Invoice is Funded and Link is activate</Heading>
+            <Heading>
+              Voucher <Bold>{withdrawLink?.identifier_code}</Bold> is Funded and
+              Link is activate
+            </Heading>
           )}
         </div>
         <LinkDetails
@@ -169,6 +172,15 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
               >
                 Copy to Clipboard
               </Button>
+              <Link href={`bitcoin:${withdrawLink.payment_request}`}>
+                <Button
+                  style={{
+                    width: "20em",
+                  }}
+                >
+                  Open in wallet
+                </Button>
+              </Link>
               <Button
                 style={{
                   width: "20em",
