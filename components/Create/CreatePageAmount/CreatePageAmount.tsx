@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDisplayCurrency } from "@/hooks/useDisplayCurrency";
 import NumPad from "@/components/NumPad/NumPad";
 import { formatOperand } from "@/utils/helpers";
@@ -12,6 +12,7 @@ import Button from "@/components/Button/Button";
 import ModalComponent from "@/components/ModalComponent";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import Heading from "@/components/Heading";
+import useRealtimePrice from "@/hooks/useRealTimePrice";
 
 const DEFAULT_CURRENCY: any = {
   __typename: "Currency",
@@ -23,35 +24,30 @@ const DEFAULT_CURRENCY: any = {
 };
 
 interface Props {
-  amountSATS: string;
-  setAmountSATS: (amount: string) => void;
-  amountFIAT: string;
-  setAmountFIAT: (amount: string) => void;
-  unit: string;
-  setUnit: (unit: string) => void;
+  amount: string;
+  setamount: (amount: string) => void;
   currency: any;
   setCurrency: (currency: any) => void;
-  accountType: string;
-  setAccountType: (accountType: string) => void;
-  loading: any;
   setCurrentPage: (accountType: string) => void;
   usdToSats: any;
+  commissionPercentage: any;
+  setConfirmModal: (currency: boolean) => void;
+  AmountInDollars: string;
+  commissionAmountInDollars: string;
+  hasLoaded:any;
 }
 
 export default function HomePage({
-  amountSATS,
-  amountFIAT,
-  unit,
-  currency,
-  accountType,
-  loading,
-  setAmountSATS,
-  setAmountFIAT,
-  setUnit,
+  setamount,
   setCurrency,
-  setAccountType,
   setCurrentPage,
+  setConfirmModal,
+  amount,
+  currency,
   usdToSats,
+  commissionPercentage,
+  commissionAmountInDollars,
+  hasLoaded
 }: Props) {
   const { currencyList, loading: currencyLoading } = useDisplayCurrency();
   const [alerts, setAlerts] = useState(false);
@@ -67,14 +63,12 @@ export default function HomePage({
     return <PageLoadingComponent></PageLoadingComponent>;
   }
 
-  const handelPageChange = () => {
-    const cent_sats = (usdToSats(1) / 100).toFixed();
-    if (Number(cent_sats) > Number(amountSATS)) {
-      return setAlerts(true);
-    } else {
-      setUnit("FIAT");
-      setCurrentPage("COMMISSION");
+  const handelConfimLink = () => {
+    if (Number(commissionAmountInDollars) < 0.01) {
+      setAlerts(true);
+      return;
     }
+    setConfirmModal(true);
   };
 
   return (
@@ -86,17 +80,21 @@ export default function HomePage({
         }}
       >
         <div className={styles.alert_box}>
-          Amount cannot be less than ≈ {(usdToSats(1) / 100).toFixed()} sats
+          Amount cannot be less than 0.01 ≈ {(usdToSats(1) / 100).toFixed()}{" "}
+          sats
           <Button
             onClick={() => {
               setAlerts(false);
             }}
+            style={{
+              width: "8rem",
+            }}
           >
-            {" "}
-            OK{" "}
+            Ok
           </Button>
         </div>
       </ModalComponent>
+      <div>{hasLoaded.current === false ? "LOADING" : null}</div>
       <Heading>Please Enter Amount</Heading>
       <select
         id="currency"
@@ -115,77 +113,25 @@ export default function HomePage({
         ))}
       </select>
       <div className="text-3xl font-semibold">
-        {unit === "FIAT" ? (
-          <div>
-            {currency.symbol} {formatOperand(amountFIAT)}
-          </div>
-        ) : (
-          <div>{formatOperand(amountSATS)} sats</div>
-        )}
-      </div>
-      <div className="cursor-pointer">
-        <SwapVertIcon
-          onClick={() => (unit === "FIAT" ? setUnit("SATS") : setUnit("FIAT"))}
-        />
-      </div>
-      {loading ? (
-        <LoadingComponent></LoadingComponent>
-      ) : (
-        <div className="text-xl">
-          {unit === "FIAT" ? (
-            <div> ≈ {formatOperand(amountSATS)} sats</div>
-          ) : (
-            <div>
-              {currency.symbol} {formatOperand(amountFIAT)}
-            </div>
-          )}
+        <div>
+          {currency.symbol} {formatOperand(amount)}
         </div>
-      )}
-      <NumPad
-        currentAmount={unit === "FIAT" ? amountFIAT : amountSATS}
-        setCurrentAmount={unit === "FIAT" ? setAmountFIAT : setAmountSATS}
-        unit={unit}
-      />
-      <div className={styles.account_type}>
-        <Tooltip
-          placement="top-start"
-          title="BTC link will be created where sats' fixed price will fluctuate based on the price of BTC."
-        >
-          <button
-            className={
-              accountType === "BTC"
-                ? styles.account_type_button_selected
-                : styles.account_type_button
-            }
-            onClick={() => setAccountType("BTC")}
-          >
-            Regular sats BTC
-          </button>
-        </Tooltip>
-        <Tooltip
-          placement="top-start"
-          title="Withdraw link will be created that will have a stable price. Sats will automatically adjust based on the price."
-        >
-          <button
-            className={
-              accountType === "USD"
-                ? styles.account_type_button_selected
-                : styles.account_type_button
-            }
-            onClick={() => setAccountType("USD")}
-          >
-            Stable sats USD
-          </button>
-        </Tooltip>
       </div>
-      <Button
-        style={{
-          width: "90%",
-        }}
-        onClick={handelPageChange}
-      >
-        Next
-      </Button>
+      <div>{Number(commissionPercentage)}% commission</div>
+      <div>≈ ${commissionAmountInDollars}</div>
+      <NumPad currentAmount={amount} setCurrentAmount={setamount} unit="FIAT" />
+      <div className={styles.account_type}></div>
+      <div className={styles.commission_and_submit_buttons}>
+        <Button
+          onClick={() => {
+            setCurrentPage("COMMISSION");
+          }}
+        >
+          Commission
+        </Button>
+        <Button onClick={handelConfimLink}>Create link</Button>
+      </div>
+
       <InfoComponent>
         Regular sats refer to BTC sats, which can fluctuate in value over time,
         either increasing or decreasing. On the other hand, stable sats are USD

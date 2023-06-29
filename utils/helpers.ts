@@ -92,3 +92,20 @@ export function errorArrayToString(errors: Error[] | undefined): string | null {
     return null;
   }
 }
+
+export function generateCode(length: number) {
+  const characters =
+    "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ";
+  let code = "";
+  for (let i = 0; i < length; i++) {
+    code += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return code;
+}
+
+export function formatSecretCode(s: string | null | undefined): string {
+  if (!s) {
+    return "";
+  }
+  return s.match(/.{1,4}/g)!.join("-");
+}

@@ -74,7 +74,6 @@ export const LN_INVOICE_CREATE = gql`
   }
 `;
 
-
 export const LN_INVOICE_CREATE_USD = gql`
   mutation LnUsdInvoiceCreateOnBehalfOfRecipient(
     $input: LnUsdInvoiceCreateOnBehalfOfRecipientInput!
@@ -95,8 +94,7 @@ export const LN_INVOICE_CREATE_USD = gql`
   }
 `;
 
-
-export const ON_CHAIN_PAYMENT =  gql`
+export const ON_CHAIN_PAYMENT = gql`
   mutation SendPaymentOnChain(
     $sendPaymentOnChainId: ID!
     $btcWalletAddress: String!
@@ -108,5 +106,11 @@ export const ON_CHAIN_PAYMENT =  gql`
       amount
       status
     }
+  }
+`;
+
+export const DELETE_WITHDRAW_LINK = gql`
+  mutation DeleteWithdrawLink($id: ID!) {
+    deleteWithdrawLink(id: $id)
   }
 `;

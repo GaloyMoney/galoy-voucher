@@ -37,10 +37,21 @@
   display: flex;
   color: #767575;
   font-size: 0.8rem;
+}
+
+.expire_time {
+  display: flex;
+  color: #767575;
+  font-size: 0.9rem;
   margin: 0.5em;
+  gap: 0.3em;
+  align-items: center;
+  justify-content: center;
 }
 
 .amount {
   margin-top: 0.5em;
   font-weight: 700;
+  text-align: center;
+  max-width: 60%;
 }

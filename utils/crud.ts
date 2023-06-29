@@ -2,7 +2,7 @@ import knexConfig from "../config/knexfile";
 const knexConfigObj = knexConfig["development"];
 const knex = require("knex")(knexConfigObj);
 import { v4 as uuidv4 } from "uuid";
-
+import { generateCode } from "./helpers";
 //CREATE READ UPDATE DELETE functions
 export async function getWithdrawLinkByIdQuery(id: string) {
   const query = knex.select().from("withdraw_links").where({ id });
@@ -40,9 +40,39 @@ export async function getAllWithdrawLinksQuery() {
 }
 
 export async function createWithdrawLinkMutation(input: any) {
+  // Generate a unique 5-digit identifier code
+  let identifierCode = generateCode(5);
+  let exists = await knex("withdraw_links")
+    .where({ identifier_code: identifierCode })
+    .first();
+
+  // Keep generating a new code until a unique one is found
+  while (exists) {
+    identifierCode = generateCode(5);
+    exists = await knex("withdraw_links")
+      .where({ identifier_code: identifierCode })
+      .first();
+  }
+
+  // Generate a unique 12-digit secret code
+  let secretCode = generateCode(12);
+  exists = await knex("withdraw_links")
+    .where({ secret_code: secretCode })
+    .first();
+
+  // Keep generating a new code until a unique one is found
+  while (exists) {
+    secretCode = generateCode(12);
+    exists = await knex("withdraw_links")
+      .where({ secret_code: secretCode })
+      .first();
+  }
+
   const withdrawLink = {
     id: uuidv4(),
     ...input,
+    identifier_code: identifierCode,
+    secret_code: secretCode,
   };
 
   const [createdWithdrawLink] = await knex("withdraw_links")

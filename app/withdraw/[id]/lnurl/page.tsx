@@ -1,7 +1,7 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { QRCode } from "react-qrcode-logo";
-import { encodeURLToLNURL } from "@/utils/helpers";
+import { encodeURLToLNURL, formatSecretCode } from "@/utils/helpers";
 import PageLoadingComponet from "@/components/Loading/PageLoadingComponent";
 import { useGetWithdrawLinkQuery } from "@/utils/generated/graphql";
 import { NEXT_PUBLIC_LOCAL_URL } from "@/config/variables";
@@ -11,6 +11,7 @@ import styles from "./LnurlPage.module.css";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import FundsPaid from "@/components/FundsPaid";
 import Heading from "@/components/Heading";
+import Link from "next/link";
 interface Params {
   params: {
     id: string;
@@ -19,6 +20,7 @@ interface Params {
 
 // this page shows the LNURLw screen after success in fund transfer to escrow account
 export default function Page({ params: { id } }: Params) {
+  const [revelLNURL, setRevelLNURL] = useState(false);
   const { loading, error, data } = useGetWithdrawLinkQuery({
     variables: { getWithdrawLinkId: id },
     context: {
@@ -50,16 +52,54 @@ export default function Page({ params: { id } }: Params) {
         <FundsPaid></FundsPaid>
       ) : (
         <>
-          <Heading>LNURL fund withdraw</Heading>
-          <LinkDetails withdrawLink={data.getWithdrawLink}></LinkDetails>
-          <div>
-            <QRCode size={300} value={url} />
-            <Button onClick={copyToClipboard}>Copy LNURL</Button>
+          <div className="top_page_container">
+            <Heading>
+              {" "}
+              Voucher {data.getWithdrawLink?.identifier_code} created
+              Successfully{" "}
+            </Heading>
+            <p>
+              Please collect {data.getWithdrawLink?.amount} before sharing with
+              the customer
+            </p>
+            <p>voucher {data.getWithdrawLink?.identifier_code}</p>
+            <p>
+              voucher Amount $
+              {(Number(data.getWithdrawLink?.max_withdrawable) / 10).toFixed(2)}
+            </p>
+            {revelLNURL ? (
+              <>
+                {" "}
+                <div className={styles.LNURL_container}>
+                  <Heading>LNURL fund withdraw</Heading>
+                  <p>scan to redeem</p>
+                  <QRCode size={300} value={url} />
+                  <p>or visit voucher.blink.sv and redeem with </p>
+                  <div className={styles.voucher_container}>
+                    <p> VOUCHER CODE </p>
+                    <p>
+                      {formatSecretCode(data.getWithdrawLink?.secret_code)}{" "}
+                    </p>
+                  </div>
+                </div>
+                  <Button onClick={copyToClipboard}>Copy LNURL</Button>
+              </>
+            ) : null}
+            {!revelLNURL ? (
+              <Button onClick={() => setRevelLNURL(true)}>Revel Voucher</Button>
+            ) : null}
+            <Button>Share Voucher</Button>
+            <Button>Print Voucher</Button>
           </div>
           <InfoComponent>
-            If you can't withdraw links from LNURL, you can scan this QR code
-            with a regular QR scanner. After scanning, visit the URL and choose
-            the "onChain" option.
+            To redeem instantly for zero fees Download App at blink.sv and scan
+            above QR with Blink
+          </InfoComponent>{" "}
+          <InfoComponent>
+            To redeem later or onChain visit voucher.blink.sv and enter the
+            voucher secret, If you can't withdraw links from LNURL, you can scan
+            this QR code with a regular QR scanner. After scanning, visit the
+            URL and choose the "onChain" option.
           </InfoComponent>
         </>
       )}

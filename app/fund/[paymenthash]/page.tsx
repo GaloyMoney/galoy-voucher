@@ -7,6 +7,7 @@ import {
   useGetWithdrawLinkQuery,
   useUpdateWithdrawLinkMutation,
   useLnInvoicePaymentStatusSubscription,
+  useDeleteWithdrawLinkMutation,
 } from "@/utils/generated/graphql";
 import LinkDetails from "@/components/LinkDetails/LinkDetails";
 import ModalComponent from "@/components/ModalComponent";
@@ -15,7 +16,9 @@ import styles from "./fundPage.module.css";
 import Link from "next/link";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
-
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
+import Heading from "@/components/Heading";
 interface Params {
   params: {
     paymenthash: string;
@@ -25,6 +28,8 @@ interface Params {
 //this Screen is used to take funds from user for withdraw links
 export default function FundPaymentHash({ params: { paymenthash } }: Params) {
   const [modalOpen, setModalOpen] = useState(false);
+  const [expired, setExpired] = useState(false);
+  const router = useRouter();
   //getting the data for withdraw links that was saved on /create screen
   const {
     loading: loadingWithdrawLink,
@@ -40,11 +45,9 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
   const withdrawLink = dataWithdrawLink?.getWithdrawLink;
   const paymentRequest = withdrawLink?.payment_request;
 
-  //creating web socket connection for invoice that will be used to take funds from user
   const [updateWithdrawLink, { loading: updatingWithdrawLink }] =
     useUpdateWithdrawLinkMutation();
 
-  //TODO need to add error checking in this section
   const {
     data: paymentStatusData,
     loading: paymentStatusLoading,
@@ -56,14 +59,39 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
     skip: withdrawLink?.status === Status.Paid,
   });
 
+  const [deleteWithdrawLink, { loading: deletingWithdrawLink }] =
+    useDeleteWithdrawLinkMutation();
+
+  useEffect(() => {
+    if (
+      expired &&
+      withdrawLink?.status === "UNFUNDED" &&
+      paymentStatusData?.lnInvoicePaymentStatus.status !== "PAID"
+    ) {
+      try {
+        const deleteLink = async () => {
+          const result = await deleteWithdrawLink({
+            variables: {
+              id: withdrawLink?.id,
+            },
+          });
+          router.push("/create2");
+        };
+        deleteLink();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }, [expired]);
+
   useEffect(() => {
     const handlePaymentStatus = async () => {
-      if (paymentStatusData && paymentStatusData.lnInvoicePaymentStatus) {
+      if (paymentStatusData && withdrawLink) {
         if (paymentStatusData.lnInvoicePaymentStatus.status === "PAID") {
           try {
             await updateWithdrawLink({
               variables: {
-                updateWithdrawLinkId: withdrawLink?.id || "",
+                updateWithdrawLinkId: withdrawLink?.id,
                 updateWithdrawLinkInput: { status: Status.Funded },
               },
             });
@@ -78,7 +106,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
     handlePaymentStatus();
   }, [paymentStatusData]);
 
-  if (loadingWithdrawLink || updatingWithdrawLink) {
+  if (loadingWithdrawLink || updatingWithdrawLink || deletingWithdrawLink) {
     return <PageLoadingComponent />;
   }
 
@@ -94,10 +122,11 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(withdrawLink?.payment_request || "");
   };
+  console.log("invoice_expiration", withdrawLink?.invoice_expiration);
 
   return (
     <>
-      <ModalComponent open={modalOpen} onClose={() => setModalOpen(false)}>
+      <ModalComponent open={modalOpen}>
         <div className={styles.modal_container}>
           <CheckCircleIcon style={{ fontSize: 60, color: "#16ca40" }} />
           <h1 className={styles.modal_heading}>Successfully Paid</h1>
@@ -114,27 +143,43 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
       <div className="top_page_container">
         <div className={styles.heading}>
           {withdrawLink?.status === "UNFUNDED" ? (
-            <h1>
-              Please Fund the Lighting Invoice to activate the withdraw Link{" "}
-            </h1>
+            <Heading>
+              Fund Voucher {withdrawLink.identifier_code} by paying the invoice
+              below{" "}
+            </Heading>
           ) : (
-            <h1>Lighting Invoice is Funded and Link is activate</h1>
+            <Heading>Lighting Invoice is Funded and Link is activate</Heading>
           )}
         </div>
-        <LinkDetails withdrawLink={withdrawLink}></LinkDetails>
+        <LinkDetails
+          withdrawLink={withdrawLink}
+          setExpired={setExpired}
+        ></LinkDetails>
         {withdrawLink?.status === "UNFUNDED" ? (
           <div>
             <div className="w-80 h-80 flex flex-col items-center justify-center border border-gray-300 rounded-md p-4">
               <QRCode size={300} value={withdrawLink?.payment_request} />
             </div>
-            <Button
-              style={{
-                width: "20em",
-              }}
-              onClick={handleCopyToClipboard}
-            >
-              Copy to Clipboard
-            </Button>
+            <div className={styles.button_container}>
+              <Button
+                style={{
+                  width: "20em",
+                }}
+                onClick={handleCopyToClipboard}
+              >
+                Copy to Clipboard
+              </Button>
+              <Button
+                style={{
+                  width: "20em",
+                  backgroundColor: "#d90429",
+                  color: "white",
+                }}
+                onClick={() => setExpired(true)}
+              >
+                Cancel Voucher Creation
+              </Button>
+            </div>
           </div>
         ) : (
           <Link
@@ -143,7 +188,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
             }}
             href={`/withdraw/${withdrawLink?.id}/lnurl`}
           >
-            <Button >Next </Button>
+            <Button>Next </Button>
           </Link>
         )}
 

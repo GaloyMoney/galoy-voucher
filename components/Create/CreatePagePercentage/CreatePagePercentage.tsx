@@ -7,55 +7,42 @@ import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import Heading from "@/components/Heading";
 
 interface Props {
+  commissionPercentage: any;
   setCommissionPercentage: any;
-  commissionPercentage: string;
-  amountSATS: string;
-  amountFIAT: string;
+  amount: any;
   currency: any;
   usdToSats: any;
   setCurrentPage: any;
   fiatAfterCommission: any;
-  satsAfterCommission: any;
   setFiatAfterCommission: any;
-  setSatsAfterCommission: any;
+  
 }
 
 export default function CreatePagePercentage({
   commissionPercentage,
   setCommissionPercentage,
-  amountSATS,
-  amountFIAT,
+  amount,
   currency,
   setCurrentPage,
   fiatAfterCommission,
-  satsAfterCommission,
   setFiatAfterCommission,
-  setSatsAfterCommission,
 }: Props) {
   useEffect(() => {
     setFiatAfterCommission(
       currency.fractionDigits === 0
         ? Number(
-            Number(amountFIAT) -
-              (Number(amountFIAT) * Number(commissionPercentage)) / 100
+            Number(amount) -
+              (Number(amount) * Number(commissionPercentage)) / 100
           ).toFixed()
         : Number(
-            Number(amountFIAT) -
-              (Number(amountFIAT) * Number(commissionPercentage)) / 100
+            Number(amount) -
+              (Number(amount) * Number(commissionPercentage)) / 100
           )
             .toFixed(currency.fractionDigits)
             .toString()
     );
 
-    setSatsAfterCommission(
-      Number(
-        Number(amountSATS) -
-          (Number(amountSATS) * Number(commissionPercentage)) / 100
-      )
-        .toFixed()
-        .toString()
-    );
-  }, [commissionPercentage, amountSATS, amountFIAT]);
+  }, [commissionPercentage, amount]);
 
   return (
     <>
@@ -67,17 +54,21 @@ export default function CreatePagePercentage({
         <div>
           {currency.symbol} {formatOperand(fiatAfterCommission)}
         </div>
-        <div>≈ {formatOperand(satsAfterCommission)} sats</div>
       </div>
       <Numpad
         currentAmount={commissionPercentage}
         setCurrentAmount={setCommissionPercentage}
         unit="PERCENTAGE"
       />
-
-      <Button style={{ width: "90%" }} onClick={() => setCurrentPage("AMOUNT")}>
-        Previous
-      </Button>
+      <div className={styles.commission_and_submit_buttons}>
+        <Button
+          style={{ width: "90%" }}
+          onClick={() => setCurrentPage("AMOUNT")}
+        >
+          Previous
+        </Button>
+        <Button style={{ width: "90%" }}>Set commission</Button>
+      </div>
     </>
   );
 }

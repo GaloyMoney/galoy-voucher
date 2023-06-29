@@ -20,6 +20,9 @@ export const GET_WITHDRAW_LINK = gql`
       created_at
       updated_at
       commission_percentage
+      identifier_code
+      secret_code
+      invoice_expiration
     }
   }
 `;
@@ -44,6 +47,9 @@ export const GET_WITHDRAW_LINKS_BY_USER_ID = gql`
       payment_secret
       escrow_wallet
       commission_percentage
+      identifier_code
+      secret_code
+      invoice_expiration
     }
   }
 `;

@@ -33,7 +33,7 @@
 .account_type_button {
   border-radius: 0.5em;
   border-width: 0.124em;
-  border-color: var(--orange);;
+  border-color: var(--orange);
   text-align: center;
   text-decoration: none;
   font-weight: 500;
@@ -78,4 +78,12 @@
   align-items: center;
   justify-content: center;
   gap: 1em;
+}
+
+.commission_and_submit_buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  width: 90%;
 }

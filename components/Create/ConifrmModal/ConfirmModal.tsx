@@ -5,55 +5,77 @@ import styles from "./ConfirmModal.module.css";
 import { formatOperand } from "@/utils/helpers";
 
 interface ConfirmModalProps {
-  open: boolean;
-  onClose: () => void;
-  handleSubmit: () => void;
-  fiatAfterCommission: string;
+  open: any;
+  onClose: any;
+  handleSubmit: any;
+  amount: any;
   currency: any;
-  satsAfterCommission: string;
-  accountType: string;
-  commissionPercentage: string;
+  commissionPercentage: any;
+  commissionAmountInDollars: any;
+  exchangeRateFiatUSD: any;
+  satsToUsd: any;
+  usdToSats: any
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
   open,
   onClose,
   handleSubmit,
-  fiatAfterCommission,
+  amount,
   currency,
-  satsAfterCommission,
-  accountType,
   commissionPercentage,
+  commissionAmountInDollars,
+  exchangeRateFiatUSD,
+  satsToUsd,
+  usdToSats,
 }) => {
   return (
     <ModalComponent open={open} onClose={onClose}>
       <div className={styles.modal_container}>
         <h1 className={styles.modalTitle}>Confirm</h1>
         <div>
-          <h2 className={styles.modalSubtitle}>Total Amount </h2>
+          <h3 className={styles.modalSubtitle}>Sales Amount </h3>
           <p className={styles.modalText}>
-            {formatOperand(
-              Number(fiatAfterCommission).toFixed(currency.fractionDigits)
-            )}{" "}
+            {formatOperand(Number(amount).toFixed(currency.fractionDigits))}{" "}
             {currency.name}
           </p>
-          <p className={styles.modalText}>
-            ≈ {formatOperand(satsAfterCommission)} sats
-          </p>
         </div>
         <div>
-          <h3 className={styles.modalSubtitle}>Sats Type</h3>
+          <h3 className={styles.modalSubtitle}>Voucher Amount</h3>
           <p className={styles.modalText}>
-            {accountType === "BTC" ? "Regular" : "Stable"}
+            {Number(commissionAmountInDollars)} US Dollar
           </p>
         </div>
+
+        {/* <div>
+          <h3 className={styles.modalSubtitle}>Exchange Rate USD/{currency.id}</h3>
+          <p className={styles.modalText}>
+            {formatOperand(exchangeRateFiatUSD)}
+          </p>
+        </div> */}
+
         <div>
-          <h3 className={styles.modalSubtitle}>Commission</h3>
-          <p className={styles.modalText}>{formatOperand(commissionPercentage)}%</p>
+          <h3 className={styles.modalSubtitle}>Funding Amount</h3>
+          <p className={styles.modalText}>
+            ≈ {usdToSats(Number(commissionAmountInDollars)).toFixed()} sats
+          </p>
+        </div>
+        {/* <div>
+          <h3 className={styles.modalSubtitle}>Exchange Rate BTC/USD</h3>
+          <p className={styles.modalText}>
+          </p>
+        </div> */}
+        <div>
+          <h3 className={styles.modalSubtitle}>Escrow Currency</h3>
+          <p className={styles.modalText}>US Dollar (Stablesats)</p>
+        </div>
+        <div>
+          <h3 className={styles.modalSubtitle}>Sales Commission</h3>
+          <p className={styles.modalText}>{Number(commissionPercentage)}%</p>
         </div>
         <div className={styles.button_container}>
-          <Button onClick={handleSubmit}>Confirm</Button>
           <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={handleSubmit}>Fund</Button>
         </div>
       </div>
     </ModalComponent>

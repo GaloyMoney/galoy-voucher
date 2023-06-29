@@ -5,6 +5,7 @@ import CreatePageAmount from "@/components/Create/CreatePageAmount/CreatePageAmo
 import CreatePagePercentage from "@/components/Create/CreatePagePercentage/CreatePagePercentage";
 import {
   useCreateWithdrawLinkMutation,
+  useLnUsdInvoiceCreateOnBehalfOfRecipientMutation,
   useRealtimePriceInitialQuery,
   useRealtimePriceWsSubscription,
 } from "@/utils/generated/graphql";
@@ -15,12 +16,13 @@ import {
   NEXT_PUBLIC_ESCROW_WALLET_BTC,
   NEXT_PUBLIC_ESCROW_WALLET_USD,
 } from "@/config/variables";
-import { generateRandomHash } from "@/utils/helpers";
+import { errorArrayToString, generateRandomHash } from "@/utils/helpers";
 import ModalComponent from "@/components/ModalComponent";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/Create/ConifrmModal/ConfirmModal";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import Heading from "@/components/Heading";
+import useRealtimePrice from "@/hooks/useRealTimePrice";
 
 const DEFAULT_CURRENCY: any = {
   __typename: "Currency",
@@ -33,155 +35,73 @@ const DEFAULT_CURRENCY: any = {
 
 export default function CreatePage() {
   const [currentPage, setCurrentPage] = useState("AMOUNT");
-  const [amountSATS, setAmountSATS] = useState("0");
-  const [amountFIAT, setAmountFIAT] = useState("0");
+  const [amount, setamount] = useState("0");
   const [commissionPercentage, setCommissionPercentage] = useState("0");
-  const [unit, setUnit] = useState("FIAT");
   const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
-  const [accountType, setAccountType] = useState("BTC");
   const { usdToSats, satsToUsd } = useSatsPrice();
-  const [fiatAfterCommission, setFiatAfterCommission] = useState(amountFIAT);
-  const [satsAfterCommission, setSatsAfterCommission] = useState(amountSATS);
+  const [fiatAfterCommission, setFiatAfterCommission] = useState(amount);
   const [loadingPageChange, setLoadingPageChange] = useState(false);
   const [confirmModal, setConfirmModal] = useState(false);
+  const { currencyToCents, hasLoaded } = useRealtimePrice(currency.id);
 
   const router = useRouter();
+  const AmountInDollars = (
+    currencyToCents(Number(amount), currency.id, currency.fractionDigits)
+      .convertedCurrencyAmount / 100
+  ).toFixed(2);
 
-  const [alert, setAlert] = useState({
-    message: "",
-    modal: false,
-  });
+  const commissionAmountInDollars = (
+    Number(AmountInDollars) -
+    (Number(AmountInDollars) * Number(commissionPercentage)) / 100
+  ).toFixed(2);
 
   const [
     createWithdrawLink,
     { loading: withdrawLinkLoading, error: withdrawLinkError },
   ] = useCreateWithdrawLinkMutation();
 
-  const {
-    handleCreateInvoice,
-    loading: CreateInvoiceLoading,
-    error: CreateInvoiceError,
-  } = useCreateInvoice({
-    recipientWalletCurrency: accountType,
-  });
+  const [
+    createLnUsdInvoice,
+    { loading: lnUSDInvoiceLoading, error: lnUSDInvoiceError },
+  ] = useLnUsdInvoiceCreateOnBehalfOfRecipientMutation();
 
-  const {
-    data: initialData,
-    loading,
-    refetch,
-  } = useRealtimePriceInitialQuery({
-    variables: { currency: currency.id },
-    context: {
-      endpoint: "MAINNET",
-    },
-  });
+  if (withdrawLinkLoading || loadingPageChange) {
+    return <PageLoadingComponent />;
+  }
 
-  const { data: wsData, loading: wsLoading } = useRealtimePriceWsSubscription({
-    variables: { currency: currency.id },
-    context: {
-      endpoint: "MAINNET",
-    },
-  });
-
-  const updateCurrencyConversion = (priceData: any) => {
-    if (priceData) {
-      const { base, offset } = priceData;
-      const priceRef = base / 10 ** offset;
-      if (unit === "SATS") {
-        const convertedCurrencyAmount =
-          currency.fractionDigits === 2
-            ? (Number(amountSATS) * priceRef) / 100
-            : Number(amountSATS) * priceRef;
-        setAmountFIAT(
-          (currency.fractionDigits === 0
-            ? convertedCurrencyAmount.toFixed()
-            : convertedCurrencyAmount.toFixed(currency.fractionDigits)
-          ).toString()
-        );
-      } else {
-        const convertedCurrencyAmount =
-          currency.fractionDigits === 2
-            ? (100 * Number(amountFIAT)) / priceRef
-            : Number(amountFIAT) / priceRef;
-        setAmountSATS(convertedCurrencyAmount.toFixed().toString());
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (initialData?.realtimePrice?.btcSatPrice) {
-      updateCurrencyConversion(initialData?.realtimePrice?.btcSatPrice);
-    }
-  }, [amountSATS, amountFIAT, initialData]);
-
-  useEffect(() => {
-    refetch();
-  }, [wsData]);
-
-  const handelConfirmModal = () => {
-    const cent_sats = (usdToSats(1) / 100).toFixed();
-    if (Number(satsAfterCommission) < Number(cent_sats)) {
-      setAlert({
-        message: "Amount is very small",
-        modal: true,
-      });
-    } else {
-      setConfirmModal(true);
-    }
-  };
-
-  const handelSubmit = async () => {
-    setConfirmModal(false);
+  const handleSubmit = async () => {
     try {
-      let amount;
-      const auto_memo = `Galoy withdraw Link - for ${
-        accountType === "BTC" ? "Regular sats" : "Stable sats"
-      } ${
-        Number(commissionPercentage) === 0
-          ? ""
-          : `@${Number(commissionPercentage)}% commission"`
-      }`;
-      if (accountType === "BTC") {
-        amount = Number(satsAfterCommission);
-      } else {
-        amount = (
-          Number(satsToUsd(Number(satsAfterCommission)).toFixed(2)) * 100
-        ).toFixed();
-      }
-      console.log("amount", amount);
-      const result = await handleCreateInvoice(Number(amount), auto_memo);
-      if (result?.error?.length != 0 && result.error) {
-        const errorMessage = result?.error
-          .map((error) => error.message)
-          .join(", ");
-        return setAlert({
-          message: errorMessage,
-          modal: true,
-        });
-      }
+      const result = await createLnUsdInvoice({
+        variables: {
+          input: {
+            recipientWalletId: `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
+            amount: Number(commissionAmountInDollars) * 100,
+            memo: "memo",
+          },
+        },
+        context: {
+          endpoint: "MAINNET",
+        },
+      });
 
-      setLoadingPageChange(true);
-      if (result.data) {
-        const { paymentRequest, paymentHash, paymentSecret, satoshis } =
-          result.data;
+      const data = result.data?.lnUsdInvoiceCreateOnBehalfOfRecipient.invoice;
+      const error = errorArrayToString(
+        result.data?.lnUsdInvoiceCreateOnBehalfOfRecipient.errors
+      );
+      if (!error && data) {
         const createWithdrawLinkResult = await createWithdrawLink({
           variables: {
             input: {
-              payment_hash: paymentHash,
+              payment_hash: data.paymentHash,
               user_id: "aaaaaaaa-e098-4a16-932b-e4f4abc24366",
-              payment_request: paymentRequest,
-              payment_secret: paymentSecret,
-              amount: accountType === "BTC" ? satoshis : Number(amount),
-              account_type: accountType,
-              escrow_wallet:
-                accountType === "BTC"
-                  ? `${NEXT_PUBLIC_ESCROW_WALLET_BTC}`
-                  : `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
-              title: auto_memo,
-              min_withdrawable:
-                accountType === "BTC" ? satoshis : Number(amount),
-              max_withdrawable:
-                accountType === "BTC" ? satoshis : Number(amount),
+              payment_request: data.paymentRequest,
+              payment_secret: data.paymentSecret,
+              amount: Number(commissionAmountInDollars) * 100,
+              account_type: "USD",
+              escrow_wallet: `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
+              title: "Galoy withdraw",
+              min_withdrawable: Number(commissionAmountInDollars) * 100,
+              max_withdrawable: Number(commissionAmountInDollars) * 100,
               unique_hash: generateRandomHash(),
               k1: generateRandomHash(),
               commission_percentage: Number(commissionPercentage),
@@ -194,35 +114,41 @@ export default function CreatePage() {
       }
     } catch (e) {
       console.log(e);
-      setLoadingPageChange(false);
-      setAlert({
-        message: String(e),
-        modal: true,
-      });
     }
   };
 
-  if (CreateInvoiceLoading || withdrawLinkLoading || loadingPageChange) {
+  if (withdrawLinkLoading || lnUSDInvoiceLoading) {
     return <PageLoadingComponent />;
   }
 
   if (currentPage === "AMOUNT") {
     return (
       <div className="top_page_container">
-        <CreatePageAmount
-          amountSATS={amountSATS}
-          amountFIAT={amountFIAT}
-          unit={unit}
+        <ConfirmModal
+          open={confirmModal}
+          onClose={() => setConfirmModal(false)}
+          handleSubmit={handleSubmit}
+          amount={amount}
           currency={currency}
-          accountType={accountType}
-          loading={loading}
-          setAmountSATS={setAmountSATS}
-          setAmountFIAT={setAmountFIAT}
-          setUnit={setUnit}
+          commissionPercentage={commissionPercentage}
+          commissionAmountInDollars={commissionAmountInDollars}
+          exchangeRateFiatUSD={"USD"}
+          satsToUsd={satsToUsd}
+          usdToSats={usdToSats}
+        />
+
+        <CreatePageAmount
+          amount={amount}
+          currency={currency}
+          setamount={setamount}
           setCurrency={setCurrency}
-          setAccountType={setAccountType}
           setCurrentPage={setCurrentPage}
           usdToSats={usdToSats}
+          setConfirmModal={setConfirmModal}
+          commissionPercentage={commissionPercentage}
+          AmountInDollars={AmountInDollars}
+          commissionAmountInDollars={commissionAmountInDollars}
+          hasLoaded={hasLoaded}
         />
       </div>
     );
@@ -230,53 +156,17 @@ export default function CreatePage() {
     return (
       <>
         <div className="top_page_container">
-          <ModalComponent
-            open={alert.modal}
-            onClose={() =>
-              setAlert({
-                message: "",
-                modal: false,
-              })
-            }
-          >
-            {alert.message}
-            <Button
-              onClick={() =>
-                setAlert({
-                  message: "",
-                  modal: false,
-                })
-              }
-            >
-              Ok{" "}
-            </Button>
-          </ModalComponent>
-          <ConfirmModal
-            open={confirmModal}
-            onClose={() => setConfirmModal(false)}
-            handleSubmit={handelSubmit}
-            fiatAfterCommission={fiatAfterCommission}
-            satsAfterCommission={satsAfterCommission}
-            currency={currency}
-            accountType={accountType}
-            commissionPercentage={commissionPercentage}
-          />
           <CreatePagePercentage
             commissionPercentage={commissionPercentage}
             setCommissionPercentage={setCommissionPercentage}
-            amountFIAT={amountFIAT}
-            amountSATS={amountSATS}
+            amount={amount}
             currency={currency}
             usdToSats={usdToSats}
             setCurrentPage={setCurrentPage}
             fiatAfterCommission={fiatAfterCommission}
-            satsAfterCommission={satsAfterCommission}
             setFiatAfterCommission={setFiatAfterCommission}
-            setSatsAfterCommission={setSatsAfterCommission}
           />
-          <Button style={{ width: "90%" }} onClick={handelConfirmModal}>
-            Submit
-          </Button>
+
           <InfoComponent>
             Please enter the commission percentage that will be deducted from
             the original Link amount. The maximum commission is 99 percent.
