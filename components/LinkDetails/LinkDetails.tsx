@@ -4,6 +4,7 @@ import { timeSince } from "@/utils/helpers";
 import { WithdrawLink } from "@/utils/generated/graphql";
 import useSatPrice from "@/hooks/useSatsPrice";
 import { TimeBar } from "@/components/TimeBar/TimeBar";
+import Bold from "../Bold";
 
 interface LinkDetailsProps {
   withdrawLink?: WithdrawLink | null;
@@ -31,23 +32,38 @@ export default function LinkDetails({
         {withdrawLink?.status === "UNFUNDED"
           ? "Not Funded"
           : withdrawLink?.status === "FUNDED"
-          ? "LNURLw Funded and active"
+          ? "Funded and Active"
           : null}
       </div>
-      <div className={styles.amount}>
-        Pay{" "}
-        {withdrawLink?.account_type === "BTC"
-          ? `${withdrawLink?.max_withdrawable} sats`
-          : `≈ ${usdToSats(
-              withdrawLink?.max_withdrawable / 100
-            ).toFixed()} sats`}{" "}
-        to create withdraw link for ${withdrawLink?.max_withdrawable / 100}
-      </div>
-      <div>
-        {withdrawLink?.commission_percentage === 0
-          ? `No commission`
-          : `${withdrawLink?.commission_percentage} percent Commission`}
-      </div>
+      {withdrawLink.status === "UNFUNDED" ? (
+        <>
+          <div className={styles.amount}>
+            Pay{" "}
+            {withdrawLink?.account_type === "BTC"
+              ? `${withdrawLink?.max_withdrawable} sats`
+              : `≈ ${usdToSats(
+                  withdrawLink?.max_withdrawable / 100
+                ).toFixed()} sats`}{" "}
+            to create withdraw link for ${withdrawLink?.max_withdrawable / 100}{" "}
+            US Dollar
+          </div>
+          <div>
+            {withdrawLink?.commission_percentage === 0
+              ? `No commission`
+              : `${withdrawLink?.commission_percentage} percent Commission`}
+          </div>
+        </>
+      ) : withdrawLink?.status === "FUNDED" ? (
+        <>
+          <div className={styles.amount}>
+            Voucher Amount ${withdrawLink?.max_withdrawable / 100} US
+          </div>
+          <div>
+            Voucher Code <Bold>{withdrawLink.identifier_code}</Bold>{" "}
+          </div>
+        </>
+      ) : null}
+
       <div className={styles.time}>
         Created {timeSince(Number(withdrawLink?.created_at))}{" "}
       </div>

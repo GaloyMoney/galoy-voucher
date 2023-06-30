@@ -11,6 +11,7 @@ import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import FundsPaid from "@/components/FundsPaid";
 import Heading from "@/components/Heading";
 import Bold from "@/components/Bold";
+import LinkDetails from "@/components/LinkDetails/LinkDetails";
 interface Params {
   params: {
     id: string;
@@ -69,13 +70,7 @@ export default function Page({ params: { id } }: Params) {
             Please collect ${data.getWithdrawLink?.amount} before sharing with
             the customer
           </p>
-          <p>
-            Voucher <Bold>{data.getWithdrawLink?.identifier_code}</Bold>
-          </p>
-          <p>
-            voucher Amount $
-            {(Number(data.getWithdrawLink?.max_withdrawable) / 100).toFixed(2)}
-          </p>
+          <LinkDetails withdrawLink={data.getWithdrawLink}></LinkDetails>
           {revelLNURL ? (
             <>
               {" "}
@@ -89,14 +84,42 @@ export default function Page({ params: { id } }: Params) {
                   <p>{formatSecretCode(data.getWithdrawLink?.secret_code)} </p>
                 </div>
               </div>
-              <Button onClick={copyToClipboard}>Copy LNURL</Button>
+              <Button
+                style={{
+                  width: "90%",
+                }}
+                onClick={copyToClipboard}
+              >
+                Copy LNURL
+              </Button>
             </>
           ) : null}
           {!revelLNURL ? (
-            <Button onClick={() => setRevelLNURL(true)}>Revel Voucher</Button>
+            <Button
+              style={{
+                width: "90%",
+              }}
+              onClick={() => setRevelLNURL(true)}
+            >
+              Revel Voucher
+            </Button>
           ) : null}
-          <Button onClick={() => sharePage()}>Share Voucher</Button>
-          <Button onClick={() => window.print()}>Print Voucher</Button>
+          <Button
+            style={{
+              width: "90%",
+            }}
+            onClick={() => sharePage()}
+          >
+            Share Voucher
+          </Button>
+          <Button
+            style={{
+              width: "90%",
+            }}
+            onClick={() => window.print()}
+          >
+            Print Voucher
+          </Button>
           <InfoComponent>
             To redeem instantly for zero fees Download App at blink.sv and scan
             above QR with Blink

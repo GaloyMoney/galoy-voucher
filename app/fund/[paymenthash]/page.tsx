@@ -19,6 +19,7 @@ import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 import { useRouter } from "next/navigation";
 import Heading from "@/components/Heading";
 import Bold from "@/components/Bold";
+import { SingletonRouter, Router } from "next/router";
 
 interface Params {
   params: {

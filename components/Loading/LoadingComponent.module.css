@@ -17,6 +17,7 @@
   position: absolute;
   left: 50%;
   top: 35%;
+  margin-left: -15.5px; 
   z-index: 1000;
   height: 31px;
   width: 31px;
