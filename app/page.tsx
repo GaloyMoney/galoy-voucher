@@ -1,7 +1,5 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import Button from "@/components/Button/Button";
 // path : /
 //TODO home page or welcome screen needed to be created gere

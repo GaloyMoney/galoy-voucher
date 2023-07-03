@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 
-export const TimeBar = ({ expirationTimestamp, setExpired }: any) => {
+interface Props {
+  expirationTimestamp: number;
+  setExpired: (expired: boolean) => void;
+}
+
+export const TimeBar = ({ expirationTimestamp, setExpired }: Props) => {
   const [timeLeft, setTimeLeft] = useState(expirationTimestamp - Date.now());
 
   useEffect(() => {

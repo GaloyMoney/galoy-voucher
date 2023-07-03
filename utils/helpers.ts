@@ -109,3 +109,15 @@ export function formatSecretCode(s: string | null | undefined): string {
   }
   return s.match(/.{1,4}/g)!.join("-");
 }
+
+
+export function calculateCommission(
+  AmountInDollars: string,
+  commissionPercentage: string
+): string {
+  const commissionAmountInDollars =
+    Number(AmountInDollars) -
+    (Number(AmountInDollars) * Number(commissionPercentage)) / 100;
+  return commissionAmountInDollars.toFixed(2);
+}
+

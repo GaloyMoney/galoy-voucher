@@ -16,19 +16,26 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import FundsPaid from "@/components/FundsPaid";
 import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 import Heading from "@/components/Heading";
+import { Status } from "@/utils/generated/graphql";
+
 interface Params {
   params: {
     id: string;
   };
 }
 
+interface ErrorModal {
+  message: string;
+  open: boolean;
+}
+
 export default function Page({ params: { id } }: Params) {
-  const [btcWalletAddress, setBtcWalletAddress] = useState("");
-  const [fetchingFees, setFetchingFees] = useState(false);
-  const [fees, setFees] = useState(0);
-  const [confirmModal, setConfirmModal] = useState(false);
-  const [successModal, setSuccessModal] = useState(false);
-  const [errorModal, setErrorModal] = useState({
+  const [btcWalletAddress, setBtcWalletAddress] = useState<string>("");
+  const [fetchingFees, setFetchingFees] = useState<boolean>(false);
+  const [fees, setFees] = useState<number>(0);
+  const [confirmModal, setConfirmModal] = useState<boolean>(false);
+  const [successModal, setSuccessModal] = useState<boolean>(false);
+  const [errorModal, setErrorModal] = useState<ErrorModal>({
     message: "",
     open: false,
   });
@@ -48,6 +55,7 @@ export default function Page({ params: { id } }: Params) {
       endpoint: "SELF",
     },
   });
+
   const withdrawLink = dataWithdrawLink?.getWithdrawLink;
   const { loading, error, data, refetch } = useGetOnChainPaymentFeesQuery({
     variables: { getOnChainPaymentFeesId: id, btcWalletAddress },
@@ -56,12 +64,6 @@ export default function Page({ params: { id } }: Params) {
     },
     skip: !fetchingFees,
   });
-
-  useEffect(() => {
-    if (fetchingFees) {
-      refetch();
-    }
-  }, [fetchingFees]);
 
   const handleConfirm = async () => {
     try {
@@ -80,6 +82,7 @@ export default function Page({ params: { id } }: Params) {
         throw new Error(response.errors[0].message);
       }
     } catch (error) {
+      setBtcWalletAddress("");
       setConfirmModal(false);
       if (error instanceof Error) {
         setErrorModal({
@@ -97,7 +100,6 @@ export default function Page({ params: { id } }: Params) {
 
   useEffect(() => {
     if (data) {
-      console.log("data", data);
       if (data.getOnChainPaymentFees.fees) {
         setFees(data.getOnChainPaymentFees.fees);
         setConfirmModal(true);
@@ -124,10 +126,9 @@ export default function Page({ params: { id } }: Params) {
   if (loadingWithdrawLink) {
     return <PageLoadingComponent />;
   }
-  console.log("sendPaymentOnChainLoading", sendPaymentOnChainLoading);
   return (
     <div className="top_page_container">
-      {withdrawLink?.status === "PAID" ? (
+      {withdrawLink?.status === Status.Paid ? (
         <>
           <FundsPaid></FundsPaid>
         </>

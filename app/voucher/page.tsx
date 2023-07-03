@@ -7,11 +7,21 @@ import Button from "@/components/Button/Button";
 import { useRouter } from "next/navigation";
 import ModalComponent from "@/components/ModalComponent";
 import LoadingPageComponent from "@/components/Loading/PageLoadingComponent";
+interface SecretCode {
+  input1: string;
+  input2: string;
+  input3: string;
+}
+
 export default function VoucherPage() {
   const router = useRouter();
-  const [secret, setSecret] = useState("");
-  const [inputs, setInputs] = useState({ input1: "", input2: "", input3: "" });
-  const [modalOpen, setModalOpen] = useState(false);
+  const [secret, setSecret] = useState<string>("");
+  const [inputs, setInputs] = useState<SecretCode>({
+    input1: "",
+    input2: "",
+    input3: "",
+  });
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const { loading, error, data } = useGetWithdrawLinkBySecretQuery({
     variables: { secret_code: secret },
     context: {
@@ -20,7 +30,8 @@ export default function VoucherPage() {
     skip: secret.length !== 12,
   });
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e : React.ChangeEvent<HTMLInputElement>
+    ) => {
     setInputs((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,

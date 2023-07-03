@@ -1,11 +1,10 @@
 "use client";
 import React from "react";
-import { useGetWithdrawLinkQuery } from "@/utils/generated/graphql";
+import { useGetWithdrawLinkQuery ,Status } from "@/utils/generated/graphql";
 import { NEXT_PUBLIC_LOCAL_URL } from "@/config/variables";
 import Link from "next/link";
 import Button from "@/components/Button/Button";
 import LinkDetails from "@/components/LinkDetails/LinkDetails";
-import styles from "./withdraw.module.css";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import FundsPaid from "@/components/FundsPaid";
 import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
@@ -38,9 +37,9 @@ export default function Page({ params: { id } }: Params) {
 
   return (
     <div className="top_page_container">
-      {data.getWithdrawLink?.status === "PAID" ? (
+      {data.getWithdrawLink?.status === Status.Paid ? (
         <>
-          <FundsPaid></FundsPaid>
+          <FundsPaid/>
         </>
       ) : (
         <>

@@ -3,47 +3,43 @@ import { useState } from "react";
 import CreatePageAmount from "@/components/Create/CreatePageAmount/CreatePageAmount";
 import CreatePagePercentage from "@/components/Create/CreatePagePercentage/CreatePagePercentage";
 import {
+  Currency,
   useCreateWithdrawLinkMutation,
   useLnUsdInvoiceCreateOnBehalfOfRecipientMutation,
 } from "@/utils/generated/graphql";
 import useSatsPrice from "@/hooks/useSatsPrice";
 import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 import { NEXT_PUBLIC_ESCROW_WALLET_USD } from "@/config/variables";
-import { errorArrayToString, generateRandomHash } from "@/utils/helpers";
+import {
+  calculateCommission,
+  errorArrayToString,
+  generateRandomHash,
+} from "@/utils/helpers";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/Create/ConifrmModal/ConfirmModal";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import useRealtimePrice from "@/hooks/useRealTimePrice";
-
-const DEFAULT_CURRENCY: any = {
-  __typename: "Currency",
-  id: "USD",
-  symbol: "$",
-  name: "US Dollar",
-  flag: "🇺🇸",
-  fractionDigits: 2,
-};
+import { DEFAULT_CURRENCY } from "@/config/default";
 
 export default function CreatePage() {
+  const { usdToSats } = useSatsPrice();
   const storedCurrency =
     typeof window !== "undefined" ? localStorage.getItem("currency") : null;
   const storedCommission =
-    typeof window !== "undefined" ? localStorage.getItem("commission") : "0";
+    typeof window !== "undefined" ? localStorage.getItem("commission") : null;
 
-  const [currency, setCurrency] = useState(
+  const [currency, setCurrency] = useState<Currency>(
     storedCurrency ? JSON.parse(storedCurrency) : DEFAULT_CURRENCY
   );
 
-  const [commissionPercentage, setCommissionPercentage] = useState(
-    storedCommission ? storedCommission : "0"
+  const [commissionPercentage, setCommissionPercentage] = useState<string>(
+    storedCommission || "0"
   );
-
-  const [currentPage, setCurrentPage] = useState("AMOUNT");
-  const [amount, setamount] = useState("0");
-  const { usdToSats, satsToUsd } = useSatsPrice();
-  const [loadingPageChange, setLoadingPageChange] = useState(false);
-  const [confirmModal, setConfirmModal] = useState(false);
   const { currencyToCents, hasLoaded } = useRealtimePrice(currency.id);
+  const [currentPage, setCurrentPage] = useState<string>("AMOUNT");
+  const [amount, setAmount] = useState<string>("0");
+  const [confirmModal, setConfirmModal] = useState<boolean>(false);
+  const [loadingPageChange, setLoadingPageChange] = useState<boolean>(false);
 
   const router = useRouter();
   const AmountInDollars = (
@@ -51,10 +47,10 @@ export default function CreatePage() {
       .convertedCurrencyAmount / 100
   ).toFixed(2);
 
-  const commissionAmountInDollars = (
-    Number(AmountInDollars) -
-    (Number(AmountInDollars) * Number(commissionPercentage)) / 100
-  ).toFixed(2);
+  const commissionAmountInDollars = calculateCommission(
+    AmountInDollars,
+    commissionPercentage
+  );
 
   const [
     createWithdrawLink,
@@ -68,16 +64,15 @@ export default function CreatePage() {
 
   const handleSubmit = async () => {
     setLoadingPageChange(true);
-    console.log(Number(commissionAmountInDollars));
-    console.log(Number(AmountInDollars));
-    console.log((Number(commissionAmountInDollars) * 100).toFixed());
     try {
       const result = await createLnUsdInvoice({
         variables: {
           input: {
             recipientWalletId: `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
             amount: Number(Number(commissionAmountInDollars) * 100).toFixed(),
-            memo: `Galoy withdraw  $${Number(commissionAmountInDollars)} `,
+            memo: `Galoy withdraw  $${Number(
+              commissionAmountInDollars
+            )} @${Number(commissionPercentage)}`,
           },
         },
         context: {
@@ -101,8 +96,12 @@ export default function CreatePage() {
               account_type: "USD",
               escrow_wallet: `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
               title: `Galoy withdraw $${Number(commissionAmountInDollars)} `,
-              min_withdrawable: Number((Number(commissionAmountInDollars) * 100).toFixed()),
-              max_withdrawable: Number((Number(commissionAmountInDollars) * 100).toFixed()),
+              min_withdrawable: Number(
+                (Number(commissionAmountInDollars) * 100).toFixed()
+              ),
+              max_withdrawable: Number(
+                (Number(commissionAmountInDollars) * 100).toFixed()
+              ),
               unique_hash: generateRandomHash(),
               k1: generateRandomHash(),
               commission_percentage: Number(commissionPercentage),
@@ -140,7 +139,7 @@ export default function CreatePage() {
         <CreatePageAmount
           amount={amount}
           currency={currency}
-          setamount={setamount}
+          setAmount={setAmount}
           setCurrency={setCurrency}
           setCurrentPage={setCurrentPage}
           usdToSats={usdToSats}

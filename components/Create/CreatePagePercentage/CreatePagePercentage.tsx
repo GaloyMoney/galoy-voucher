@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Numpad from "@/components/NumPad/NumPad";
 import { formatOperand } from "@/utils/helpers";
 import styles from "../CreateLink.module.css";
 import Button from "@/components/Button/Button";
-import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import Heading from "@/components/Heading";
 
 interface Props {
-  commissionPercentage: any;
-  setCommissionPercentage: any;
-  setCurrentPage: any;
+  commissionPercentage: string;
+  setCommissionPercentage: (amount: string) => void;
+  setCurrentPage: (amount: string) => void;
 }
 
 export default function CreatePagePercentage({

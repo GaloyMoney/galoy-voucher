@@ -3,10 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --gradient-orange: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+  --gradient-orange: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.1),
+      rgba(0, 0, 0, 0.1)
+    ),
     linear-gradient(45deg, #f6a139 0%, #fb5607 100%);
   --orange: #fe7434;
-
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -25,7 +28,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-} */ 
+} */
 
 body {
   color: #212529;
@@ -41,4 +44,23 @@ body {
   justify-content: center;
   gap: 1em;
   max-width: 30em;
+}
+
+
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print_this,
+  .print_this * {
+    visibility: visible;
+    position: initial;
+
+  }
+
+  @page {
+    size: auto;
+    margin: 0;
+  }
 }

@@ -3,28 +3,29 @@ import ModalComponent from "@/components/ModalComponent";
 import React from "react";
 import styles from "./ConfirmModal.module.css";
 import { formatOperand } from "@/utils/helpers";
+import { Currency } from "@/utils/generated/graphql";
 
-interface ConfirmModalProps {
-  open: any;
-  onClose: any;
-  handleSubmit: any;
-  amount: any;
-  currency: any;
-  commissionPercentage: any;
-  commissionAmountInDollars: any;
-  usdToSats: any
+interface Props {
+  open: boolean;
+  onClose: (currency: boolean) => void;
+  handleSubmit: (currency: boolean) => void;
+  amount: string;
+  currency: Currency;
+  commissionPercentage: string;
+  commissionAmountInDollars: string;
+  usdToSats: (currency: number) => number;
 }
 
-const ConfirmModal: React.FC<ConfirmModalProps> = ({
-  open,
+const ConfirmModal = (
+ { open,
   onClose,
   handleSubmit,
   amount,
   currency,
   commissionPercentage,
   commissionAmountInDollars,
-  usdToSats,
-}) => {
+  usdToSats} : Props,
+) => {
   return (
     <ModalComponent open={open} onClose={onClose}>
       <div className={styles.modal_container}>
@@ -42,8 +43,6 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
             {Number(commissionAmountInDollars)} US Dollar
           </p>
         </div>
-
-
 
         <div>
           <h3 className={styles.modalSubtitle}>Funding Amount</h3>

@@ -12,6 +12,10 @@ import FundsPaid from "@/components/FundsPaid";
 import Heading from "@/components/Heading";
 import Bold from "@/components/Bold";
 import LinkDetails from "@/components/LinkDetails/LinkDetails";
+import { Status } from "@/utils/generated/graphql";
+import useRealtimePrice from "@/hooks/useRealTimePrice";
+import { DEFAULT_CURRENCY } from "@/config/default";
+
 interface Params {
   params: {
     id: string;
@@ -20,26 +24,34 @@ interface Params {
 
 // this page shows the LNURLw screen after success in fund transfer to escrow account
 export default function Page({ params: { id } }: Params) {
-  const [revelLNURL, setRevelLNURL] = useState(false);
+  const [revealLNURL, setRevealLNURL] = useState<boolean>(false);
+  const storedCurrency =
+    typeof window !== "undefined" ? localStorage.getItem("currency") : null;
+  const [currency, setCurrency] = useState(
+    storedCurrency ? JSON.parse(storedCurrency) : DEFAULT_CURRENCY
+  );
+
+  const { centsToCurrency, hasLoaded } = useRealtimePrice(currency.id);
   const { loading, error, data } = useGetWithdrawLinkQuery({
     variables: { getWithdrawLinkId: id },
     context: {
       endpoint: "SELF",
     },
   });
+  const WithdrawLink = data?.getWithdrawLink;
 
-  if (loading) {
+  if (loading || !hasLoaded.current) {
     return <PageLoadingComponet />;
   }
   if (error) {
     return <div>Error: {error.message}</div>;
   }
-  if (!data) {
+  if (!WithdrawLink) {
     return <div>No data</div>;
   }
 
   const lnurl = encodeURLToLNURL(
-    `${NEXT_PUBLIC_LOCAL_URL}/api/lnurlw/${data.getWithdrawLink?.unique_hash}`
+    `${NEXT_PUBLIC_LOCAL_URL}/api/lnurlw/${WithdrawLink?.unique_hash}`
   );
   const url = `${NEXT_PUBLIC_LOCAL_URL}/withdraw/${id}?lightning=${lnurl}`;
   const copyToClipboard = () => {
@@ -55,33 +67,53 @@ export default function Page({ params: { id } }: Params) {
     }
   };
 
+  const handelPrint = () => {
+    setRevealLNURL(true);
+    setTimeout(() => {
+      window.print();
+    }, 100);
+  };
+
+  console.log(hasLoaded.current);
   return (
     <div className="top_page_container">
-      {data.getWithdrawLink?.status === "PAID" ? (
+      {WithdrawLink?.status === Status.Paid ? (
         <FundsPaid></FundsPaid>
       ) : (
         <>
           <Heading>
             {" "}
-            Voucher <Bold>{data.getWithdrawLink?.identifier_code}</Bold> created
+            Voucher <Bold>{WithdrawLink?.identifier_code}</Bold> created
             Successfully{" "}
           </Heading>
-          <p>
-            Please collect ${data.getWithdrawLink?.amount} before sharing with
-            the customer
-          </p>
-          <LinkDetails withdrawLink={data.getWithdrawLink}></LinkDetails>
-          {revelLNURL ? (
+          <Bold
+            style={{
+              textAlign: "center",
+              width:"90%"
+            }}
+          >
+            Please collect $
+            {Number(
+              centsToCurrency(
+                Number(WithdrawLink?.amount) * 100,
+                currency.id,
+                currency.fractionDigits
+              ).convertedCurrencyAmount
+            )}{" "}
+            {currency.name} before sharing with the customer
+          </Bold>
+          <LinkDetails withdrawLink={WithdrawLink}></LinkDetails>
+          {revealLNURL ? (
             <>
               {" "}
-              <div className={styles.LNURL_container}>
+              <div className={`${styles.LNURL_container} print_this`}>
                 <Heading>LNURL fund withdraw</Heading>
                 <p>scan to redeem</p>
                 <QRCode size={300} value={url} />
                 <p>or visit voucher.blink.sv and redeem with </p>
                 <div className={styles.voucher_container}>
                   <p> VOUCHER CODE </p>
-                  <p>{formatSecretCode(data.getWithdrawLink?.secret_code)} </p>
+                  <p>{formatSecretCode(WithdrawLink?.secret_code)} </p>
                 </div>
               </div>
               <Button
@@ -94,14 +126,14 @@ export default function Page({ params: { id } }: Params) {
               </Button>
             </>
           ) : null}
-          {!revelLNURL ? (
+          {!revealLNURL ? (
             <Button
               style={{
                 width: "90%",
               }}
-              onClick={() => setRevelLNURL(true)}
+              onClick={() => setRevealLNURL(true)}
             >
-              Revel Voucher
+              Reveal Voucher
             </Button>
           ) : null}
           <Button
@@ -116,7 +148,7 @@ export default function Page({ params: { id } }: Params) {
             style={{
               width: "90%",
             }}
-            onClick={() => window.print()}
+            onClick={handelPrint}
           >
             Print Voucher
           </Button>

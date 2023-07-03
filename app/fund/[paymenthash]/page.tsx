@@ -8,6 +8,7 @@ import {
   useUpdateWithdrawLinkMutation,
   useLnInvoicePaymentStatusSubscription,
   useDeleteWithdrawLinkMutation,
+  InvoicePaymentStatus,
 } from "@/utils/generated/graphql";
 import LinkDetails from "@/components/LinkDetails/LinkDetails";
 import ModalComponent from "@/components/ModalComponent";
@@ -19,7 +20,6 @@ import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 import { useRouter } from "next/navigation";
 import Heading from "@/components/Heading";
 import Bold from "@/components/Bold";
-import { SingletonRouter, Router } from "next/router";
 
 interface Params {
   params: {
@@ -29,10 +29,11 @@ interface Params {
 
 //this Screen is used to take funds from user for withdraw links
 export default function FundPaymentHash({ params: { paymenthash } }: Params) {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [expired, setExpired] = useState(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [expired, setExpired] = useState<boolean>(false);
+  const isWindows = navigator.platform.includes("Win");
   const router = useRouter();
-  //getting the data for withdraw links that was saved on /create screen
+
   const {
     loading: loadingWithdrawLink,
     error: errorWithdrawLink,
@@ -56,7 +57,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
     error: paymentStatusDataError,
   } = useLnInvoicePaymentStatusSubscription({
     variables: {
-      payment_request: paymentRequest || "",
+      payment_request: paymentRequest,
     },
     skip: withdrawLink?.status === Status.Paid,
   });
@@ -67,8 +68,9 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
   useEffect(() => {
     if (
       expired &&
-      withdrawLink?.status === "UNFUNDED" &&
-      paymentStatusData?.lnInvoicePaymentStatus.status !== "PAID"
+      withdrawLink?.status === Status.Unfunded &&
+      paymentStatusData?.lnInvoicePaymentStatus.status !==
+        InvoicePaymentStatus.Paid
     ) {
       try {
         const deleteLink = async () => {
@@ -88,19 +90,22 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
 
   useEffect(() => {
     const handlePaymentStatus = async () => {
-      if (paymentStatusData && withdrawLink) {
-        if (paymentStatusData.lnInvoicePaymentStatus.status === "PAID") {
-          try {
-            await updateWithdrawLink({
-              variables: {
-                updateWithdrawLinkId: withdrawLink?.id,
-                updateWithdrawLinkInput: { status: Status.Funded },
-              },
-            });
-            setModalOpen(true);
-          } catch (error) {
-            alert(error);
-          }
+      if (
+        paymentStatusData &&
+        withdrawLink &&
+        paymentStatusData.lnInvoicePaymentStatus.status ===
+          InvoicePaymentStatus.Paid
+      ) {
+        try {
+          await updateWithdrawLink({
+            variables: {
+              updateWithdrawLinkId: withdrawLink?.id,
+              updateWithdrawLinkInput: { status: Status.Funded },
+            },
+          });
+          setModalOpen(true);
+        } catch (error) {
+          alert(error);
         }
       }
     };
@@ -143,7 +148,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
           </div>
         </ModalComponent>
         <div>
-          {withdrawLink?.status === "UNFUNDED" ? (
+          {withdrawLink?.status === Status.Unfunded ? (
             <Heading>
               Fund Voucher <Bold>{withdrawLink.identifier_code}</Bold> by paying
               the invoice below{" "}
@@ -159,7 +164,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
           withdrawLink={withdrawLink}
           setExpired={setExpired}
         ></LinkDetails>
-        {withdrawLink?.status === "UNFUNDED" ? (
+        {withdrawLink?.status === Status.Unfunded ? (
           <div>
             <div className="w-80 h-80 flex flex-col items-center justify-center border border-gray-300 rounded-md p-4">
               <QRCode size={300} value={withdrawLink?.payment_request} />
@@ -173,18 +178,31 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
               >
                 Copy to Clipboard
               </Button>
-              <Link
-                href={`bitcoin:${withdrawLink.payment_request}`}
-                target="_blank"
-              >
+              {isWindows ? (
                 <Button
                   style={{
                     width: "20em",
                   }}
+                  onClick={() => {
+                    window.open(`bitcoin:${withdrawLink.payment_request}`);
+                  }}
                 >
                   Open in wallet
                 </Button>
-              </Link>
+              ) : (
+                <a
+                  href={`bitcoin:${withdrawLink.payment_request}`}
+                  target="_blank"
+                >
+                  <Button
+                    style={{
+                      width: "20em",
+                    }}
+                  >
+                    Open in wallet
+                  </Button>
+                </a>
+              )}
               <Button
                 style={{
                   width: "20em",
@@ -208,7 +226,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
           </Link>
         )}
 
-        {withdrawLink?.status === "UNFUNDED" ? (
+        {withdrawLink?.status === Status.Unfunded ? (
           <InfoComponent>
             Please note that a Stable sats invoice is only valid for 5 minutes,
             while a Regular sats invoice is valid for 24 hours from the point of

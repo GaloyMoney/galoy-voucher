@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useDisplayCurrency } from "@/hooks/useDisplayCurrency";
 import NumPad from "@/components/NumPad/NumPad";
 import { formatOperand } from "@/utils/helpers";
@@ -10,32 +10,27 @@ import Button from "@/components/Button/Button";
 import ModalComponent from "@/components/ModalComponent";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import Heading from "@/components/Heading";
-
-const DEFAULT_CURRENCY: any = {
-  __typename: "Currency",
-  id: "USD",
-  symbol: "$",
-  name: "US Dollar",
-  flag: "🇺🇸",
-  fractionDigits: 2,
-};
+import { Currency } from "@/utils/generated/graphql";
+import { DEFAULT_CURRENCY } from "@/config/default";
 
 interface Props {
   amount: string;
-  setamount: (amount: string) => void;
-  currency: any;
-  setCurrency: (currency: any) => void;
+  setAmount: (amount: string) => void;
+  currency: Currency;
+  setCurrency: (currency: Currency) => void;
   setCurrentPage: (accountType: string) => void;
-  usdToSats: any;
-  commissionPercentage: any;
+  usdToSats: (accountType: number) => number;
+  commissionPercentage: string;
   setConfirmModal: (currency: boolean) => void;
   AmountInDollars: string;
   commissionAmountInDollars: string;
-  hasLoaded: any;
+  hasLoaded: {
+    current: boolean;
+  };
 }
 
 export default function HomePage({
-  setamount,
+  setAmount,
   setCurrency,
   setCurrentPage,
   setConfirmModal,
@@ -46,18 +41,20 @@ export default function HomePage({
   commissionAmountInDollars,
   hasLoaded,
 }: Props) {
-  const { currencyList, loading: currencyLoading } = useDisplayCurrency();
-  const [alerts, setAlerts] = useState(false);
+  const { currencyList, loading } = useDisplayCurrency();
+  const [alerts, setAlerts] = useState<boolean>(false);
 
-  const handleCurrencyChange = (event: any) => {
+  const handleCurrencyChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const selectedCurrency = currencyList.find(
-      (currency) => currency.id === event.target.value
+      (currency : Currency) => currency.id === event.target.value
     );
     localStorage.setItem("currency", JSON.stringify(selectedCurrency));
     setCurrency(selectedCurrency || DEFAULT_CURRENCY);
   };
 
-  if (currencyLoading) {
+  if (loading) {
     return <PageLoadingComponent></PageLoadingComponent>;
   }
 
@@ -120,7 +117,7 @@ export default function HomePage({
       ) : (
         <div>≈ ${formatOperand(commissionAmountInDollars)}</div>
       )}
-      <NumPad currentAmount={amount} setCurrentAmount={setamount} unit="FIAT" />
+      <NumPad currentAmount={amount} setCurrentAmount={setAmount} unit="FIAT" />
       <div className={styles.account_type}></div>
       <div className={styles.commission_and_submit_buttons}>
         <Button
