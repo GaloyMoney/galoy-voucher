@@ -20,11 +20,15 @@ import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 import { useRouter } from "next/navigation";
 import Heading from "@/components/Heading";
 import Bold from "@/components/Bold";
-
 interface Params {
   params: {
     paymenthash: string;
   };
+}
+declare global {
+  interface Window {
+    webln: any;
+  }
 }
 
 //this Screen is used to take funds from user for withdraw links
@@ -34,7 +38,6 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
   const isClient = typeof window !== "undefined";
   const isWindows = isClient && navigator.platform.includes("Win");
   const router = useRouter();
-
   const {
     loading: loadingWithdrawLink,
     error: errorWithdrawLink,
@@ -114,6 +117,23 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
     handlePaymentStatus();
   }, [paymentStatusData]);
 
+  useEffect(() => {
+    if (withdrawLink?.payment_request) {
+      try {
+        (async () => {
+          if (window.webln) {
+            const result = await window.webln.enable();
+            if (result.enabled) {
+              window.webln.sendPayment(withdrawLink.payment_request);
+            }
+          }
+        })();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [withdrawLink?.payment_request]);
+
   if (loadingWithdrawLink || updatingWithdrawLink || deletingWithdrawLink) {
     return <PageLoadingComponent />;
   }
@@ -132,6 +152,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
       navigator.clipboard?.writeText(withdrawLink?.payment_request || "");
     }
   };
+
   return (
     <>
       <div className="top_page_container">
@@ -180,31 +201,16 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
               >
                 Copy to Clipboard
               </Button>
-              {isWindows ? (
+
+              <a href={`lightning:${withdrawLink.payment_request}`}>
                 <Button
                   style={{
                     width: "20em",
                   }}
-                  onClick={() => {
-                    window.open(`bitcoin:${withdrawLink.payment_request}`);
-                  }}
                 >
                   Open in wallet
                 </Button>
-              ) : (
-                <a
-                  href={`bitcoin:${withdrawLink.payment_request}`}
-                  target="_blank"
-                >
-                  <Button
-                    style={{
-                      width: "20em",
-                    }}
-                  >
-                    Open in wallet
-                  </Button>
-                </a>
-              )}
+              </a>
               <Button
                 style={{
                   width: "20em",
