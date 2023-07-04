@@ -1,6 +1,5 @@
-import { PGDATABASE, PGHOST, PGPASSWORD, PGUSER } from "@/config/variables";
+import { PGDATABASE, PGHOST, PGPASSWORD, PGUSER } from "../config/variables";
 import type { Knex } from "knex";
-const env = require("dotenv").config({ path: "../.env" });
 
 const config: { [key: string]: Knex.Config } = {
   //using vercel's free tier postgress DB for development

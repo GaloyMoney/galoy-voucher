@@ -5,10 +5,12 @@ import {
   WithdrawLink,
   useGetWithdrawLinksByUserIdQuery,
 } from "@/utils/generated/graphql";
-import { formatDate } from "@/utils/helpers";
-import LoadingComponent from "@/components/LoadingComponent";
-import Link from "next/link";
 
+import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
+import UserLinksComponent from "@/components/UserLinks/UserLinks";
+import styles from "./UserLinkPage.module.css";
+import Pagination from "@mui/material/Pagination";
+import { getOffset } from "@/utils/helpers";
 interface Params {
   params: {
     user_id: string;
@@ -16,13 +18,17 @@ interface Params {
 }
 
 export default function UserLinks({ params: { user_id } }: Params) {
-  console.log("user_id", user_id);
   const [status, setStatus] = useState<Status | null>(null); // Initial status is null
-
-  const [poll, setPoll] = useState(false);
+  const [poll, setPoll] = useState<boolean>(false);
+  const [page, setPage] = React.useState(1);
 
   const { loading, error, data } = useGetWithdrawLinksByUserIdQuery({
-    variables: { user_id, status },
+    variables: {
+      userId: user_id,
+      status,
+      limit: 10,
+      offset: getOffset(page, 10),
+    },
     pollInterval: poll ? 5000 : 0,
   });
 
@@ -44,13 +50,21 @@ export default function UserLinks({ params: { user_id } }: Params) {
     }
   };
 
-  const withdrawLinks = data?.getWithdrawLinksByUserId;
+  const withdrawLinks = data?.getWithdrawLinksByUserId.withdrawLinks;
+  const totalLinks = data?.getWithdrawLinksByUserId.total_links;
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(Number(totalLinks) / itemsPerPage);
+
   return (
-    <div className="flex justify-center items-start min-h-screen">
-      <div className="w-full max-w-3xl p-8 rounded-lg shadow">
+    <div className="top_page_container_user_links">
+      <div
+        style={{
+          width: "95%",
+        }}
+      >
         <div className="mb-4">
           <select
-            className="bg-zinc-800 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-white focus:border-white"
+            className="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-white focus:border-white"
             value={status ? status.toString() : ""}
             onChange={(e) => handleStatusChange(e.target.value as Status)}
           >
@@ -61,78 +75,32 @@ export default function UserLinks({ params: { user_id } }: Params) {
           </select>
         </div>
         {loading ? (
-          <LoadingComponent></LoadingComponent>
+          <PageLoadingComponent></PageLoadingComponent>
         ) : error ? (
           <p>Error: {error.message}</p>
         ) : (
-          <div>
-            {withdrawLinks?.map((withdrawLink: WithdrawLink) => (
-              <Link
-                href={
-                  withdrawLink.status === "UNFUNDED"
-                    ? `/fund/${withdrawLink.id}`
-                    : withdrawLink.status === "FUNDED"
-                    ? `/withdraw/${withdrawLink.id}`
-                    : "#"
-                }
-                onClick={(event) => {
-                  if (
-                    withdrawLink.status !== "UNFUNDED" &&
-                    withdrawLink.status !== "FUNDED"
-                  ) {
-                    event.preventDefault();
-                  }
-                }}
-                key={withdrawLink.id}
-              >
-                <div className="flex-col mb-4">
-                  <div className="block max-w-7xl p-6 border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-zinc-900 dark:border-gray-700 dark:hover:bg-zinc-800">
-                    <div className="flex justify-between">
-                      <h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                        {withdrawLink?.title}
-                      </h2>
-                      <span
-                        className={` inline-flex items-center px-3 py-2 text-xs  text-center  rounded-lg  focus:ring-4            text-gray-600
-                    dark:text-gray-400 ${
-                      withdrawLink.status === "UNFUNDED"
-                        ? "border border-red-800"
-                        : withdrawLink.status === "PAID"
-                        ? "border border-blue-800"
-                        : withdrawLink.status === "FUNDED"
-                        ? "border border-green-800"
-                        : ""
-                    }`}
-                      >
-                        {withdrawLink.status === "UNFUNDED"
-                          ? "Unfunded"
-                          : withdrawLink.status === "PAID"
-                          ? "Claimed"
-                          : withdrawLink.status === "FUNDED"
-                          ? "Active"
-                          : ""}
-                      </span>
-                    </div>
-                    <p>
-                      Withdrawable amount: {withdrawLink.min_withdrawable}{" "}
-                      {withdrawLink.account_type === "BTC" ? "sats" : "cents"}
-                    </p>
-                    <p>Account Type: {withdrawLink.account_type}</p>
-                    <p
-                      className="
-                    text-sm
-                    font-medium
-                    text-gray-600
-                    dark:text-gray-400
-                    hover:underline
-                    "
-                    >
-                      Created At: {formatDate(withdrawLink.created_at)}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+          <>
+            <div className={styles.LinksContainer}>
+              {withdrawLinks?.map((withdrawLink: WithdrawLink) => (
+                <UserLinksComponent
+                  key={withdrawLink.id}
+                  withdrawLink={withdrawLink}
+                />
+              ))}
+            </div>
+            <Pagination
+              style={{
+                paddingTop: "2em",
+                display: "flex",
+                justifyContent: "center",
+              }}
+              count={totalPages}
+              page={page}
+              variant="outlined"
+              shape="rounded"
+              onChange={(event, value) => setPage(value)}
+            />
+          </>
         )}
       </div>
     </div>

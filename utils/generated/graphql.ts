@@ -25,6 +25,8 @@ export type Scalars = {
   CountryCode: { input: any; output: any; }
   /** Display currency of an account */
   DisplayCurrency: { input: any; output: any; }
+  /** Feedback shared with our user */
+  Feedback: { input: any; output: any; }
   /** Hex-encoded string of 32 bytes */
   Hex32Bytes: { input: any; output: any; }
   Language: { input: any; output: any; }
@@ -34,6 +36,8 @@ export type Scalars = {
   LnPaymentSecret: { input: any; output: any; }
   /** Text field in a lightning payment transaction */
   Memo: { input: any; output: any; }
+  /** (Positive) amount of minutes */
+  Minutes: { input: any; output: any; }
   /** An address for an on-chain bitcoin destination */
   OnChainAddress: { input: any; output: any; }
   OnChainTxHash: { input: any; output: any; }
@@ -88,9 +92,16 @@ export type AccountTransactionsArgs = {
   walletIds?: InputMaybe<Array<InputMaybe<Scalars['WalletId']['input']>>>;
 };
 
+export type AccountDeletePayload = {
+  __typename?: 'AccountDeletePayload';
+  errors: Array<Error>;
+  success: Scalars['Boolean']['output'];
+};
+
 export enum AccountLevel {
   One = 'ONE',
-  Two = 'TWO'
+  Two = 'TWO',
+  Zero = 'ZERO'
 }
 
 export type AccountLimit = {
@@ -253,6 +264,7 @@ export type Country = {
 export type CreateWithdrawLinkInput = {
   account_type: Scalars['String']['input'];
   amount: Scalars['Float']['input'];
+  commission_percentage?: InputMaybe<Scalars['Float']['input']>;
   escrow_wallet: Scalars['String']['input'];
   k1?: InputMaybe<Scalars['String']['input']>;
   max_withdrawable: Scalars['Float']['input'];
@@ -275,6 +287,15 @@ export type Currency = {
   symbol: Scalars['String']['output'];
 };
 
+export type DepositFeesInformation = {
+  __typename?: 'DepositFeesInformation';
+  minBankFee: Scalars['String']['output'];
+  /** below this amount minBankFee will be charged */
+  minBankFeeThreshold: Scalars['String']['output'];
+  /** ratio to charge as basis points above minBankFeeThreshold amount */
+  ratio: Scalars['String']['output'];
+};
+
 export type DeviceNotificationTokenCreateInput = {
   deviceToken: Scalars['String']['input'];
 };
@@ -290,10 +311,25 @@ export enum ExchangeCurrencyUnit {
   Usdcent = 'USDCENT'
 }
 
+export type FeedbackSubmitInput = {
+  feedback: Scalars['Feedback']['input'];
+};
+
+export type FeesInformation = {
+  __typename?: 'FeesInformation';
+  deposit: DepositFeesInformation;
+};
+
+export type FeesResult = {
+  __typename?: 'FeesResult';
+  fees: Scalars['Float']['output'];
+};
+
 /** Provides global settings for the application which might have an impact for the user. */
 export type Globals = {
   __typename?: 'Globals';
   buildInformation: BuildInformation;
+  feesInformation: FeesInformation;
   /** The domain name for lightning addresses accepted by this Galoy instance */
   lightningAddressDomain: Scalars['String']['output'];
   lightningAddressDomainAliases: Array<Scalars['String']['output']>;
@@ -380,6 +416,8 @@ export type LnInvoice = {
 export type LnInvoiceCreateInput = {
   /** Amount in satoshis. */
   amount: Scalars['SatAmount']['input'];
+  /** Optional invoice expiration time in minutes. */
+  expiresIn?: InputMaybe<Scalars['Minutes']['input']>;
   /** Optional memo for the lightning invoice. */
   memo?: InputMaybe<Scalars['Memo']['input']>;
   /** Wallet ID for a BTC wallet belonging to the current account. */
@@ -390,6 +428,8 @@ export type LnInvoiceCreateOnBehalfOfRecipientInput = {
   /** Amount in satoshis. */
   amount: Scalars['SatAmount']['input'];
   descriptionHash?: InputMaybe<Scalars['Hex32Bytes']['input']>;
+  /** Optional invoice expiration time in minutes. */
+  expiresIn?: InputMaybe<Scalars['Minutes']['input']>;
   /** Optional memo for the lightning invoice. */
   memo?: InputMaybe<Scalars['Memo']['input']>;
   /** Wallet ID for a BTC wallet which belongs to any account. */
@@ -434,6 +474,8 @@ export type LnNoAmountInvoice = {
 };
 
 export type LnNoAmountInvoiceCreateInput = {
+  /** Optional invoice expiration time in minutes. */
+  expiresIn?: InputMaybe<Scalars['Minutes']['input']>;
   /** Optional memo for the lightning invoice. */
   memo?: InputMaybe<Scalars['Memo']['input']>;
   /** ID for either a USD or BTC wallet belonging to the account of the current user. */
@@ -441,6 +483,8 @@ export type LnNoAmountInvoiceCreateInput = {
 };
 
 export type LnNoAmountInvoiceCreateOnBehalfOfRecipientInput = {
+  /** Optional invoice expiration time in minutes. */
+  expiresIn?: InputMaybe<Scalars['Minutes']['input']>;
   /** Optional memo for the lightning invoice. */
   memo?: InputMaybe<Scalars['Memo']['input']>;
   /** ID for either a USD or BTC wallet which belongs to the account of any user. */
@@ -497,6 +541,8 @@ export type LnUpdate = {
 export type LnUsdInvoiceCreateInput = {
   /** Amount in USD cents. */
   amount: Scalars['CentAmount']['input'];
+  /** Optional invoice expiration time in minutes. */
+  expiresIn?: InputMaybe<Scalars['Minutes']['input']>;
   /** Optional memo for the lightning invoice. */
   memo?: InputMaybe<Scalars['Memo']['input']>;
   /** Wallet ID for a USD wallet belonging to the current user. */
@@ -507,6 +553,8 @@ export type LnUsdInvoiceCreateOnBehalfOfRecipientInput = {
   /** Amount in USD cents. */
   amount: Scalars['CentAmount']['input'];
   descriptionHash?: InputMaybe<Scalars['Hex32Bytes']['input']>;
+  /** Optional invoice expiration time in minutes. */
+  expiresIn?: InputMaybe<Scalars['Minutes']['input']>;
   /** Optional memo for the lightning invoice. Acts as a note to the recipient. */
   memo?: InputMaybe<Scalars['Memo']['input']>;
   /** Wallet ID for a USD wallet which belongs to the account of any user. */
@@ -539,6 +587,7 @@ export type MobileVersions = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  accountDelete: AccountDeletePayload;
   accountUpdateDefaultWalletId: AccountUpdateDefaultWalletIdPayload;
   accountUpdateDisplayCurrency: AccountUpdateDisplayCurrencyPayload;
   captchaCreateChallenge: CaptchaCreateChallengePayload;
@@ -546,6 +595,7 @@ export type Mutation = {
   createWithdrawLink: WithdrawLink;
   deleteWithdrawLink: Scalars['ID']['output'];
   deviceNotificationTokenCreate: SuccessPayload;
+  feedbackSubmit: SuccessPayload;
   /**
    * Actions a payment which is internal to the ledger e.g. it does
    * not use onchain/lightning. Returns payment status (success,
@@ -561,13 +611,13 @@ export type Mutation = {
   /**
    * Returns a lightning invoice for an associated wallet.
    * When invoice is paid the value will be credited to a BTC wallet.
-   * Expires after 24 hours.
+   * Expires after 'expiresIn' or 24 hours.
    */
   lnInvoiceCreate: LnInvoicePayload;
   /**
    * Returns a lightning invoice for an associated wallet.
    * When invoice is paid the value will be credited to a BTC wallet.
-   * Expires after 24 hours.
+   * Expires after 'expiresIn' or 24 hours.
    */
   lnInvoiceCreateOnBehalfOfRecipient: LnInvoicePayload;
   lnInvoiceFeeProbe: SatAmountPayload;
@@ -580,13 +630,13 @@ export type Mutation = {
   /**
    * Returns a lightning invoice for an associated wallet.
    * Can be used to receive any supported currency value (currently USD or BTC).
-   * Expires after 24 hours.
+   * Expires after 'expiresIn' or 24 hours for BTC invoices or 5 minutes for USD invoices.
    */
   lnNoAmountInvoiceCreate: LnNoAmountInvoicePayload;
   /**
    * Returns a lightning invoice for an associated wallet.
    * Can be used to receive any supported currency value (currently USD or BTC).
-   * Expires after 24 hours.
+   * Expires after 'expiresIn' or 24 hours for BTC invoices or 5 minutes for USD invoices.
    */
   lnNoAmountInvoiceCreateOnBehalfOfRecipient: LnNoAmountInvoicePayload;
   lnNoAmountInvoiceFeeProbe: SatAmountPayload;
@@ -606,14 +656,14 @@ export type Mutation = {
   /**
    * Returns a lightning invoice denominated in satoshis for an associated wallet.
    * When invoice is paid the equivalent value at invoice creation will be credited to a USD wallet.
-   * Expires after 5 minutes (short expiry time because there is a USD/BTC exchange rate
+   * Expires after 'expiresIn' or 5 minutes (short expiry time because there is a USD/BTC exchange rate
    * associated with the amount).
    */
   lnUsdInvoiceCreate: LnInvoicePayload;
   /**
    * Returns a lightning invoice denominated in satoshis for an associated wallet.
    * When invoice is paid the equivalent value at invoice creation will be credited to a USD wallet.
-   * Expires after 5 minutes (short expiry time because there is a USD/BTC exchange rate
+   * Expires after 'expiresIn' or 5 minutes (short expiry time because there is a USD/BTC exchange rate
    *   associated with the amount).
    */
   lnUsdInvoiceCreateOnBehalfOfRecipient: LnInvoicePayload;
@@ -625,10 +675,12 @@ export type Mutation = {
   onChainUsdPaymentSend: PaymentSendPayload;
   onChainUsdPaymentSendAsBtcDenominated: PaymentSendPayload;
   quizCompleted: QuizCompletedPayload;
+  sendPaymentOnChain: SendPaymentOnChainResult;
   updateWithdrawLink: WithdrawLink;
   /** @deprecated will be moved to AccountContact */
   userContactUpdateAlias: UserContactUpdateAliasPayload;
   userLogin: AuthTokenPayload;
+  userLoginUpgrade: UpgradePayload;
   userLogout: AuthTokenPayload;
   /** @deprecated Use QuizCompletedMutation instead */
   userQuizQuestionUpdateCompleted: UserQuizQuestionUpdateCompletedPayload;
@@ -666,6 +718,11 @@ export type MutationDeleteWithdrawLinkArgs = {
 
 export type MutationDeviceNotificationTokenCreateArgs = {
   input: DeviceNotificationTokenCreateInput;
+};
+
+
+export type MutationFeedbackSubmitArgs = {
+  input: FeedbackSubmitInput;
 };
 
 
@@ -779,6 +836,12 @@ export type MutationQuizCompletedArgs = {
 };
 
 
+export type MutationSendPaymentOnChainArgs = {
+  btc_wallet_address: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationUpdateWithdrawLinkArgs = {
   id: Scalars['ID']['input'];
   input: UpdateWithdrawLinkInput;
@@ -792,6 +855,11 @@ export type MutationUserContactUpdateAliasArgs = {
 
 export type MutationUserLoginArgs = {
   input: UserLoginInput;
+};
+
+
+export type MutationUserLoginUpgradeArgs = {
+  input: UserLoginUpgradeInput;
 };
 
 
@@ -850,7 +918,7 @@ export type OnChainAddressPayload = {
 export type OnChainPaymentSendAllInput = {
   address: Scalars['OnChainAddress']['input'];
   memo?: InputMaybe<Scalars['Memo']['input']>;
-  targetConfirmations?: InputMaybe<Scalars['TargetConfirmations']['input']>;
+  speed?: InputMaybe<PayoutSpeed>;
   walletId: Scalars['WalletId']['input'];
 };
 
@@ -858,13 +926,14 @@ export type OnChainPaymentSendInput = {
   address: Scalars['OnChainAddress']['input'];
   amount: Scalars['SatAmount']['input'];
   memo?: InputMaybe<Scalars['Memo']['input']>;
-  targetConfirmations?: InputMaybe<Scalars['TargetConfirmations']['input']>;
+  speed?: InputMaybe<PayoutSpeed>;
   walletId: Scalars['WalletId']['input'];
 };
 
 export type OnChainTxFee = {
   __typename?: 'OnChainTxFee';
   amount: Scalars['SatAmount']['output'];
+  /** @deprecated Ignored - will be removed */
   targetConfirmations: Scalars['TargetConfirmations']['output'];
 };
 
@@ -883,7 +952,7 @@ export type OnChainUsdPaymentSendAsBtcDenominatedInput = {
   address: Scalars['OnChainAddress']['input'];
   amount: Scalars['SatAmount']['input'];
   memo?: InputMaybe<Scalars['Memo']['input']>;
-  targetConfirmations?: InputMaybe<Scalars['TargetConfirmations']['input']>;
+  speed?: InputMaybe<PayoutSpeed>;
   walletId: Scalars['WalletId']['input'];
 };
 
@@ -891,13 +960,14 @@ export type OnChainUsdPaymentSendInput = {
   address: Scalars['OnChainAddress']['input'];
   amount: Scalars['CentAmount']['input'];
   memo?: InputMaybe<Scalars['Memo']['input']>;
-  targetConfirmations?: InputMaybe<Scalars['TargetConfirmations']['input']>;
+  speed?: InputMaybe<PayoutSpeed>;
   walletId: Scalars['WalletId']['input'];
 };
 
 export type OnChainUsdTxFee = {
   __typename?: 'OnChainUsdTxFee';
   amount: Scalars['CentAmount']['output'];
+  /** @deprecated Ignored - will be removed */
   targetConfirmations: Scalars['TargetConfirmations']['output'];
 };
 
@@ -935,6 +1005,10 @@ export enum PaymentSendResult {
   Failure = 'FAILURE',
   Pending = 'PENDING',
   Success = 'SUCCESS'
+}
+
+export enum PayoutSpeed {
+  Fast = 'FAST'
 }
 
 export enum PhoneCodeChannelType {
@@ -1031,8 +1105,9 @@ export type Query = {
   businessMapMarkers?: Maybe<Array<Maybe<MapMarker>>>;
   currencyList: Array<Currency>;
   getAllWithdrawLinks: Array<WithdrawLink>;
+  getOnChainPaymentFees: FeesResult;
   getWithdrawLink?: Maybe<WithdrawLink>;
-  getWithdrawLinksByUserId: Array<WithdrawLink>;
+  getWithdrawLinksByUserId: WithdrawLinksByUserIdResult;
   globals?: Maybe<Globals>;
   lnInvoicePaymentStatus: LnInvoicePaymentStatusPayload;
   me?: Maybe<User>;
@@ -1066,15 +1141,25 @@ export type QueryBtcPriceListArgs = {
 };
 
 
+export type QueryGetOnChainPaymentFeesArgs = {
+  btc_wallet_address: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+};
+
+
 export type QueryGetWithdrawLinkArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
+  identifier_code?: InputMaybe<Scalars['String']['input']>;
   k1?: InputMaybe<Scalars['String']['input']>;
   payment_hash?: InputMaybe<Scalars['String']['input']>;
+  secret_code?: InputMaybe<Scalars['String']['input']>;
   unique_hash?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryGetWithdrawLinksByUserIdArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<Status>;
   user_id: Scalars['ID']['input'];
 };
@@ -1088,7 +1173,7 @@ export type QueryLnInvoicePaymentStatusArgs = {
 export type QueryOnChainTxFeeArgs = {
   address: Scalars['OnChainAddress']['input'];
   amount: Scalars['SatAmount']['input'];
-  targetConfirmations?: InputMaybe<Scalars['TargetConfirmations']['input']>;
+  speed?: InputMaybe<PayoutSpeed>;
   walletId: Scalars['WalletId']['input'];
 };
 
@@ -1096,7 +1181,7 @@ export type QueryOnChainTxFeeArgs = {
 export type QueryOnChainUsdTxFeeArgs = {
   address: Scalars['OnChainAddress']['input'];
   amount: Scalars['CentAmount']['input'];
-  targetConfirmations?: InputMaybe<Scalars['TargetConfirmations']['input']>;
+  speed?: InputMaybe<PayoutSpeed>;
   walletId: Scalars['WalletId']['input'];
 };
 
@@ -1104,7 +1189,7 @@ export type QueryOnChainUsdTxFeeArgs = {
 export type QueryOnChainUsdTxFeeAsBtcDenominatedArgs = {
   address: Scalars['OnChainAddress']['input'];
   amount: Scalars['SatAmount']['input'];
-  targetConfirmations?: InputMaybe<Scalars['TargetConfirmations']['input']>;
+  speed?: InputMaybe<PayoutSpeed>;
   walletId: Scalars['WalletId']['input'];
 };
 
@@ -1192,7 +1277,7 @@ export type SettlementViaLn = {
 
 export type SettlementViaOnChain = {
   __typename?: 'SettlementViaOnChain';
-  transactionHash: Scalars['OnChainTxHash']['output'];
+  transactionHash?: Maybe<Scalars['OnChainTxHash']['output']>;
   vout?: Maybe<Scalars['Int']['output']>;
 };
 
@@ -1303,6 +1388,7 @@ export enum TxStatus {
 export type UpdateWithdrawLinkInput = {
   account_type?: InputMaybe<Scalars['String']['input']>;
   amount?: InputMaybe<Scalars['Float']['input']>;
+  commission_percentage?: InputMaybe<Scalars['Float']['input']>;
   escrow_wallet?: InputMaybe<Scalars['String']['input']>;
   k1?: InputMaybe<Scalars['String']['input']>;
   max_withdrawable?: InputMaybe<Scalars['Float']['input']>;
@@ -1314,6 +1400,13 @@ export type UpdateWithdrawLinkInput = {
   title?: InputMaybe<Scalars['String']['input']>;
   unique_hash?: InputMaybe<Scalars['String']['input']>;
   user_id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type UpgradePayload = {
+  __typename?: 'UpgradePayload';
+  authToken?: Maybe<Scalars['AuthToken']['output']>;
+  errors: Array<Error>;
+  success: Scalars['Boolean']['output'];
 };
 
 /** A wallet belonging to an account which contains a USD balance and a list of transactions. */
@@ -1428,6 +1521,11 @@ export type UserLoginInput = {
   phone: Scalars['Phone']['input'];
 };
 
+export type UserLoginUpgradeInput = {
+  code: Scalars['OneTimeAuthCode']['input'];
+  phone: Scalars['Phone']['input'];
+};
+
 export type UserLogoutInput = {
   authToken: Scalars['AuthToken']['input'];
 };
@@ -1522,15 +1620,19 @@ export type WithdrawLink = {
   __typename?: 'WithdrawLink';
   account_type: Scalars['String']['output'];
   amount: Scalars['Float']['output'];
+  commission_percentage?: Maybe<Scalars['Float']['output']>;
   created_at: Scalars['String']['output'];
   escrow_wallet: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  identifier_code?: Maybe<Scalars['String']['output']>;
+  invoice_expiration: Scalars['String']['output'];
   k1?: Maybe<Scalars['String']['output']>;
   max_withdrawable: Scalars['Float']['output'];
   min_withdrawable: Scalars['Float']['output'];
   payment_hash: Scalars['String']['output'];
   payment_request: Scalars['String']['output'];
   payment_secret: Scalars['String']['output'];
+  secret_code?: Maybe<Scalars['String']['output']>;
   status: Status;
   title: Scalars['String']['output'];
   unique_hash: Scalars['String']['output'];
@@ -1538,12 +1640,24 @@ export type WithdrawLink = {
   user_id: Scalars['ID']['output'];
 };
 
+export type WithdrawLinksByUserIdResult = {
+  __typename?: 'WithdrawLinksByUserIdResult';
+  total_links?: Maybe<Scalars['Int']['output']>;
+  withdrawLinks: Array<WithdrawLink>;
+};
+
+export type SendPaymentOnChainResult = {
+  __typename?: 'sendPaymentOnChainResult';
+  amount: Scalars['Float']['output'];
+  status: Scalars['String']['output'];
+};
+
 export type CreateWithdrawLinkMutationVariables = Exact<{
   input: CreateWithdrawLinkInput;
 }>;
 
 
-export type CreateWithdrawLinkMutation = { __typename?: 'Mutation', createWithdrawLink: { __typename?: 'WithdrawLink', id: string, user_id: string, payment_request: string, payment_hash: string, payment_secret: string, amount: number, account_type: string, escrow_wallet: string, status: Status, title: string, min_withdrawable: number, max_withdrawable: number, unique_hash: string, k1?: string | null, created_at: string, updated_at: string } };
+export type CreateWithdrawLinkMutation = { __typename?: 'Mutation', createWithdrawLink: { __typename?: 'WithdrawLink', id: string, user_id: string, payment_request: string, payment_hash: string, payment_secret: string, amount: number, account_type: string, escrow_wallet: string, status: Status, title: string, min_withdrawable: number, max_withdrawable: number, unique_hash: string, k1?: string | null, created_at: string, updated_at: string, commission_percentage?: number | null } };
 
 export type UpdateWithdrawLinkMutationVariables = Exact<{
   updateWithdrawLinkId: Scalars['ID']['input'];
@@ -1551,7 +1665,7 @@ export type UpdateWithdrawLinkMutationVariables = Exact<{
 }>;
 
 
-export type UpdateWithdrawLinkMutation = { __typename?: 'Mutation', updateWithdrawLink: { __typename?: 'WithdrawLink', account_type: string, amount: number, created_at: string, escrow_wallet: string, id: string, k1?: string | null, max_withdrawable: number, min_withdrawable: number, payment_hash: string, payment_request: string, payment_secret: string, status: Status, title: string, unique_hash: string, user_id: string, updated_at: string } };
+export type UpdateWithdrawLinkMutation = { __typename?: 'Mutation', updateWithdrawLink: { __typename?: 'WithdrawLink', account_type: string, amount: number, created_at: string, escrow_wallet: string, id: string, k1?: string | null, max_withdrawable: number, min_withdrawable: number, payment_hash: string, payment_request: string, payment_secret: string, status: Status, title: string, unique_hash: string, user_id: string, updated_at: string, commission_percentage?: number | null } };
 
 export type LnInvoiceCreateOnBehalfOfRecipientMutationVariables = Exact<{
   input: LnInvoiceCreateOnBehalfOfRecipientInput;
@@ -1567,20 +1681,37 @@ export type LnUsdInvoiceCreateOnBehalfOfRecipientMutationVariables = Exact<{
 
 export type LnUsdInvoiceCreateOnBehalfOfRecipientMutation = { __typename?: 'Mutation', lnUsdInvoiceCreateOnBehalfOfRecipient: { __typename?: 'LnInvoicePayload', errors: Array<{ __typename?: 'GraphQLApplicationError', message: string, path?: Array<string | null> | null, code?: string | null }>, invoice?: { __typename?: 'LnInvoice', paymentRequest: any, paymentHash: any, paymentSecret: any, satoshis?: any | null } | null } };
 
+export type SendPaymentOnChainMutationVariables = Exact<{
+  sendPaymentOnChainId: Scalars['ID']['input'];
+  btcWalletAddress: Scalars['String']['input'];
+}>;
+
+
+export type SendPaymentOnChainMutation = { __typename?: 'Mutation', sendPaymentOnChain: { __typename?: 'sendPaymentOnChainResult', amount: number, status: string } };
+
+export type DeleteWithdrawLinkMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteWithdrawLinkMutation = { __typename?: 'Mutation', deleteWithdrawLink: string };
+
 export type GetWithdrawLinkQueryVariables = Exact<{
   getWithdrawLinkId?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
-export type GetWithdrawLinkQuery = { __typename?: 'Query', getWithdrawLink?: { __typename?: 'WithdrawLink', id: string, user_id: string, payment_request: string, payment_hash: string, payment_secret: string, amount: number, account_type: string, escrow_wallet: string, status: Status, title: string, min_withdrawable: number, max_withdrawable: number, unique_hash: string, k1?: string | null, created_at: string, updated_at: string } | null };
+export type GetWithdrawLinkQuery = { __typename?: 'Query', getWithdrawLink?: { __typename?: 'WithdrawLink', id: string, user_id: string, payment_request: string, payment_hash: string, payment_secret: string, amount: number, account_type: string, escrow_wallet: string, status: Status, title: string, min_withdrawable: number, max_withdrawable: number, unique_hash: string, k1?: string | null, created_at: string, updated_at: string, commission_percentage?: number | null, identifier_code?: string | null, secret_code?: string | null, invoice_expiration: string } | null };
 
 export type GetWithdrawLinksByUserIdQueryVariables = Exact<{
-  user_id: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
   status?: InputMaybe<Status>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetWithdrawLinksByUserIdQuery = { __typename?: 'Query', getWithdrawLinksByUserId: Array<{ __typename?: 'WithdrawLink', title: string, account_type: string, min_withdrawable: number, amount: number, created_at: string, id: string, payment_hash: string, status: Status, updated_at: string, payment_request: string, user_id: string, max_withdrawable: number, unique_hash: string, k1?: string | null, payment_secret: string, escrow_wallet: string }> };
+export type GetWithdrawLinksByUserIdQuery = { __typename?: 'Query', getWithdrawLinksByUserId: { __typename?: 'WithdrawLinksByUserIdResult', total_links?: number | null, withdrawLinks: Array<{ __typename?: 'WithdrawLink', id: string, user_id: string, payment_request: string, payment_hash: string, payment_secret: string, amount: number, account_type: string, escrow_wallet: string, status: Status, title: string, min_withdrawable: number, max_withdrawable: number, unique_hash: string, k1?: string | null, created_at: string, updated_at: string, commission_percentage?: number | null, identifier_code?: string | null, secret_code?: string | null, invoice_expiration: string }> } };
 
 export type CurrencyListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1593,6 +1724,21 @@ export type RealtimePriceInitialQueryVariables = Exact<{
 
 
 export type RealtimePriceInitialQuery = { __typename?: 'Query', realtimePrice: { __typename?: 'RealtimePrice', timestamp: any, denominatorCurrency: any, btcSatPrice: { __typename?: 'PriceOfOneSatInMinorUnit', base: any, offset: number }, usdCentPrice: { __typename?: 'PriceOfOneUsdCentInMinorUnit', base: any, offset: number } } };
+
+export type GetOnChainPaymentFeesQueryVariables = Exact<{
+  getOnChainPaymentFeesId: Scalars['ID']['input'];
+  btcWalletAddress: Scalars['String']['input'];
+}>;
+
+
+export type GetOnChainPaymentFeesQuery = { __typename?: 'Query', getOnChainPaymentFees: { __typename?: 'FeesResult', fees: number } };
+
+export type GetWithdrawLinkBySecretQueryVariables = Exact<{
+  secret_code: Scalars['String']['input'];
+}>;
+
+
+export type GetWithdrawLinkBySecretQuery = { __typename?: 'Query', getWithdrawLink?: { __typename?: 'WithdrawLink', id: string } | null };
 
 export type LnInvoicePaymentStatusSubscriptionVariables = Exact<{
   payment_request: Scalars['LnPaymentRequest']['input'];
@@ -1607,6 +1753,15 @@ export type RealtimePriceWsSubscriptionVariables = Exact<{
 
 
 export type RealtimePriceWsSubscription = { __typename?: 'Subscription', realtimePrice: { __typename?: 'RealtimePricePayload', errors: Array<{ __typename?: 'GraphQLApplicationError', message: string }>, realtimePrice?: { __typename?: 'RealtimePrice', timestamp: any, denominatorCurrency: any, btcSatPrice: { __typename?: 'PriceOfOneSatInMinorUnit', base: any, offset: number }, usdCentPrice: { __typename?: 'PriceOfOneUsdCentInMinorUnit', base: any, offset: number } } | null } };
+
+export type PriceSubscriptionVariables = Exact<{
+  amount: Scalars['SatAmount']['input'];
+  amountCurrencyUnit: ExchangeCurrencyUnit;
+  priceCurrencyUnit: ExchangeCurrencyUnit;
+}>;
+
+
+export type PriceSubscription = { __typename?: 'Subscription', price: { __typename?: 'PricePayload', errors: Array<{ __typename?: 'GraphQLApplicationError', message: string }>, price?: { __typename?: 'Price', base: any, offset: number, currencyUnit: string, formattedAmount: string } | null } };
 
 
 export const CreateWithdrawLinkDocument = gql`
@@ -1628,6 +1783,7 @@ export const CreateWithdrawLinkDocument = gql`
     k1
     created_at
     updated_at
+    commission_percentage
   }
 }
     `;
@@ -1676,6 +1832,7 @@ export const UpdateWithdrawLinkDocument = gql`
     unique_hash
     user_id
     updated_at
+    commission_percentage
   }
 }
     `;
@@ -1792,6 +1949,75 @@ export function useLnUsdInvoiceCreateOnBehalfOfRecipientMutation(baseOptions?: A
 export type LnUsdInvoiceCreateOnBehalfOfRecipientMutationHookResult = ReturnType<typeof useLnUsdInvoiceCreateOnBehalfOfRecipientMutation>;
 export type LnUsdInvoiceCreateOnBehalfOfRecipientMutationResult = Apollo.MutationResult<LnUsdInvoiceCreateOnBehalfOfRecipientMutation>;
 export type LnUsdInvoiceCreateOnBehalfOfRecipientMutationOptions = Apollo.BaseMutationOptions<LnUsdInvoiceCreateOnBehalfOfRecipientMutation, LnUsdInvoiceCreateOnBehalfOfRecipientMutationVariables>;
+export const SendPaymentOnChainDocument = gql`
+    mutation SendPaymentOnChain($sendPaymentOnChainId: ID!, $btcWalletAddress: String!) {
+  sendPaymentOnChain(
+    id: $sendPaymentOnChainId
+    btc_wallet_address: $btcWalletAddress
+  ) {
+    amount
+    status
+  }
+}
+    `;
+export type SendPaymentOnChainMutationFn = Apollo.MutationFunction<SendPaymentOnChainMutation, SendPaymentOnChainMutationVariables>;
+
+/**
+ * __useSendPaymentOnChainMutation__
+ *
+ * To run a mutation, you first call `useSendPaymentOnChainMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendPaymentOnChainMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendPaymentOnChainMutation, { data, loading, error }] = useSendPaymentOnChainMutation({
+ *   variables: {
+ *      sendPaymentOnChainId: // value for 'sendPaymentOnChainId'
+ *      btcWalletAddress: // value for 'btcWalletAddress'
+ *   },
+ * });
+ */
+export function useSendPaymentOnChainMutation(baseOptions?: Apollo.MutationHookOptions<SendPaymentOnChainMutation, SendPaymentOnChainMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendPaymentOnChainMutation, SendPaymentOnChainMutationVariables>(SendPaymentOnChainDocument, options);
+      }
+export type SendPaymentOnChainMutationHookResult = ReturnType<typeof useSendPaymentOnChainMutation>;
+export type SendPaymentOnChainMutationResult = Apollo.MutationResult<SendPaymentOnChainMutation>;
+export type SendPaymentOnChainMutationOptions = Apollo.BaseMutationOptions<SendPaymentOnChainMutation, SendPaymentOnChainMutationVariables>;
+export const DeleteWithdrawLinkDocument = gql`
+    mutation DeleteWithdrawLink($id: ID!) {
+  deleteWithdrawLink(id: $id)
+}
+    `;
+export type DeleteWithdrawLinkMutationFn = Apollo.MutationFunction<DeleteWithdrawLinkMutation, DeleteWithdrawLinkMutationVariables>;
+
+/**
+ * __useDeleteWithdrawLinkMutation__
+ *
+ * To run a mutation, you first call `useDeleteWithdrawLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteWithdrawLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteWithdrawLinkMutation, { data, loading, error }] = useDeleteWithdrawLinkMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteWithdrawLinkMutation(baseOptions?: Apollo.MutationHookOptions<DeleteWithdrawLinkMutation, DeleteWithdrawLinkMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteWithdrawLinkMutation, DeleteWithdrawLinkMutationVariables>(DeleteWithdrawLinkDocument, options);
+      }
+export type DeleteWithdrawLinkMutationHookResult = ReturnType<typeof useDeleteWithdrawLinkMutation>;
+export type DeleteWithdrawLinkMutationResult = Apollo.MutationResult<DeleteWithdrawLinkMutation>;
+export type DeleteWithdrawLinkMutationOptions = Apollo.BaseMutationOptions<DeleteWithdrawLinkMutation, DeleteWithdrawLinkMutationVariables>;
 export const GetWithdrawLinkDocument = gql`
     query GetWithdrawLink($getWithdrawLinkId: ID) {
   getWithdrawLink(id: $getWithdrawLinkId) {
@@ -1811,6 +2037,10 @@ export const GetWithdrawLinkDocument = gql`
     k1
     created_at
     updated_at
+    commission_percentage
+    identifier_code
+    secret_code
+    invoice_expiration
   }
 }
     `;
@@ -1843,24 +2073,36 @@ export type GetWithdrawLinkQueryHookResult = ReturnType<typeof useGetWithdrawLin
 export type GetWithdrawLinkLazyQueryHookResult = ReturnType<typeof useGetWithdrawLinkLazyQuery>;
 export type GetWithdrawLinkQueryResult = Apollo.QueryResult<GetWithdrawLinkQuery, GetWithdrawLinkQueryVariables>;
 export const GetWithdrawLinksByUserIdDocument = gql`
-    query GetWithdrawLinksByUserId($user_id: ID!, $status: Status) {
-  getWithdrawLinksByUserId(user_id: $user_id, status: $status) {
-    title
-    account_type
-    min_withdrawable
-    amount
-    created_at
-    id
-    payment_hash
-    status
-    updated_at
-    payment_request
-    user_id
-    max_withdrawable
-    unique_hash
-    k1
-    payment_secret
-    escrow_wallet
+    query GetWithdrawLinksByUserId($userId: ID!, $status: Status, $limit: Int, $offset: Int) {
+  getWithdrawLinksByUserId(
+    user_id: $userId
+    status: $status
+    limit: $limit
+    offset: $offset
+  ) {
+    total_links
+    withdrawLinks {
+      id
+      user_id
+      payment_request
+      payment_hash
+      payment_secret
+      amount
+      account_type
+      escrow_wallet
+      status
+      title
+      min_withdrawable
+      max_withdrawable
+      unique_hash
+      k1
+      created_at
+      updated_at
+      commission_percentage
+      identifier_code
+      secret_code
+      invoice_expiration
+    }
   }
 }
     `;
@@ -1877,8 +2119,10 @@ export const GetWithdrawLinksByUserIdDocument = gql`
  * @example
  * const { data, loading, error } = useGetWithdrawLinksByUserIdQuery({
  *   variables: {
- *      user_id: // value for 'user_id'
+ *      userId: // value for 'userId'
  *      status: // value for 'status'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
  *   },
  * });
  */
@@ -1975,6 +2219,80 @@ export function useRealtimePriceInitialLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type RealtimePriceInitialQueryHookResult = ReturnType<typeof useRealtimePriceInitialQuery>;
 export type RealtimePriceInitialLazyQueryHookResult = ReturnType<typeof useRealtimePriceInitialLazyQuery>;
 export type RealtimePriceInitialQueryResult = Apollo.QueryResult<RealtimePriceInitialQuery, RealtimePriceInitialQueryVariables>;
+export const GetOnChainPaymentFeesDocument = gql`
+    query GetOnChainPaymentFees($getOnChainPaymentFeesId: ID!, $btcWalletAddress: String!) {
+  getOnChainPaymentFees(
+    id: $getOnChainPaymentFeesId
+    btc_wallet_address: $btcWalletAddress
+  ) {
+    fees
+  }
+}
+    `;
+
+/**
+ * __useGetOnChainPaymentFeesQuery__
+ *
+ * To run a query within a React component, call `useGetOnChainPaymentFeesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOnChainPaymentFeesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOnChainPaymentFeesQuery({
+ *   variables: {
+ *      getOnChainPaymentFeesId: // value for 'getOnChainPaymentFeesId'
+ *      btcWalletAddress: // value for 'btcWalletAddress'
+ *   },
+ * });
+ */
+export function useGetOnChainPaymentFeesQuery(baseOptions: Apollo.QueryHookOptions<GetOnChainPaymentFeesQuery, GetOnChainPaymentFeesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOnChainPaymentFeesQuery, GetOnChainPaymentFeesQueryVariables>(GetOnChainPaymentFeesDocument, options);
+      }
+export function useGetOnChainPaymentFeesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOnChainPaymentFeesQuery, GetOnChainPaymentFeesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOnChainPaymentFeesQuery, GetOnChainPaymentFeesQueryVariables>(GetOnChainPaymentFeesDocument, options);
+        }
+export type GetOnChainPaymentFeesQueryHookResult = ReturnType<typeof useGetOnChainPaymentFeesQuery>;
+export type GetOnChainPaymentFeesLazyQueryHookResult = ReturnType<typeof useGetOnChainPaymentFeesLazyQuery>;
+export type GetOnChainPaymentFeesQueryResult = Apollo.QueryResult<GetOnChainPaymentFeesQuery, GetOnChainPaymentFeesQueryVariables>;
+export const GetWithdrawLinkBySecretDocument = gql`
+    query GetWithdrawLinkBySecret($secret_code: String!) {
+  getWithdrawLink(secret_code: $secret_code) {
+    id
+  }
+}
+    `;
+
+/**
+ * __useGetWithdrawLinkBySecretQuery__
+ *
+ * To run a query within a React component, call `useGetWithdrawLinkBySecretQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetWithdrawLinkBySecretQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetWithdrawLinkBySecretQuery({
+ *   variables: {
+ *      secret_code: // value for 'secret_code'
+ *   },
+ * });
+ */
+export function useGetWithdrawLinkBySecretQuery(baseOptions: Apollo.QueryHookOptions<GetWithdrawLinkBySecretQuery, GetWithdrawLinkBySecretQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetWithdrawLinkBySecretQuery, GetWithdrawLinkBySecretQueryVariables>(GetWithdrawLinkBySecretDocument, options);
+      }
+export function useGetWithdrawLinkBySecretLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetWithdrawLinkBySecretQuery, GetWithdrawLinkBySecretQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetWithdrawLinkBySecretQuery, GetWithdrawLinkBySecretQueryVariables>(GetWithdrawLinkBySecretDocument, options);
+        }
+export type GetWithdrawLinkBySecretQueryHookResult = ReturnType<typeof useGetWithdrawLinkBySecretQuery>;
+export type GetWithdrawLinkBySecretLazyQueryHookResult = ReturnType<typeof useGetWithdrawLinkBySecretLazyQuery>;
+export type GetWithdrawLinkBySecretQueryResult = Apollo.QueryResult<GetWithdrawLinkBySecretQuery, GetWithdrawLinkBySecretQueryVariables>;
 export const LnInvoicePaymentStatusDocument = gql`
     subscription LnInvoicePaymentStatus($payment_request: LnPaymentRequest!) {
   lnInvoicePaymentStatus(input: {paymentRequest: $payment_request}) {
@@ -2054,3 +2372,45 @@ export function useRealtimePriceWsSubscription(baseOptions: Apollo.SubscriptionH
       }
 export type RealtimePriceWsSubscriptionHookResult = ReturnType<typeof useRealtimePriceWsSubscription>;
 export type RealtimePriceWsSubscriptionResult = Apollo.SubscriptionResult<RealtimePriceWsSubscription>;
+export const PriceDocument = gql`
+    subscription price($amount: SatAmount!, $amountCurrencyUnit: ExchangeCurrencyUnit!, $priceCurrencyUnit: ExchangeCurrencyUnit!) {
+  price(
+    input: {amount: $amount, amountCurrencyUnit: $amountCurrencyUnit, priceCurrencyUnit: $priceCurrencyUnit}
+  ) {
+    errors {
+      message
+    }
+    price {
+      base
+      offset
+      currencyUnit
+      formattedAmount
+    }
+  }
+}
+    `;
+
+/**
+ * __usePriceSubscription__
+ *
+ * To run a query within a React component, call `usePriceSubscription` and pass it any options that fit your needs.
+ * When your component renders, `usePriceSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePriceSubscription({
+ *   variables: {
+ *      amount: // value for 'amount'
+ *      amountCurrencyUnit: // value for 'amountCurrencyUnit'
+ *      priceCurrencyUnit: // value for 'priceCurrencyUnit'
+ *   },
+ * });
+ */
+export function usePriceSubscription(baseOptions: Apollo.SubscriptionHookOptions<PriceSubscription, PriceSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<PriceSubscription, PriceSubscriptionVariables>(PriceDocument, options);
+      }
+export type PriceSubscriptionHookResult = ReturnType<typeof usePriceSubscription>;
+export type PriceSubscriptionResult = Apollo.SubscriptionResult<PriceSubscription>;

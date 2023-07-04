@@ -1,22 +1,23 @@
 "use client";
-
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Inter_Tight } from "next/font/google";
 import { ApolloProvider } from "@apollo/client";
 import apolloClient from "@/config/apollo";
-import NavBarComponent from "@/components/NavBarComponent";
-const inter = Inter({ subsets: ["latin"] });
+import Navigation from "@/components/NavBar/Navigation";
+const inter = Inter_Tight({ subsets: ["latin"], display: "auto" });
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+
+
   return (
     <ApolloProvider client={apolloClient}>
       <html lang="en">
         <body className={inter.className}>
-          <NavBarComponent />
+          <Navigation  />
           {children}
         </body>
       </html>

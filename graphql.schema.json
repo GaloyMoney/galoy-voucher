@@ -266,6 +266,57 @@
         ]
       },
       {
+        "kind": "OBJECT",
+        "name": "AccountDeletePayload",
+        "description": null,
+        "fields": [
+          {
+            "name": "errors",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INTERFACE",
+                    "name": "Error",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "success",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "ENUM",
         "name": "AccountLevel",
         "description": null,
@@ -281,6 +332,12 @@
           },
           {
             "name": "TWO",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ZERO",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -1623,6 +1680,18 @@
             "deprecationReason": null
           },
           {
+            "name": "commission_percentage",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "escrow_wallet",
             "description": null,
             "type": {
@@ -1887,6 +1956,65 @@
         "possibleTypes": null
       },
       {
+        "kind": "OBJECT",
+        "name": "DepositFeesInformation",
+        "description": null,
+        "fields": [
+          {
+            "name": "minBankFee",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "minBankFeeThreshold",
+            "description": "below this amount minBankFee will be charged",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ratio",
+            "description": "ratio to charge as basis points above minBankFeeThreshold amount",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "DeviceNotificationTokenCreateInput",
         "description": null,
@@ -2009,6 +2137,97 @@
       },
       {
         "kind": "SCALAR",
+        "name": "Feedback",
+        "description": "Feedback shared with our user",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "FeedbackSubmitInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "feedback",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Feedback",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "FeesInformation",
+        "description": null,
+        "fields": [
+          {
+            "name": "deposit",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "DepositFeesInformation",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "FeesResult",
+        "description": null,
+        "fields": [
+          {
+            "name": "fees",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
         "name": "Float",
         "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).",
         "fields": null,
@@ -2032,6 +2251,22 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "BuildInformation",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "feesInformation",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "FeesInformation",
                 "ofType": null
               }
             },
@@ -2720,6 +2955,18 @@
             "deprecationReason": null
           },
           {
+            "name": "expiresIn",
+            "description": "Optional invoice expiration time in minutes.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Minutes",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "memo",
             "description": "Optional memo for the lightning invoice.",
             "type": {
@@ -2780,6 +3027,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "Hex32Bytes",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "expiresIn",
+            "description": "Optional invoice expiration time in minutes.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Minutes",
               "ofType": null
             },
             "defaultValue": null,
@@ -3104,6 +3363,18 @@
         "fields": null,
         "inputFields": [
           {
+            "name": "expiresIn",
+            "description": "Optional invoice expiration time in minutes.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Minutes",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "memo",
             "description": "Optional memo for the lightning invoice.",
             "type": {
@@ -3142,6 +3413,18 @@
         "description": null,
         "fields": null,
         "inputFields": [
+          {
+            "name": "expiresIn",
+            "description": "Optional invoice expiration time in minutes.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Minutes",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "memo",
             "description": "Optional memo for the lightning invoice.",
@@ -3594,6 +3877,18 @@
             "deprecationReason": null
           },
           {
+            "name": "expiresIn",
+            "description": "Optional invoice expiration time in minutes.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Minutes",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "memo",
             "description": "Optional memo for the lightning invoice.",
             "type": {
@@ -3654,6 +3949,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "Hex32Bytes",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "expiresIn",
+            "description": "Optional invoice expiration time in minutes.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Minutes",
               "ofType": null
             },
             "defaultValue": null,
@@ -3829,6 +4136,16 @@
         "possibleTypes": null
       },
       {
+        "kind": "SCALAR",
+        "name": "Minutes",
+        "description": "(Positive) amount of minutes",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "OBJECT",
         "name": "MobileVersions",
         "description": null,
@@ -3892,6 +4209,22 @@
         "name": "Mutation",
         "description": null,
         "fields": [
+          {
+            "name": "accountDelete",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "AccountDeletePayload",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "accountUpdateDefaultWalletId",
             "description": null,
@@ -4107,6 +4440,39 @@
             "deprecationReason": null
           },
           {
+            "name": "feedbackSubmit",
+            "description": null,
+            "args": [
+              {
+                "name": "input",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FeedbackSubmitInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SuccessPayload",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "intraLedgerPaymentSend",
             "description": "Actions a payment which is internal to the ledger e.g. it does\nnot use onchain/lightning. Returns payment status (success,\nfailed, pending, already_paid).",
             "args": [
@@ -4174,7 +4540,7 @@
           },
           {
             "name": "lnInvoiceCreate",
-            "description": "Returns a lightning invoice for an associated wallet.\nWhen invoice is paid the value will be credited to a BTC wallet.\nExpires after 24 hours.",
+            "description": "Returns a lightning invoice for an associated wallet.\nWhen invoice is paid the value will be credited to a BTC wallet.\nExpires after 'expiresIn' or 24 hours.",
             "args": [
               {
                 "name": "input",
@@ -4207,7 +4573,7 @@
           },
           {
             "name": "lnInvoiceCreateOnBehalfOfRecipient",
-            "description": "Returns a lightning invoice for an associated wallet.\nWhen invoice is paid the value will be credited to a BTC wallet.\nExpires after 24 hours.",
+            "description": "Returns a lightning invoice for an associated wallet.\nWhen invoice is paid the value will be credited to a BTC wallet.\nExpires after 'expiresIn' or 24 hours.",
             "args": [
               {
                 "name": "input",
@@ -4306,7 +4672,7 @@
           },
           {
             "name": "lnNoAmountInvoiceCreate",
-            "description": "Returns a lightning invoice for an associated wallet.\nCan be used to receive any supported currency value (currently USD or BTC).\nExpires after 24 hours.",
+            "description": "Returns a lightning invoice for an associated wallet.\nCan be used to receive any supported currency value (currently USD or BTC).\nExpires after 'expiresIn' or 24 hours for BTC invoices or 5 minutes for USD invoices.",
             "args": [
               {
                 "name": "input",
@@ -4339,7 +4705,7 @@
           },
           {
             "name": "lnNoAmountInvoiceCreateOnBehalfOfRecipient",
-            "description": "Returns a lightning invoice for an associated wallet.\nCan be used to receive any supported currency value (currently USD or BTC).\nExpires after 24 hours.",
+            "description": "Returns a lightning invoice for an associated wallet.\nCan be used to receive any supported currency value (currently USD or BTC).\nExpires after 'expiresIn' or 24 hours for BTC invoices or 5 minutes for USD invoices.",
             "args": [
               {
                 "name": "input",
@@ -4504,7 +4870,7 @@
           },
           {
             "name": "lnUsdInvoiceCreate",
-            "description": "Returns a lightning invoice denominated in satoshis for an associated wallet.\nWhen invoice is paid the equivalent value at invoice creation will be credited to a USD wallet.\nExpires after 5 minutes (short expiry time because there is a USD/BTC exchange rate\nassociated with the amount).",
+            "description": "Returns a lightning invoice denominated in satoshis for an associated wallet.\nWhen invoice is paid the equivalent value at invoice creation will be credited to a USD wallet.\nExpires after 'expiresIn' or 5 minutes (short expiry time because there is a USD/BTC exchange rate\nassociated with the amount).",
             "args": [
               {
                 "name": "input",
@@ -4537,7 +4903,7 @@
           },
           {
             "name": "lnUsdInvoiceCreateOnBehalfOfRecipient",
-            "description": "Returns a lightning invoice denominated in satoshis for an associated wallet.\nWhen invoice is paid the equivalent value at invoice creation will be credited to a USD wallet.\nExpires after 5 minutes (short expiry time because there is a USD/BTC exchange rate\n  associated with the amount).",
+            "description": "Returns a lightning invoice denominated in satoshis for an associated wallet.\nWhen invoice is paid the equivalent value at invoice creation will be credited to a USD wallet.\nExpires after 'expiresIn' or 5 minutes (short expiry time because there is a USD/BTC exchange rate\n  associated with the amount).",
             "args": [
               {
                 "name": "input",
@@ -4833,6 +5199,55 @@
             "deprecationReason": null
           },
           {
+            "name": "sendPaymentOnChain",
+            "description": null,
+            "args": [
+              {
+                "name": "btc_wallet_address",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "id",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "sendPaymentOnChainResult",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "updateWithdrawLink",
             "description": null,
             "args": [
@@ -4941,6 +5356,39 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "AuthTokenPayload",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "userLoginUpgrade",
+            "description": null,
+            "args": [
+              {
+                "name": "input",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UserLoginUpgradeInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UpgradePayload",
                 "ofType": null
               }
             },
@@ -5358,14 +5806,14 @@
             "deprecationReason": null
           },
           {
-            "name": "targetConfirmations",
+            "name": "speed",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "TargetConfirmations",
+              "kind": "ENUM",
+              "name": "PayoutSpeed",
               "ofType": null
             },
-            "defaultValue": "1",
+            "defaultValue": "FAST",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -5441,14 +5889,14 @@
             "deprecationReason": null
           },
           {
-            "name": "targetConfirmations",
+            "name": "speed",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "TargetConfirmations",
+              "kind": "ENUM",
+              "name": "PayoutSpeed",
               "ofType": null
             },
-            "defaultValue": "1",
+            "defaultValue": "FAST",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -5507,8 +5955,8 @@
                 "ofType": null
               }
             },
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "Ignored - will be removed"
           }
         ],
         "inputFields": null,
@@ -5684,14 +6132,14 @@
             "deprecationReason": null
           },
           {
-            "name": "targetConfirmations",
+            "name": "speed",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "TargetConfirmations",
+              "kind": "ENUM",
+              "name": "PayoutSpeed",
               "ofType": null
             },
-            "defaultValue": "1",
+            "defaultValue": "FAST",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -5767,14 +6215,14 @@
             "deprecationReason": null
           },
           {
-            "name": "targetConfirmations",
+            "name": "speed",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "TargetConfirmations",
+              "kind": "ENUM",
+              "name": "PayoutSpeed",
               "ofType": null
             },
-            "defaultValue": "1",
+            "defaultValue": "FAST",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -5833,8 +6281,8 @@
                 "ofType": null
               }
             },
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "Ignored - will be removed"
           }
         ],
         "inputFields": null,
@@ -6061,6 +6509,23 @@
           },
           {
             "name": "SUCCESS",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "PayoutSpeed",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "FAST",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -6872,6 +7337,55 @@
             "deprecationReason": null
           },
           {
+            "name": "getOnChainPaymentFees",
+            "description": null,
+            "args": [
+              {
+                "name": "btc_wallet_address",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "id",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "FeesResult",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "getWithdrawLink",
             "description": null,
             "args": [
@@ -6881,6 +7395,18 @@
                 "type": {
                   "kind": "SCALAR",
                   "name": "ID",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "identifier_code",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -6901,6 +7427,18 @@
               },
               {
                 "name": "payment_hash",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "secret_code",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
@@ -6937,6 +7475,30 @@
             "description": null,
             "args": [
               {
+                "name": "limit",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "offset",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
                 "name": "status",
                 "description": null,
                 "type": {
@@ -6969,17 +7531,9 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "WithdrawLink",
-                    "ofType": null
-                  }
-                }
+                "kind": "OBJECT",
+                "name": "WithdrawLinksByUserIdResult",
+                "ofType": null
               }
             },
             "isDeprecated": false,
@@ -7095,14 +7649,14 @@
                 "deprecationReason": null
               },
               {
-                "name": "targetConfirmations",
+                "name": "speed",
                 "description": null,
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "TargetConfirmations",
+                  "kind": "ENUM",
+                  "name": "PayoutSpeed",
                   "ofType": null
                 },
-                "defaultValue": "1",
+                "defaultValue": "FAST",
                 "isDeprecated": false,
                 "deprecationReason": null
               },
@@ -7172,14 +7726,14 @@
                 "deprecationReason": null
               },
               {
-                "name": "targetConfirmations",
+                "name": "speed",
                 "description": null,
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "TargetConfirmations",
+                  "kind": "ENUM",
+                  "name": "PayoutSpeed",
                   "ofType": null
                 },
-                "defaultValue": "1",
+                "defaultValue": "FAST",
                 "isDeprecated": false,
                 "deprecationReason": null
               },
@@ -7249,14 +7803,14 @@
                 "deprecationReason": null
               },
               {
-                "name": "targetConfirmations",
+                "name": "speed",
                 "description": null,
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "TargetConfirmations",
+                  "kind": "ENUM",
+                  "name": "PayoutSpeed",
                   "ofType": null
                 },
-                "defaultValue": "1",
+                "defaultValue": "FAST",
                 "isDeprecated": false,
                 "deprecationReason": null
               },
@@ -7922,13 +8476,9 @@
             "description": null,
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "OnChainTxHash",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "OnChainTxHash",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -8654,6 +9204,18 @@
             "deprecationReason": null
           },
           {
+            "name": "commission_percentage",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "escrow_wallet",
             "description": null,
             "type": {
@@ -8787,6 +9349,69 @@
           }
         ],
         "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpgradePayload",
+        "description": null,
+        "fields": [
+          {
+            "name": "authToken",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "AuthToken",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "errors",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INTERFACE",
+                    "name": "Error",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "success",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
         "enumValues": null,
         "possibleTypes": null
       },
@@ -9430,6 +10055,49 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UserLoginInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "code",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "OneTimeAuthCode",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "phone",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Phone",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UserLoginUpgradeInput",
         "description": null,
         "fields": null,
         "inputFields": [
@@ -10158,6 +10826,18 @@
             "deprecationReason": null
           },
           {
+            "name": "commission_percentage",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "created_at",
             "description": null,
             "args": [],
@@ -10199,6 +10879,34 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "ID",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "identifier_code",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "invoice_expiration",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -10298,6 +11006,18 @@
             "deprecationReason": null
           },
           {
+            "name": "secret_code",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "status",
             "description": null,
             "args": [],
@@ -10372,6 +11092,53 @@
                 "kind": "SCALAR",
                 "name": "ID",
                 "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "WithdrawLinksByUserIdResult",
+        "description": null,
+        "fields": [
+          {
+            "name": "total_links",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "withdrawLinks",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "WithdrawLink",
+                    "ofType": null
+                  }
+                }
               }
             },
             "isDeprecated": false,
@@ -11288,6 +12055,49 @@
             "deprecationReason": null
           }
         ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "sendPaymentOnChainResult",
+        "description": null,
+        "fields": [
+          {
+            "name": "amount",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "status",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
         "possibleTypes": null
       }
     ],
