@@ -1,8 +1,11 @@
 import knexConfig from "../config/knexfile";
 const knexConfigObj = knexConfig["development"];
 const knex = require("knex")(knexConfigObj);
+
 import { v4 as uuidv4 } from "uuid";
 import { generateCode } from "./helpers";
+import { Knex } from "knex";
+
 //CREATE READ UPDATE DELETE functions
 export async function getWithdrawLinkByIdQuery(id: string) {
   const query = knex.select().from("withdraw_links").where({ id });
@@ -30,7 +33,6 @@ export async function GetWithdrawLinkBySecret(secret_code: string) {
   const withdrawLink = await query.first();
   return withdrawLink;
 }
-
 
 export async function getWithdrawLinkByPaymentHashQuery(paymentHash: string) {
   const query = knex
@@ -109,7 +111,17 @@ export async function getWithdrawLinksByUserIdQuery(
   limit?: number,
   offset?: number
 ) {
-  let query = knex.select().from("withdraw_links").where({ user_id: user_id });
+  let query = knex
+    .select()
+    .from("withdraw_links")
+    .where({ user_id: user_id })
+    .andWhere(function (this: Knex.QueryBuilder) {
+      this.where("status", "<>", "UNFUNDED").orWhere(
+        "invoice_expiration",
+        ">",
+        knex.fn.now()
+      );
+    });
   if (status) {
     query = query.andWhere({ status: status });
   }
@@ -125,7 +137,14 @@ export async function getWithdrawLinksByUserIdQuery(
   let countQuery = knex
     .count()
     .from("withdraw_links")
-    .where({ user_id: user_id });
+    .where({ user_id: user_id })
+    .andWhere(function (this: Knex.QueryBuilder) {
+      this.where("status", "<>", "UNFUNDED").orWhere(
+        "invoice_expiration",
+        ">",
+        knex.fn.now()
+      );
+    });
   if (status) {
     countQuery = countQuery.andWhere({ status: status });
   }

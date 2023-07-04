@@ -94,7 +94,7 @@ export default function UserLinks({ withdrawLink }: any) {
             <div className={styles.LinkDetails}>
               <Bold>Sales amount</Bold>{" "}
               <p>
-                ${withdrawLink?.amount / 100}{" "}
+                ${withdrawLink?.amount }{" "}
                 {withdrawLink.account_type === "BTC" ? "sats" : "US"}
               </p>
             </div>
