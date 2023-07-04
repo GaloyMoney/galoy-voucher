@@ -105,15 +105,34 @@ export async function deleteWithdrawLinkMutation(id: string) {
 
 export async function getWithdrawLinksByUserIdQuery(
   user_id: string,
-  status?: string
+  status?: string,
+  limit?: number,
+  offset?: number
 ) {
   let query = knex.select().from("withdraw_links").where({ user_id: user_id });
   if (status) {
     query = query.andWhere({ status: status });
   }
+  if (limit) {
+    query = query.limit(limit);
+  }
+  if (offset) {
+    query = query.offset(offset);
+  }
 
   const withdrawLinks = await query.orderBy("created_at", "desc");
-  return withdrawLinks;
+
+  let countQuery = knex
+    .count()
+    .from("withdraw_links")
+    .where({ user_id: user_id });
+  if (status) {
+    countQuery = countQuery.andWhere({ status: status });
+  }
+  const result = await countQuery;
+  const total_links = result[0].count;
+
+  return { withdrawLinks, total_links };
 }
 
 export async function updateWithdrawLinkStatus(id: string, status: string) {

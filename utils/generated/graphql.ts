@@ -1107,7 +1107,7 @@ export type Query = {
   getAllWithdrawLinks: Array<WithdrawLink>;
   getOnChainPaymentFees: FeesResult;
   getWithdrawLink?: Maybe<WithdrawLink>;
-  getWithdrawLinksByUserId: Array<WithdrawLink>;
+  getWithdrawLinksByUserId: WithdrawLinksByUserIdResult;
   globals?: Maybe<Globals>;
   lnInvoicePaymentStatus: LnInvoicePaymentStatusPayload;
   me?: Maybe<User>;
@@ -1158,6 +1158,8 @@ export type QueryGetWithdrawLinkArgs = {
 
 
 export type QueryGetWithdrawLinksByUserIdArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<Status>;
   user_id: Scalars['ID']['input'];
 };
@@ -1638,6 +1640,12 @@ export type WithdrawLink = {
   user_id: Scalars['ID']['output'];
 };
 
+export type WithdrawLinksByUserIdResult = {
+  __typename?: 'WithdrawLinksByUserIdResult';
+  total_links?: Maybe<Scalars['Int']['output']>;
+  withdrawLinks: Array<WithdrawLink>;
+};
+
 export type SendPaymentOnChainResult = {
   __typename?: 'sendPaymentOnChainResult';
   amount: Scalars['Float']['output'];
@@ -1696,12 +1704,14 @@ export type GetWithdrawLinkQueryVariables = Exact<{
 export type GetWithdrawLinkQuery = { __typename?: 'Query', getWithdrawLink?: { __typename?: 'WithdrawLink', id: string, user_id: string, payment_request: string, payment_hash: string, payment_secret: string, amount: number, account_type: string, escrow_wallet: string, status: Status, title: string, min_withdrawable: number, max_withdrawable: number, unique_hash: string, k1?: string | null, created_at: string, updated_at: string, commission_percentage?: number | null, identifier_code?: string | null, secret_code?: string | null, invoice_expiration: string } | null };
 
 export type GetWithdrawLinksByUserIdQueryVariables = Exact<{
-  user_id: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
   status?: InputMaybe<Status>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetWithdrawLinksByUserIdQuery = { __typename?: 'Query', getWithdrawLinksByUserId: Array<{ __typename?: 'WithdrawLink', title: string, account_type: string, min_withdrawable: number, amount: number, created_at: string, id: string, payment_hash: string, status: Status, updated_at: string, payment_request: string, user_id: string, max_withdrawable: number, unique_hash: string, k1?: string | null, payment_secret: string, escrow_wallet: string, commission_percentage?: number | null, identifier_code?: string | null, secret_code?: string | null, invoice_expiration: string }> };
+export type GetWithdrawLinksByUserIdQuery = { __typename?: 'Query', getWithdrawLinksByUserId: { __typename?: 'WithdrawLinksByUserIdResult', total_links?: number | null, withdrawLinks: Array<{ __typename?: 'WithdrawLink', id: string, user_id: string, payment_request: string, payment_hash: string, payment_secret: string, amount: number, account_type: string, escrow_wallet: string, status: Status, title: string, min_withdrawable: number, max_withdrawable: number, unique_hash: string, k1?: string | null, created_at: string, updated_at: string, commission_percentage?: number | null, identifier_code?: string | null, secret_code?: string | null, invoice_expiration: string }> } };
 
 export type CurrencyListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2063,28 +2073,36 @@ export type GetWithdrawLinkQueryHookResult = ReturnType<typeof useGetWithdrawLin
 export type GetWithdrawLinkLazyQueryHookResult = ReturnType<typeof useGetWithdrawLinkLazyQuery>;
 export type GetWithdrawLinkQueryResult = Apollo.QueryResult<GetWithdrawLinkQuery, GetWithdrawLinkQueryVariables>;
 export const GetWithdrawLinksByUserIdDocument = gql`
-    query GetWithdrawLinksByUserId($user_id: ID!, $status: Status) {
-  getWithdrawLinksByUserId(user_id: $user_id, status: $status) {
-    title
-    account_type
-    min_withdrawable
-    amount
-    created_at
-    id
-    payment_hash
-    status
-    updated_at
-    payment_request
-    user_id
-    max_withdrawable
-    unique_hash
-    k1
-    payment_secret
-    escrow_wallet
-    commission_percentage
-    identifier_code
-    secret_code
-    invoice_expiration
+    query GetWithdrawLinksByUserId($userId: ID!, $status: Status, $limit: Int, $offset: Int) {
+  getWithdrawLinksByUserId(
+    user_id: $userId
+    status: $status
+    limit: $limit
+    offset: $offset
+  ) {
+    total_links
+    withdrawLinks {
+      id
+      user_id
+      payment_request
+      payment_hash
+      payment_secret
+      amount
+      account_type
+      escrow_wallet
+      status
+      title
+      min_withdrawable
+      max_withdrawable
+      unique_hash
+      k1
+      created_at
+      updated_at
+      commission_percentage
+      identifier_code
+      secret_code
+      invoice_expiration
+    }
   }
 }
     `;
@@ -2101,8 +2119,10 @@ export const GetWithdrawLinksByUserIdDocument = gql`
  * @example
  * const { data, loading, error } = useGetWithdrawLinksByUserIdQuery({
  *   variables: {
- *      user_id: // value for 'user_id'
+ *      userId: // value for 'userId'
  *      status: // value for 'status'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
  *   },
  * });
  */

@@ -44,8 +44,8 @@ const resolvers = {
       return getAllWithdrawLinksQuery();
     },
     getWithdrawLinksByUserId: async (parent: any, args: any, context: any) => {
-      const { user_id, status } = args;
-      return getWithdrawLinksByUserIdQuery(user_id, status);
+      const { user_id, status, limit, offset } = args;
+      return getWithdrawLinksByUserIdQuery(user_id, status, limit, offset);
     },
     getOnChainPaymentFees: async (parent: any, args: any, context: any) => {
       const { id, btc_wallet_address } = args;

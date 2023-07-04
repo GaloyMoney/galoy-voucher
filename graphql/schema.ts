@@ -32,6 +32,11 @@ type sendPaymentOnChainResult {
   amount: Float!
 }
 
+type WithdrawLinksByUserIdResult {
+  withdrawLinks: [WithdrawLink!]!
+  total_links: Int
+}
+
 enum Status {
   FUNDED
   UNFUNDED
@@ -41,7 +46,7 @@ enum Status {
 type Query {
   getWithdrawLink(id: ID, unique_hash: String, k1: String, payment_hash: String, secret_code: String, identifier_code: String  ): WithdrawLink
   getAllWithdrawLinks: [WithdrawLink!]!
-  getWithdrawLinksByUserId(user_id: ID!, status: Status): [WithdrawLink!]!
+  getWithdrawLinksByUserId(user_id: ID!, status: Status, limit: Int, offset: Int): WithdrawLinksByUserIdResult!
   getOnChainPaymentFees(id: ID!, btc_wallet_address: String!): FeesResult!
 }
 

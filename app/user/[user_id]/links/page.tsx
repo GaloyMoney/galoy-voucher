@@ -8,7 +8,9 @@ import {
 
 import LoadingComponent from "@/components/Loading/LoadingComponent";
 import UserLinksComponent from "@/components/UserLinks/UserLinks";
-import styles from "./UserLinkPage.module.css"
+import styles from "./UserLinkPage.module.css";
+import Pagination from "@mui/material/Pagination";
+import { getOffset } from "@/utils/helpers";
 interface Params {
   params: {
     user_id: string;
@@ -18,9 +20,15 @@ interface Params {
 export default function UserLinks({ params: { user_id } }: Params) {
   const [status, setStatus] = useState<Status | null>(null); // Initial status is null
   const [poll, setPoll] = useState<boolean>(false);
+  const [page, setPage] = React.useState(1);
 
   const { loading, error, data } = useGetWithdrawLinksByUserIdQuery({
-    variables: { user_id, status },
+    variables: {
+      userId: user_id,
+      status,
+      limit: 10,
+      offset: getOffset(page, 10),
+    },
     pollInterval: poll ? 5000 : 0,
   });
 
@@ -42,7 +50,11 @@ export default function UserLinks({ params: { user_id } }: Params) {
     }
   };
 
-  const withdrawLinks = data?.getWithdrawLinksByUserId;
+  const withdrawLinks = data?.getWithdrawLinksByUserId.withdrawLinks;
+  const totalLinks = data?.getWithdrawLinksByUserId.total_links;
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(Number(totalLinks) / itemsPerPage);
+
   return (
     <div className="top_page_container_user_links">
       <div
@@ -77,6 +89,16 @@ export default function UserLinks({ params: { user_id } }: Params) {
           </div>
         )}
       </div>
+      <Pagination
+        style={{
+          paddingTop:"2em"
+        }}
+        count={totalPages}
+        page={page}
+        variant="outlined"
+        shape="rounded"
+        onChange={(event, value) => setPage(value)}
+      />
     </div>
   );
 }

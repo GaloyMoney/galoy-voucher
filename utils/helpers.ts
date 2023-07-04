@@ -121,3 +121,7 @@ export function calculateCommission(
   return commissionAmountInDollars.toFixed(2);
 }
 
+
+export function getOffset(page: number, limit: number) {
+  return (page - 1) * limit;
+}
