@@ -90,11 +90,9 @@ export default function UserLinks({ params: { user_id } }: Params) {
             </div>
             <Pagination
               style={{
-                position: "absolute",
-                bottom: "3em",
-                left: "50%",
-                transform: "translateX(-50%)",
-                paddingTop: "1em",
+                paddingTop: "2em",
+                display: "flex",
+                justifyContent: "center",
               }}
               count={totalPages}
               page={page}
