@@ -6,7 +6,7 @@ import {
   useGetWithdrawLinksByUserIdQuery,
 } from "@/utils/generated/graphql";
 
-import LoadingComponent from "@/components/Loading/LoadingComponent";
+import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 import UserLinksComponent from "@/components/UserLinks/UserLinks";
 import styles from "./UserLinkPage.module.css";
 import Pagination from "@mui/material/Pagination";
@@ -75,30 +75,34 @@ export default function UserLinks({ params: { user_id } }: Params) {
           </select>
         </div>
         {loading ? (
-          <LoadingComponent></LoadingComponent>
+          <PageLoadingComponent></PageLoadingComponent>
         ) : error ? (
           <p>Error: {error.message}</p>
         ) : (
-          <div className={styles.LinksContainer}>
-            {withdrawLinks?.map((withdrawLink: WithdrawLink) => (
-              <UserLinksComponent
-                key={withdrawLink.id}
-                withdrawLink={withdrawLink}
-              />
-            ))}
-          </div>
+          <>
+            <div className={styles.LinksContainer}>
+              {withdrawLinks?.map((withdrawLink: WithdrawLink) => (
+                <UserLinksComponent
+                  key={withdrawLink.id}
+                  withdrawLink={withdrawLink}
+                />
+              ))}
+            </div>
+            <Pagination
+              style={{
+                paddingTop: "2em",
+                display: "flex",
+                justifyContent: "center",
+              }}
+              count={totalPages}
+              page={page}
+              variant="outlined"
+              shape="rounded"
+              onChange={(event, value) => setPage(value)}
+            />
+          </>
         )}
       </div>
-      <Pagination
-        style={{
-          paddingTop:"2em"
-        }}
-        count={totalPages}
-        page={page}
-        variant="outlined"
-        shape="rounded"
-        onChange={(event, value) => setPage(value)}
-      />
     </div>
   );
 }

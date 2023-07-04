@@ -118,7 +118,6 @@ export default function HomePage({
         <div>≈ ${formatOperand(commissionAmountInDollars)}</div>
       )}
       <NumPad currentAmount={amount} setCurrentAmount={setAmount} unit="FIAT" />
-      <div className={styles.account_type}></div>
       <div className={styles.commission_and_submit_buttons}>
         <Button
           onClick={() => {
@@ -127,7 +126,7 @@ export default function HomePage({
         >
           Commission
         </Button>
-        <Button onClick={handelConfimLink}>Create link</Button>
+        <Button enabled={true} onClick={handelConfimLink}>Create link</Button>
       </div>
 
       <InfoComponent>

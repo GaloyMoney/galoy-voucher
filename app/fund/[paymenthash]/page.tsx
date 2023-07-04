@@ -31,7 +31,8 @@ interface Params {
 export default function FundPaymentHash({ params: { paymenthash } }: Params) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [expired, setExpired] = useState<boolean>(false);
-  const isWindows = navigator.platform.includes("Win");
+  const isClient = typeof window !== "undefined";
+  const isWindows = isClient && navigator.platform.includes("Win");
   const router = useRouter();
 
   const {
@@ -127,9 +128,10 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
   }
 
   const handleCopyToClipboard = () => {
-    navigator.clipboard?.writeText(withdrawLink?.payment_request || "");
+    if (isClient) {
+      navigator.clipboard?.writeText(withdrawLink?.payment_request || "");
+    }
   };
-
   return (
     <>
       <div className="top_page_container">
