@@ -123,6 +123,12 @@ export default function Page({ params: { id } }: Params) {
     }
   };
 
+  useEffect(() => {
+    if (fetchingFees) {
+      refetch();
+    }
+  }, [fetchingFees]);
+
   if (loadingWithdrawLink) {
     return <PageLoadingComponent />;
   }
@@ -165,19 +171,19 @@ export default function Page({ params: { id } }: Params) {
                   <h1 className={styles.modal_heading}>Confirm Withdraw</h1>
                   <div>
                     <h2 className={styles.modal_sub_heading}>Fees</h2>
-                    <p>{fees} sats</p>
+                    <p>{fees} {withdrawLink?.account_type==='BTC' ? "sats": "cents" }</p>
                   </div>
                   <div>
                     <h2 className={styles.modal_sub_heading}>
                       Original amount{" "}
                     </h2>
-                    <p>{withdrawLink?.max_withdrawable} sats</p>
+                    <p>{withdrawLink?.max_withdrawable} {withdrawLink?.account_type==='BTC' ? "sats": "cents" }</p>
                   </div>
                   <div>
                     <h2 className={styles.modal_sub_heading}>
                       Total amount after fees
                     </h2>
-                    <p>{Number(withdrawLink?.max_withdrawable) - fees} sats </p>
+                    <p>{Number(withdrawLink?.max_withdrawable) - fees} {withdrawLink?.account_type==='BTC' ? "sats": "cents" } </p>
                   </div>
                   <div className={styles.modal_button_container}>
                     <Button
