@@ -92,14 +92,13 @@ export default function CreatePage() {
               user_id: "aaaaaaaa-e098-4a16-932b-e4f4abc24366",
               payment_request: data.paymentRequest,
               payment_secret: data.paymentSecret,
-              amount: Number(AmountInDollars),
+              sales_amount: Number(AmountInDollars),
               account_type: "USD",
               escrow_wallet: `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
-              title: `Galoy withdraw $${Number(commissionAmountInDollars)} `,
-              min_withdrawable: Number(
-                (Number(commissionAmountInDollars) * 100).toFixed()
-              ),
-              max_withdrawable: Number(
+              title: `Galoy withdraw  $${Number(
+                commissionAmountInDollars
+              )} @${Number(commissionPercentage)}`,
+              voucher_amount: Number(
                 (Number(commissionAmountInDollars) * 100).toFixed()
               ),
               unique_hash: generateRandomHash(),

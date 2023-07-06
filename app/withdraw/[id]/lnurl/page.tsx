@@ -95,7 +95,7 @@ export default function Page({ params: { id } }: Params) {
             Please collect $
             {Number(
               centsToCurrency(
-                Number(WithdrawLink?.amount) * 100,
+                Number(WithdrawLink?.sales_amount) * 100,
                 currency.id,
                 currency.fractionDigits
               ).convertedCurrencyAmount

@@ -50,7 +50,7 @@ const resolvers = {
     getOnChainPaymentFees: async (parent: any, args: any, context: any) => {
       const { id, btc_wallet_address } = args;
       const data = await getWithdrawLinkByIdQuery(id);
-      const { escrow_wallet, account_type, max_withdrawable : amount } = data;
+      const { escrow_wallet, account_type, voucher_amount: amount } = data;
       if (account_type === "BTC") {
         const result = await getOnChainTxFeeBTC(
           escrow_wallet,
@@ -97,7 +97,7 @@ const resolvers = {
       const {
         escrow_wallet,
         account_type,
-        max_withdrawable: amount,
+        voucher_amount: amount,
         title,
         status,
       } = data;

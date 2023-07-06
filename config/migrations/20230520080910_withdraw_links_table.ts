@@ -7,12 +7,11 @@ export async function up(knex: Knex): Promise<void> {
     table.text("payment_request").notNullable(); // invoice created by escrow account for to take funds from user
     table.text("payment_hash").notNullable();
     table.text("payment_secret").notNullable();
-    table.decimal("amount").notNullable(); // total sum of amount it will be used if multiple links are created at once like 10 links for 10 sats then this will be 100
+    table.decimal("sales_amount").notNullable(); // total sum of amount it will be used if multiple links are created at once like 10 links for 10 sats then this will be 100
     table.text("account_type").notNullable(); // BTC or USD
     table.text("escrow_wallet").notNullable(); // escrow account wallet USD or BTC
     table.text("title").notNullable(); //description ot title of the link
-    table.decimal("min_withdrawable").notNullable();
-    table.decimal("max_withdrawable").notNullable();
+    table.decimal("voucher_amount").notNullable();
     table.text("unique_hash").notNullable();
     table.text("k1");
     table.timestamp("created_at").defaultTo(knex.fn.now());

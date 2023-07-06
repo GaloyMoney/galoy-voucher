@@ -5,7 +5,13 @@ import Bold from "../Bold";
 import { formatDate } from "@/utils/helpers";
 import styles from "./UserLinks.module.css";
 import { color } from "@mui/system";
-export default function UserLinks({ withdrawLink }: any) {
+import { WithdrawLink } from "@/utils/generated/graphql";
+
+interface UserLinksProps {
+  withdrawLink: WithdrawLink;
+}
+
+export default function UserLinks({ withdrawLink }: UserLinksProps) {
   return (
     <>
       {" "}
@@ -85,7 +91,7 @@ export default function UserLinks({ withdrawLink }: any) {
           <div className={styles.DetailsContainer}>
             <div className={styles.LinkDetails}>
               <Bold>Voucher Amount</Bold>{" "}
-              <p>${withdrawLink.max_withdrawable / 100} US</p>
+              <p>${withdrawLink.voucher_amount / 100} US</p>
             </div>
             <div className={styles.LinkDetails}>
               <Bold>Percent commission</Bold>{" "}
@@ -94,7 +100,7 @@ export default function UserLinks({ withdrawLink }: any) {
             <div className={styles.LinkDetails}>
               <Bold>Sales amount</Bold>{" "}
               <p>
-                ${withdrawLink?.amount }{" "}
+                ${withdrawLink?.sales_amount}{" "}
                 {withdrawLink.account_type === "BTC" ? "sats" : "US"}
               </p>
             </div>

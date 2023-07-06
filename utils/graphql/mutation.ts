@@ -8,13 +8,12 @@ export const CREATE_WITHDRAW_LINK = gql`
       payment_request
       payment_hash
       payment_secret
-      amount
+      sales_amount
       account_type
       escrow_wallet
       status
       title
-      min_withdrawable
-      max_withdrawable
+      voucher_amount
       unique_hash
       k1
       created_at
@@ -34,13 +33,12 @@ export const UPDATE_WITHDRAW_LINK = gql`
       input: $updateWithdrawLinkInput
     ) {
       account_type
-      amount
+      sales_amount
       created_at
       escrow_wallet
       id
       k1
-      max_withdrawable
-      min_withdrawable
+      voucher_amount
       payment_hash
       payment_request
       payment_secret

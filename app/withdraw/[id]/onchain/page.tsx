@@ -177,13 +177,13 @@ export default function Page({ params: { id } }: Params) {
                     <h2 className={styles.modal_sub_heading}>
                       Original amount{" "}
                     </h2>
-                    <p>{withdrawLink?.max_withdrawable} {withdrawLink?.account_type==='BTC' ? "sats": "cents" }</p>
+                    <p>{withdrawLink?.voucher_amount} {withdrawLink?.account_type==='BTC' ? "sats": "cents" }</p>
                   </div>
                   <div>
                     <h2 className={styles.modal_sub_heading}>
                       Total amount after fees
                     </h2>
-                    <p>{Number(withdrawLink?.max_withdrawable) - fees} {withdrawLink?.account_type==='BTC' ? "sats": "cents" } </p>
+                    <p>{Number(withdrawLink?.voucher_amount) - fees} {withdrawLink?.account_type==='BTC' ? "sats": "cents" } </p>
                   </div>
                   <div className={styles.modal_button_container}>
                     <Button
