@@ -6,10 +6,10 @@ const config: { [key: string]: Knex.Config } = {
   development: {
     client: "postgresql",
     connection: {
-      host: `ep-dawn-snowflake-452420-pooler.ap-southeast-1.postgres.vercel-storage.com`,
-      database: `verceldb`,
-      user: `default`,
-      password: `S8u5lxODpJPe`,
+      host: `${PGHOST}`,
+      database: `${PGDATABASE}`,
+      user: `${PGUSER}`,
+      password: `${PGPASSWORD}`,
       ssl: { rejectUnauthorized: false },
     },
     migrations: {
