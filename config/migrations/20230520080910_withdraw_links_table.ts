@@ -30,7 +30,7 @@ export async function up(knex: Knex): Promise<void> {
       .notNullable()
       .unsigned()
       .defaultTo(0)
-      .checkBetween([0, 100]);
+      .comment("min = 0 and max = 100");
   });
 }
 
