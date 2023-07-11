@@ -6,7 +6,7 @@ const Cors = require("micro-cors");
 const cors = Cors();
 //graphql API provider
 //TODO need to add cors
-const server = new ApolloServer({
+export const  server = new ApolloServer({
   typeDefs,
   resolvers,
   formatError: (err) => {
