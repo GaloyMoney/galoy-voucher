@@ -57,6 +57,7 @@ type Mutation {
 }
 
 input CreateWithdrawLinkInput {
+  id:ID
   user_id: ID!
   payment_request: String!
   payment_hash: String!

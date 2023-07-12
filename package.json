@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "knex": "npx knex  --knexfile=config/knexfile.ts",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.yml",
+    "test": "jest --config=config/jest.config.js"
   },
   "dependencies": {
     "@apollo/client": "3.7.4",
@@ -63,7 +64,10 @@
     "@graphql-codegen/cli": "4.0.0",
     "@graphql-codegen/client-preset": "4.0.0",
     "@graphql-codegen/introspection": "4.0.0",
+    "@types/jest": "^29.5.3",
     "@types/uuid": "^9.0.1",
+    "jest": "^29.6.1",
+    "ts-jest": "^29.1.1",
     "typescript": "^5.0.4"
   }
 }

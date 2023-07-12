@@ -103,7 +103,7 @@ export async function createWithdrawLinkMutation(input: any) {
     }
 
     const withdrawLink = {
-      id: uuidv4(),
+      id: input.id || uuidv4(),
       ...input,
       identifier_code: identifierCode,
       secret_code: secretCode,
