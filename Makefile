@@ -5,7 +5,6 @@ start-deps:
 	sleep 1
 	yarn run db:migrate
 
-
 clean-deps:
 	docker compose down
 
@@ -17,3 +16,6 @@ start-dev: reset-deps
 check-code:
 	yarn lint
 	yarn build
+
+unit-test:
+	yarn test:unit

@@ -1,0 +1,39 @@
+name: Run API unit-tests
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+      - staging
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Start PostgreSQL service
+        run: docker-compose up -d postgres
+
+      - name: Run migrations
+        run: yarn run db:migrate
+
+      - name: Start application
+        run: yarn start &
+
+      - name: Wait for application to start
+        run: npx wait-on tcp:localhost:3000
+
+      - name: Run tests
+        run: yarn test:unit
