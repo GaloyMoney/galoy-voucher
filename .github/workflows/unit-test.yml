@@ -23,11 +23,8 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Start PostgreSQL service
-        run: docker-compose up -d postgres
-
-      - name: Run migrations
-        run: yarn run db:migrate
+      - name: Start dependencies
+        run: make start-deps
 
       - name: Start application
         run: yarn start &

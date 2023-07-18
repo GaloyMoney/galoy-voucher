@@ -2,7 +2,7 @@ BIN_DIR=node_modules/.bin
 
 start-deps:
 	docker compose up -d
-	sleep 1
+	until docker exec postgres_ln_service pg_isready; do sleep 1; done
 	yarn run db:migrate
 
 clean-deps:
