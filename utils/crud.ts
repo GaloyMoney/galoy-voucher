@@ -1,5 +1,5 @@
 import knexConfig from "../config/knexfile";
-const knexConfigObj = knexConfig["development"];
+const knexConfigObj = knexConfig;
 const knex = require("knex")(knexConfigObj);
 
 import { v4 as uuidv4 } from "uuid";
@@ -10,8 +10,7 @@ import { Knex } from "knex";
 export async function getWithdrawLinkByIdQuery(id: string) {
   try {
     const query = knex.select().from("withdraw_links").where({ id });
-    const withdrawLink = await query.first();
-    return withdrawLink;
+    return await query.first();
   } catch (error) {
     throw error;
   }
@@ -23,8 +22,7 @@ export async function getWithdrawLinkByUniqueHashQuery(uniqueHash: string) {
       .select()
       .from("withdraw_links")
       .where({ unique_hash: uniqueHash });
-    const withdrawLink = await query.first();
-    return withdrawLink;
+    return await query.first();
   } catch (error) {
     throw error;
   }
@@ -33,8 +31,7 @@ export async function getWithdrawLinkByUniqueHashQuery(uniqueHash: string) {
 export async function getWithdrawLinkByK1Query(k1: string) {
   try {
     const query = knex.select().from("withdraw_links").where({ k1 });
-    const withdrawLink = await query.first();
-    return withdrawLink;
+    return await query.first();
   } catch (error) {
     throw error;
   }
@@ -43,8 +40,7 @@ export async function getWithdrawLinkByK1Query(k1: string) {
 export async function GetWithdrawLinkBySecret(secret_code: string) {
   try {
     const query = knex.select().from("withdraw_links").where({ secret_code });
-    const withdrawLink = await query.first();
-    return withdrawLink;
+    return await query.first();
   } catch (error) {
     throw error;
   }
@@ -56,8 +52,7 @@ export async function getWithdrawLinkByPaymentHashQuery(paymentHash: string) {
       .select()
       .from("withdraw_links")
       .where({ payment_hash: paymentHash });
-    const withdrawLink = await query.first();
-    return withdrawLink;
+    return await query.first();
   } catch (error) {
     throw error;
   }
@@ -65,8 +60,7 @@ export async function getWithdrawLinkByPaymentHashQuery(paymentHash: string) {
 
 export async function getAllWithdrawLinksQuery() {
   try {
-    const withdrawLinks = await knex.select().from("withdraw_links");
-    return withdrawLinks;
+    return await knex.select().from("withdraw_links");
   } catch (error) {
     throw error;
   }

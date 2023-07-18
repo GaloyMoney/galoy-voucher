@@ -85,6 +85,7 @@ const resolvers = {
         }
         return data;
       } catch (error) {
+        console.log(error)
         createCustomError(messageCode.INTERNAL_SERVER_ERROR, error as Error);
       }
     },

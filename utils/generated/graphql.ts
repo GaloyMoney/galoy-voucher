@@ -25,6 +25,10 @@ export type Scalars = {
   CountryCode: { input: any; output: any; }
   /** Display currency of an account */
   DisplayCurrency: { input: any; output: any; }
+  /** Email address */
+  EmailAddress: { input: any; output: any; }
+  /** An id to be passed between registrationInitiate and registrationValidate for confirming email */
+  EmailRegistrationId: { input: any; output: any; }
   /** Feedback shared with our user */
   Feedback: { input: any; output: any; }
   /** Hex-encoded string of 32 bytes */
@@ -60,6 +64,12 @@ export type Scalars = {
   TargetConfirmations: { input: any; output: any; }
   /** Timestamp field, serialized as Unix time (the number of seconds since the Unix epoch) */
   Timestamp: { input: any; output: any; }
+  /** A time-based one-time password */
+  TotpCode: { input: any; output: any; }
+  /** An id to be passed between set and verify for confirming totp */
+  TotpRegistrationId: { input: any; output: any; }
+  /** A secret to generate time-based one-time password */
+  TotpSecret: { input: any; output: any; }
   /** Unique identifier of a user */
   Username: { input: any; output: any; }
   /** Unique identifier of a wallet */
@@ -265,6 +275,7 @@ export type CreateWithdrawLinkInput = {
   account_type: Scalars['String']['input'];
   commission_percentage?: InputMaybe<Scalars['Float']['input']>;
   escrow_wallet: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['ID']['input']>;
   k1?: InputMaybe<Scalars['String']['input']>;
   payment_hash: Scalars['String']['input'];
   payment_request: Scalars['String']['input'];
@@ -297,6 +308,12 @@ export type DepositFeesInformation = {
 
 export type DeviceNotificationTokenCreateInput = {
   deviceToken: Scalars['String']['input'];
+};
+
+export type Email = {
+  __typename?: 'Email';
+  address?: Maybe<Scalars['EmailAddress']['output']>;
+  verified?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type Error = {
@@ -678,12 +695,20 @@ export type Mutation = {
   updateWithdrawLink: WithdrawLink;
   /** @deprecated will be moved to AccountContact */
   userContactUpdateAlias: UserContactUpdateAliasPayload;
+  userEmailDelete: UserEmailDeletePayload;
+  userEmailRegistrationInitiate: UserEmailRegistrationInitiatePayload;
+  userEmailRegistrationValidate: UserEmailRegistrationValidatePayload;
   userLogin: AuthTokenPayload;
   userLoginUpgrade: UpgradePayload;
   userLogout: AuthTokenPayload;
+  userPhoneDelete: UserPhoneDeletePayload;
+  userPhoneRegistrationInitiate: SuccessPayload;
+  userPhoneRegistrationValidate: UserPhoneRegistrationValidatePayload;
   /** @deprecated Use QuizCompletedMutation instead */
   userQuizQuestionUpdateCompleted: UserQuizQuestionUpdateCompletedPayload;
   userRequestAuthCode: SuccessPayload;
+  userTotpRegistrationInitiate: UserTotpRegistrationInitiatePayload;
+  userTotpRegistrationValidate: UserTotpRegistrationValidatePayload;
   userUpdateLanguage: UserUpdateLanguagePayload;
   /** @deprecated Username will be moved to @Handle in Accounts. Also SetUsername naming should be used instead of UpdateUsername to reflect the idempotency of Handles */
   userUpdateUsername: UserUpdateUsernamePayload;
@@ -852,6 +877,16 @@ export type MutationUserContactUpdateAliasArgs = {
 };
 
 
+export type MutationUserEmailRegistrationInitiateArgs = {
+  input: UserEmailRegistrationInitiateInput;
+};
+
+
+export type MutationUserEmailRegistrationValidateArgs = {
+  input: UserEmailRegistrationValidateInput;
+};
+
+
 export type MutationUserLoginArgs = {
   input: UserLoginInput;
 };
@@ -867,6 +902,16 @@ export type MutationUserLogoutArgs = {
 };
 
 
+export type MutationUserPhoneRegistrationInitiateArgs = {
+  input: UserPhoneRegistrationInitiateInput;
+};
+
+
+export type MutationUserPhoneRegistrationValidateArgs = {
+  input: UserPhoneRegistrationValidateInput;
+};
+
+
 export type MutationUserQuizQuestionUpdateCompletedArgs = {
   input: UserQuizQuestionUpdateCompletedInput;
 };
@@ -874,6 +919,16 @@ export type MutationUserQuizQuestionUpdateCompletedArgs = {
 
 export type MutationUserRequestAuthCodeArgs = {
   input: UserRequestAuthCodeInput;
+};
+
+
+export type MutationUserTotpRegistrationInitiateArgs = {
+  input: UserTotpRegistrationInitiateInput;
+};
+
+
+export type MutationUserTotpRegistrationValidateArgs = {
+  input: UserTotpRegistrationValidateInput;
 };
 
 
@@ -1455,6 +1510,8 @@ export type User = {
   contacts: Array<UserContact>;
   createdAt: Scalars['Timestamp']['output'];
   defaultAccount: Account;
+  /** Email address */
+  email?: Maybe<Email>;
   id: Scalars['ID']['output'];
   /**
    * Preferred language for user.
@@ -1468,6 +1525,8 @@ export type User = {
    * @deprecated use Quiz from Account instead
    */
   quizQuestions: Array<UserQuizQuestion>;
+  /** Whether TOTP is enabled for this user. */
+  totpEnabled: Scalars['Boolean']['output'];
   /**
    * Optional immutable user friendly identifier.
    * @deprecated will be moved to @Handle in Account and Wallet
@@ -1514,6 +1573,34 @@ export type UserContactUpdateAliasPayload = {
   errors: Array<Error>;
 };
 
+export type UserEmailDeletePayload = {
+  __typename?: 'UserEmailDeletePayload';
+  errors: Array<Error>;
+  me?: Maybe<User>;
+};
+
+export type UserEmailRegistrationInitiateInput = {
+  email: Scalars['EmailAddress']['input'];
+};
+
+export type UserEmailRegistrationInitiatePayload = {
+  __typename?: 'UserEmailRegistrationInitiatePayload';
+  emailRegistrationId?: Maybe<Scalars['EmailRegistrationId']['output']>;
+  errors: Array<Error>;
+  me?: Maybe<User>;
+};
+
+export type UserEmailRegistrationValidateInput = {
+  code: Scalars['OneTimeAuthCode']['input'];
+  emailRegistrationId: Scalars['EmailRegistrationId']['input'];
+};
+
+export type UserEmailRegistrationValidatePayload = {
+  __typename?: 'UserEmailRegistrationValidatePayload';
+  errors: Array<Error>;
+  me?: Maybe<User>;
+};
+
 export type UserLoginInput = {
   code: Scalars['OneTimeAuthCode']['input'];
   phone: Scalars['Phone']['input'];
@@ -1526,6 +1613,28 @@ export type UserLoginUpgradeInput = {
 
 export type UserLogoutInput = {
   authToken: Scalars['AuthToken']['input'];
+};
+
+export type UserPhoneDeletePayload = {
+  __typename?: 'UserPhoneDeletePayload';
+  errors: Array<Error>;
+  me?: Maybe<User>;
+};
+
+export type UserPhoneRegistrationInitiateInput = {
+  channel?: InputMaybe<PhoneCodeChannelType>;
+  phone: Scalars['Phone']['input'];
+};
+
+export type UserPhoneRegistrationValidateInput = {
+  code: Scalars['OneTimeAuthCode']['input'];
+  phone: Scalars['Phone']['input'];
+};
+
+export type UserPhoneRegistrationValidatePayload = {
+  __typename?: 'UserPhoneRegistrationValidatePayload';
+  errors: Array<Error>;
+  me?: Maybe<User>;
 };
 
 export type UserQuizQuestion = {
@@ -1547,6 +1656,29 @@ export type UserQuizQuestionUpdateCompletedPayload = {
 export type UserRequestAuthCodeInput = {
   channel?: InputMaybe<PhoneCodeChannelType>;
   phone: Scalars['Phone']['input'];
+};
+
+export type UserTotpRegistrationInitiateInput = {
+  authToken: Scalars['AuthToken']['input'];
+};
+
+export type UserTotpRegistrationInitiatePayload = {
+  __typename?: 'UserTotpRegistrationInitiatePayload';
+  errors: Array<Error>;
+  totpRegistrationId?: Maybe<Scalars['TotpRegistrationId']['output']>;
+  totpSecret?: Maybe<Scalars['TotpSecret']['output']>;
+};
+
+export type UserTotpRegistrationValidateInput = {
+  authToken: Scalars['AuthToken']['input'];
+  totpCode: Scalars['TotpCode']['input'];
+  totpRegistrationId: Scalars['TotpRegistrationId']['input'];
+};
+
+export type UserTotpRegistrationValidatePayload = {
+  __typename?: 'UserTotpRegistrationValidatePayload';
+  errors: Array<Error>;
+  me?: Maybe<User>;
 };
 
 export type UserUpdate = IntraLedgerUpdate | LnUpdate | OnChainUpdate | Price | RealtimePrice;

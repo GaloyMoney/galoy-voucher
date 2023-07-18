@@ -4,12 +4,19 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
     "start": "next start",
+    "build": "next build",
     "lint": "next lint",
-    "knex": "npx knex  --knexfile=config/knexfile.ts",
     "codegen": "graphql-codegen --config codegen.yml",
-    "test": "jest --config=config/jest.config.js"
+    "test:unit": "jest --config=config/jest.config.js",
+    "db:status": "knex --knexfile ./config/knexfile.ts migrate:status",
+    "db:create": "knex --knexfile ./config/knexfile.ts migrate:make -x ts",
+    "db:migrate": "knex --knexfile ./config/knexfile.ts migrate:latest",
+    "db:rollback": "knex --knexfile ./config/knexfile.ts migrate:rollback",
+    "db:create:seed": "knex --knexfile ./config/knexfile.ts seed:make -x ts",
+    "db:seed": "knex --knexfile ./config/knexfile.ts seed:run",
+    "eslint-check": "eslint \"{app,components,graphql,pages}/**/*.ts\"",
+    "eslint-fix": "eslint \"{app,components,graphql,pages}/**/*.ts\" --fix"
   },
   "dependencies": {
     "@apollo/client": "3.7.4",
