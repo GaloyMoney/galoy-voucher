@@ -26,6 +26,9 @@ jobs:
       - name: Start dependencies
         run: make start-deps
 
+      - name: Build Next.js application
+        run: yarn build
+
       - name: Start application
         run: yarn start &
 
