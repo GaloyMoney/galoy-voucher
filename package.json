@@ -8,7 +8,7 @@
     "build": "next build",
     "lint": "next lint",
     "codegen": "graphql-codegen --config codegen.yml",
-    "test:unit": "jest --config=config/jest.config.js",
+    "test:unit": "jest --config=config/jest.config.js --forceExit",
     "db:status": "knex --knexfile ./config/knexfile.ts migrate:status",
     "db:create": "knex --knexfile ./config/knexfile.ts migrate:make -x ts",
     "db:migrate": "knex --knexfile ./config/knexfile.ts migrate:latest",
