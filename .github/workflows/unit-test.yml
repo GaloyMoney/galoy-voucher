@@ -28,12 +28,12 @@ jobs:
 
       - name: Build Next.js application
         run: yarn build
-
+        
       - name: Start application
-        run: yarn start &
-
+        run: yarn start &> app.log &
+        
       - name: Wait for application to start
-        run: npx wait-on tcp:localhost:3000
+        run: "tail -f app.log | grep -q 'ready started server on 0.0.0.0:3000, url: http://localhost:3000'"
 
       - name: Run tests
         run: yarn test:unit
