@@ -19,3 +19,7 @@ check-code:
 
 unit-test:
 	yarn test:unit
+
+e2e-test:
+	start-dev
+	yarn test:e2e
