@@ -59,6 +59,9 @@ export const config = {
   capabilities: [
     {
       browserName: "chrome",
+      "goog:chromeOptions": {
+        args: ["--no-sandbox", "--disable-dev-shm-usage"],
+      },
     },
   ],
 
