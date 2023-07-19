@@ -68,12 +68,10 @@ describe("My Login application", () => {
       );
       await percentage.click();
 
-
       const set_commission = await $(
         "body > div.top_page_container > div.CreateLink_commission_and_submit_buttons__ydXyN > button"
       );
       await set_commission.click();
-
 
       const setted_commission = await $(
         "body > div.top_page_container > div:nth-child(4)"
@@ -93,7 +91,6 @@ describe("My Login application", () => {
       ).getText();
       expect(total_ammoutn).toEqual("≈ $4.95");
 
-      
       await createPage.clickSubmitButton();
       await confirmModal.clickConfirmButton();
       const notFundedText = await linkDetailsPage.getNotFundedText();

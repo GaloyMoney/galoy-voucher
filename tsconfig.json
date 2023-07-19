@@ -1,9 +1,13 @@
 {
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
-    // "typeRoots": ["./types"],
-    "types": ["jest", "node"],
+    "types": ["jest", "node", "@wdio/globals/types", "@wdio/mocha-framework"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -26,7 +30,14 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "config/jest.config.js", "wdio.conf.mjs"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "config/jest.config.js",
+    "wdio.conf.mjs"
+  ],
   "exclude": [
     "node_modules",
     "./node_modules",
