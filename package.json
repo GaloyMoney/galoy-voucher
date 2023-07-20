@@ -17,7 +17,7 @@
     "db:seed": "knex --knexfile ./config/knexfile.ts seed:run",
     "eslint-check": "eslint \"{app,components,graphql,pages}/**/*.ts\"",
     "eslint-fix": "eslint \"{app,components,graphql,pages}/**/*.ts\" --fix",
-    "test:e2e": "wdio wdio.conf.mjs"
+    "test:e2e": "wdio ./config/wdio.conf.ts"
   },
   "dependencies": {
     "@apollo/client": "3.7.4",

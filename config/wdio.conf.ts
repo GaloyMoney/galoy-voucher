@@ -8,7 +8,7 @@ export const config = {
     },
   },
 
-  specs: ["./test/specs/**/*.ts"],
+  specs: ["../test/e2e/specs/**/*.ts"],
   exclude: [],
   maxInstances: 10,
 
