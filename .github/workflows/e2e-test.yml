@@ -7,6 +7,12 @@ on:
       - main
       - staging
 
+env:
+  ESCROW_TOKEN: ${{ secrets.ESCROW_TOKEN }}
+  NEXT_PUBLIC_GALOY_URL: ${{ secrets.NEXT_PUBLIC_GALOY_URL }}
+  NEXT_PUBLIC_ESCROW_WALLET_BTC: ${{ secrets.NEXT_PUBLIC_ESCROW_WALLET_BTC }}
+  NEXT_PUBLIC_ESCROW_WALLET_USD: ${{ secrets.NEXT_PUBLIC_ESCROW_WALLET_USD }}
+
 jobs:
   test:
     runs-on: ubuntu-latest
