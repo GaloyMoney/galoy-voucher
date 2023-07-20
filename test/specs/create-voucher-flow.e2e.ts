@@ -48,15 +48,14 @@ class LinkDetailsPage {
   }
 }
 
-describe("My Login application", () => {
+describe("Create Voucher", () => {
   const createPage = new CreatePage();
   const confirmModal = new ConfirmModal();
   const linkDetailsPage = new LinkDetailsPage();
-
+  
   it("Create Voucher", async () => {
     try {
       await browser.url("/create");
-      await browser.pause(1000);
 
       const change_commision = await $(
         "body > div.top_page_container > div.CreateLink_commission_and_submit_buttons__ydXyN > button.Button_Button__VQ4Ej.undefined"
@@ -97,7 +96,6 @@ describe("My Login application", () => {
 
       expect(notFundedText).toEqual("Not Funded");
     } catch (error) {
-      // Handle any errors that occur during the test
       console.error("Test failed with error:", error);
       throw error;
     }

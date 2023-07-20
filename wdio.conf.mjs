@@ -17,12 +17,12 @@ export const config = {
     {
       browserName: "chrome",
       "goog:chromeOptions": {
-        args: ["--no-sandbox", "--disable-dev-shm-usage", "--headless"],
+        args: ["--no-sandbox", "--disable-dev-shm-usage"],
       },
     },
   ],
 
-  logLevel: "info",
+  logLevel: "error",
   bail: 0,
   baseUrl: "http://localhost:3000",
   waitforTimeout: 100000,
