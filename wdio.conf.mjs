@@ -17,7 +17,7 @@ export const config = {
     {
       browserName: "chrome",
       "goog:chromeOptions": {
-        args: ["--no-sandbox", "--disable-dev-shm-usage"],
+        args: ["--no-sandbox", "--disable-dev-shm-usage", "--headless"],
       },
     },
   ],
