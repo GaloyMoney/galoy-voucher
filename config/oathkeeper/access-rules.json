@@ -1,0 +1,26 @@
+[
+  {
+    "id": "allow-anonymous-with-header-mutator",
+    "version": "v0.36.0-beta.4",
+    "upstream": {
+      "url": "http://localhost:4433/"
+    },
+    "match": {
+      "url": "http://<127.0.0.1|localhost>:4455/<.*>",
+      "methods": ["GET", "POST"]
+    },
+    "authenticators": [
+      {
+        "handler": "anonymous"
+      }
+    ],
+    "authorizer": {
+      "handler": "allow"
+    },
+    "mutators": [
+      {
+        "handler": "noop"
+      }
+    ]
+  }
+]

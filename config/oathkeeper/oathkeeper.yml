@@ -1,0 +1,57 @@
+# serve:
+#   proxy:
+#     cors:
+#       enabled: true
+#       allowed_origins:
+#         - "http://localhost:3000"
+#       allowed_methods:
+#         - POST
+#         - GET
+#         - PUT
+#         - PATCH
+#         - DELETE
+#       allowed_headers:
+#         - Authorization
+#         - Content-Type
+#       exposed_headers:
+#         - Content-Type
+#       allow_credentials: true
+#       debug: true
+
+# access_rules:
+#   repositories:
+#     - file:///etc/config/oathkeeper/access-rules.json
+
+# errors:
+#   fallback:
+#     - json
+#   handlers:
+#     json:
+#       enabled: true
+#       config:
+#         verbose: true
+
+# mutators:
+#   noop:
+#     enabled: true
+
+# authorizers:
+#   allow:
+#     enabled: true
+#   deny:
+#     enabled: true
+
+# authenticators:
+#   anonymous:
+#     enabled: true
+#     config:
+#       subject: guest
+#   cookie_session:
+#     enabled: true
+#     config:
+#       check_session_url: http://localhost:4433/sessions/whoami
+#       preserve_path: true
+#       extra_from: "@this"
+#       subject_from: "identity.id"
+#       only:
+#         - ory_kratos_session
