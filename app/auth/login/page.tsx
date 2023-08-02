@@ -9,6 +9,7 @@ import { NextRouter } from "next/router";
 import Input from "@/components/Input";
 import Button from "@/components/Button/Button";
 import Heading from "@/components/Heading";
+import Link from "next/link";
 
 export default function Register() {
   const router = useRouter();
@@ -85,6 +86,10 @@ export default function Register() {
       >
         Login
       </Button>
+
+      <Link href={`/auth/registration`}>
+        Done have account yet? register here
+      </Link>
     </div>
   );
 }

@@ -25,7 +25,7 @@ import { useSession } from "@/context/session";
 export default function CreatePage() {
   const router = useRouter();
   const { session, loading } = useSession();
-  const user_id = session?.identity?.id as any;
+  const user_id = session?.identity?.id 
 
   useEffect(() => {
     if (!loading && !user_id) {

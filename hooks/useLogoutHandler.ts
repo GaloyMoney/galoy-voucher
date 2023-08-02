@@ -33,11 +33,12 @@ export function LogoutLink(): () => void {
     if (logoutToken) {
       ory
         .updateLogoutFlow({ token: logoutToken })
-        .then(() => router.push("/"))
-        .then(() => router.refresh())
+        .then(() => {
+          window.location.href = '/';
+        })
         .catch(console.error);
     } else if (loginRedirect) {
-      router.push("/");
+      window.location.href = "/";
     }
   };
 }
