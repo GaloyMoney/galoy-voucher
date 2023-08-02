@@ -61,7 +61,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
     error: paymentStatusDataError,
   } = useLnInvoicePaymentStatusSubscription({
     variables: {
-      payment_request: paymentRequest,
+      payment_request: paymentRequest!,
     },
     skip: withdrawLink?.status === Status.Paid,
   });
@@ -87,7 +87,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
         };
         deleteLink();
       } catch (e) {
-        console.log(e);
+        console.log("error in deleting link", e);
       }
     }
   }, [expired]);
@@ -129,7 +129,7 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
           }
         })();
       } catch (error) {
-        console.log(error);
+        console.log("error in webln", error);
       }
     }
   }, [withdrawLink?.payment_request]);

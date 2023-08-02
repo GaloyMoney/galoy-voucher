@@ -69,7 +69,7 @@ export default function CreatePage() {
         variables: {
           input: {
             recipientWalletId: `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
-            amount: Number(Number(commissionAmountInDollars) * 100).toFixed(),
+            amount: Math.round(Number(commissionAmountInDollars) * 100),
             memo: `Galoy withdraw  $${Number(
               commissionAmountInDollars
             )} @${Number(commissionPercentage)}`,
@@ -82,7 +82,9 @@ export default function CreatePage() {
 
       const data = result.data?.lnUsdInvoiceCreateOnBehalfOfRecipient.invoice;
       const error = errorArrayToString(
-        result.data?.lnUsdInvoiceCreateOnBehalfOfRecipient.errors
+        result.data?.lnUsdInvoiceCreateOnBehalfOfRecipient.errors?.map(
+          (error) => new Error(error.message)
+        )
       );
       if (!error && data) {
         const createWithdrawLinkResult = await createWithdrawLink({
@@ -113,7 +115,7 @@ export default function CreatePage() {
       }
     } catch (e) {
       setLoadingPageChange(false);
-      console.log(e);
+      console.log("error in creating invoice at create page",e);
     }
   };
 

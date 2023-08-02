@@ -10,7 +10,7 @@ import { Knex } from "knex";
 export async function getWithdrawLinkByIdQuery(id: string) {
   try {
     const query = knex.select().from("withdraw_links").where({ id });
-    return await query.first();
+    return  query.first();
   } catch (error) {
     throw error;
   }
@@ -22,7 +22,7 @@ export async function getWithdrawLinkByUniqueHashQuery(uniqueHash: string) {
       .select()
       .from("withdraw_links")
       .where({ unique_hash: uniqueHash });
-    return await query.first();
+    return  query.first();
   } catch (error) {
     throw error;
   }
@@ -31,7 +31,7 @@ export async function getWithdrawLinkByUniqueHashQuery(uniqueHash: string) {
 export async function getWithdrawLinkByK1Query(k1: string) {
   try {
     const query = knex.select().from("withdraw_links").where({ k1 });
-    return await query.first();
+    return  query.first();
   } catch (error) {
     throw error;
   }
@@ -40,7 +40,7 @@ export async function getWithdrawLinkByK1Query(k1: string) {
 export async function GetWithdrawLinkBySecret(secret_code: string) {
   try {
     const query = knex.select().from("withdraw_links").where({ secret_code });
-    return await query.first();
+    return  query.first();
   } catch (error) {
     throw error;
   }
@@ -52,7 +52,7 @@ export async function getWithdrawLinkByPaymentHashQuery(paymentHash: string) {
       .select()
       .from("withdraw_links")
       .where({ payment_hash: paymentHash });
-    return await query.first();
+    return  query.first();
   } catch (error) {
     throw error;
   }
@@ -60,7 +60,7 @@ export async function getWithdrawLinkByPaymentHashQuery(paymentHash: string) {
 
 export async function getAllWithdrawLinksQuery() {
   try {
-    return await knex.select().from("withdraw_links");
+    return  knex.select().from("withdraw_links");
   } catch (error) {
     throw error;
   }
