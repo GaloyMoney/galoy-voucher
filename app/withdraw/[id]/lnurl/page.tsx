@@ -74,7 +74,6 @@ export default function Page({ params: { id } }: Params) {
     }, 100);
   };
 
-  console.log(hasLoaded.current);
   return (
     <div className="top_page_container">
       {WithdrawLink?.status === Status.Paid ? (
