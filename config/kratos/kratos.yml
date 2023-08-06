@@ -7,7 +7,7 @@ session:
 
 serve:
   public:
-    base_url: http://127.0.0.1:4433/
+    base_url: http://localhost:4433/
     cors:
       enabled: true
       allow_credentials: true
@@ -16,6 +16,8 @@ serve:
         - http://*127.0.0.1:4433
         - http://127.0.0.1:3000
         - http://*.127.0.0.1:3000
+        - http://localhost:3000
+        - http://*.localhost:3000
       allowed_methods:
         - POST
         - GET
