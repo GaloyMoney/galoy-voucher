@@ -38,6 +38,7 @@
     "@types/node": "^20.1.5",
     "@types/react": "^18.2.6",
     "@types/react-dom": "18.2.4",
+    "apollo-server-errors": "^3.3.1",
     "autoprefixer": "10.4.14",
     "bech32": "^2.0.0",
     "bech32-buffer": "^0.2.1",
