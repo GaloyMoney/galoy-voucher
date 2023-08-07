@@ -113,9 +113,9 @@ export default function CreatePage() {
           `/fund/${createWithdrawLinkResult.data?.createWithdrawLink.id}`
         );
       }
-    } catch (e) {
+    } catch (err) {
       setLoadingPageChange(false);
-      console.log("error in creating invoice at create page",e);
+      console.log("error in creating invoice at create page", err);
     }
   };
 
