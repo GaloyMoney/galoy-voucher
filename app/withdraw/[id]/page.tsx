@@ -1,7 +1,7 @@
 "use client";
+import { env } from "@/config/env";
 import React from "react";
 import { useGetWithdrawLinkQuery ,Status } from "@/utils/generated/graphql";
-import { NEXT_PUBLIC_LOCAL_URL } from "@/config/variables";
 import Link from "next/link";
 import Button from "@/components/Button/Button";
 import LinkDetails from "@/components/LinkDetails/LinkDetails";
@@ -9,6 +9,7 @@ import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import FundsPaid from "@/components/FundsPaid";
 import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 import Heading from "@/components/Heading";
+const { NEXT_PUBLIC_LOCAL_URL } = env;
 
 interface Params {
   params: {

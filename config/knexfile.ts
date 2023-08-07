@@ -1,14 +1,21 @@
-import { databaseConfig } from "../config/variables";
 import type { Knex } from "knex";
+import { env } from "./env";
 
-const { host, port, user, password, database, poolMin, poolMax, debug, ssl } =
-  databaseConfig;
+const {
+  PGHOST: host,
+  PGUSER: user,
+  PGPASSWORD: password,
+  PGDATABASE: database,
+  POOL_MIN: poolMin,
+  POOL_MAX: poolMax,
+  DEBUG: debug,
+  DB_SSL: ssl,
+} = env;
 
 const config: Knex.Config = {
   client: "postgresql",
   debug,
   connection: {
-    port,
     host,
     database,
     user,

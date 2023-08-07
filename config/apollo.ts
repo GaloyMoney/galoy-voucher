@@ -1,7 +1,4 @@
-import {
-  NEXT_PUBLIC_GALOY_URL,
-  NEXT_PUBLIC_LOCAL_URL,
-} from "@/config/variables";
+
 import {
   ApolloClient,
   InMemoryCache,
@@ -11,6 +8,9 @@ import {
 } from "@apollo/client";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
+import { env } from "@/config/env";
+const {NEXT_PUBLIC_GALOY_URL,
+NEXT_PUBLIC_LOCAL_URL} =env
 
 const httpLink1 = new HttpLink({
   uri: `https://${NEXT_PUBLIC_GALOY_URL}/graphql`,

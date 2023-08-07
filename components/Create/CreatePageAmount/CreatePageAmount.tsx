@@ -11,7 +11,7 @@ import ModalComponent from "@/components/ModalComponent";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import Heading from "@/components/Heading";
 import { Currency } from "@/utils/generated/graphql";
-import { DEFAULT_CURRENCY } from "@/config/default";
+import { DEFAULT_CURRENCY } from "@/config/appConfig";
 
 interface Props {
   amount: string;

@@ -4,7 +4,7 @@ import { QRCode } from "react-qrcode-logo";
 import { encodeURLToLNURL, formatSecretCode } from "@/utils/helpers";
 import PageLoadingComponet from "@/components/Loading/PageLoadingComponent";
 import { useGetWithdrawLinkQuery } from "@/utils/generated/graphql";
-import { NEXT_PUBLIC_LOCAL_URL } from "@/config/variables";
+import { env } from "@/config/env";
 import Button from "@/components/Button/Button";
 import styles from "./LnurlPage.module.css";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
@@ -14,7 +14,8 @@ import Bold from "@/components/Bold";
 import LinkDetails from "@/components/LinkDetails/LinkDetails";
 import { Status } from "@/utils/generated/graphql";
 import useRealtimePrice from "@/hooks/useRealTimePrice";
-import { DEFAULT_CURRENCY } from "@/config/default";
+import { DEFAULT_CURRENCY } from "@/config/appConfig";
+const { NEXT_PUBLIC_LOCAL_URL } = env;
 
 interface Params {
   params: {
