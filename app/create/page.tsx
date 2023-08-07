@@ -9,7 +9,6 @@ import {
 } from "@/utils/generated/graphql";
 import useSatsPrice from "@/hooks/useSatsPrice";
 import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
-import { NEXT_PUBLIC_ESCROW_WALLET_USD } from "@/config/variables";
 import {
   calculateCommission,
   errorArrayToString,
@@ -19,7 +18,9 @@ import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/Create/ConifrmModal/ConfirmModal";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import useRealtimePrice from "@/hooks/useRealTimePrice";
-import { DEFAULT_CURRENCY } from "@/config/default";
+import { DEFAULT_CURRENCY } from "@/config/appConfig";
+import { env } from "@/config/env";
+const { NEXT_PUBLIC_ESCROW_WALLET_USD } = env;
 
 export default function CreatePage() {
   const { usdToSats } = useSatsPrice();

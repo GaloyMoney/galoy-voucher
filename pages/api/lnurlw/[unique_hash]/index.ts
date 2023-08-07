@@ -1,8 +1,8 @@
-import { NEXT_PUBLIC_LOCAL_URL } from "@/config/variables";
 import { getWithdrawLinkByUniqueHashQuery } from "../../../../utils/crud";
 import { getRealtimePrice } from "@/services/galoy";
 import { convertCentsToSats } from "@/utils/helpers";
-
+import { env } from "@/config/env";
+const { NEXT_PUBLIC_LOCAL_URL } = env;
 // TODO: Add interface for request and response objects
 export default async function handler(req: any, res: any) {
   if (req.method === "GET") {

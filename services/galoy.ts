@@ -1,4 +1,5 @@
-import { ESCROW_TOKEN, NEXT_PUBLIC_GALOY_URL } from "@/config/variables";
+import { env } from "@/config/env";
+const {ESCROW_TOKEN, NEXT_PUBLIC_GALOY_URL} = env;
 
 export async function sendPaymentRequest(
   walletId: string,
