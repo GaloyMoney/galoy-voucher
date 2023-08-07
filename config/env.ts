@@ -5,7 +5,7 @@ dotenv.config({ path: "../.env" });
 
 export const env = createEnv({
   server: {
-    ESCROW_TOKEN: z.string(),
+    ESCROW_TOKEN: z.string().default(""),
     PGHOST: z.string().default("localhost"),
     PGUSER: z.string().default("ln-withdraw-usr"),
     PGPASSWORD: z.string().default("ln-withdraw-pwd"),
@@ -22,7 +22,7 @@ export const env = createEnv({
   },
   shared: {
     NEXT_PUBLIC_ESCROW_WALLET_BTC: z.string().default(""),
-    NEXT_PUBLIC_ESCROW_WALLET_USD: z.string(),
+    NEXT_PUBLIC_ESCROW_WALLET_USD: z.string().default(""),
   },
   runtimeEnv: {
     NEXT_PUBLIC_GALOY_URL: process.env.NEXT_PUBLIC_GALOY_URL,
