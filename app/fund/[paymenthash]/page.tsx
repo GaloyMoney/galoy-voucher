@@ -86,8 +86,8 @@ export default function FundPaymentHash({ params: { paymenthash } }: Params) {
           router.push("/create");
         };
         deleteLink();
-      } catch (e) {
-        console.log("error in deleting link", e);
+      } catch (err) {
+        console.log("error in deleting link", err);
       }
     }
   }, [expired]);
