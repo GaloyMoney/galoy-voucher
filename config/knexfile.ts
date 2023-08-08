@@ -1,53 +1,30 @@
-import { PGDATABASE, PGHOST, PGPASSWORD, PGUSER } from "../config/variables";
 import type { Knex } from "knex";
+import { env } from "./env";
 
-const config: { [key: string]: Knex.Config } = {
-  //using vercel's free tier postgress DB for development
-  development: {
-    client: "postgresql",
-    connection: {
-      host: `${PGHOST}`,
-      database: `${PGDATABASE}`,
-      user: `${PGUSER}`,
-      password: `${PGPASSWORD}`,
-      ssl: { rejectUnauthorized: false },
-    },
-    migrations: {
-      tableName: "knex_migrations",
-    },
+const {
+  PGHOST: host,
+  PGUSER: user,
+  PGPASSWORD: password,
+  PGDATABASE: database,
+  POOL_MIN: poolMin,
+  POOL_MAX: poolMax,
+  DEBUG: debug,
+  DB_SSL: ssl,
+} = env;
+
+const config: Knex.Config = {
+  client: "postgresql",
+  debug,
+  connection: {
+    host,
+    database,
+    user,
+    password,
+    ssl,
   },
-
-  staging: {
-    client: "postgresql",
-    connection: {
-      host: `${PGHOST}`,
-      database: `${PGDATABASE}`,
-      user: `${PGUSER}`,
-      password: `${PGPASSWORD}`,
-    },
-    pool: {
-      min: 2,
-      max: 10,
-    },
-    migrations: {
-      tableName: "knex_migrations",
-    },
-  },
-
-  production: {
-    client: "postgresql",
-    connection: {
-      database: "my_db",
-      user: "username",
-      password: "password",
-    },
-    pool: {
-      min: 2,
-      max: 10,
-    },
-    migrations: {
-      tableName: "knex_migrations",
-    },
+  migrations: {
+    tableName: "knex_migrations",
+    directory: "./migrations/",
   },
 };
 

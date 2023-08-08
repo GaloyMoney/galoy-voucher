@@ -11,6 +11,7 @@ export const messageCode: { [key: string]: MessageCodeInterface } = {
     statusCode: 400,
     message: "Invalid input",
   },
+  
 };
 
 interface MessageCodeInterface {

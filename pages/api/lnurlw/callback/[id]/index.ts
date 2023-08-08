@@ -6,7 +6,8 @@ import {
 import { sendPaymentRequest, getRealtimePrice } from "@/services/galoy";
 import { decode } from "light-bolt11-decoder";
 import { convertCentsToSats } from "@/utils/helpers";
-import { NEXT_PUBLIC_GALOY_URL } from "@/config/variables";
+import { env } from "@/config/env";
+const { NEXT_PUBLIC_GALOY_URL } = env;
 
 export default async function handler(req: any, res: any) {
   if (req.method === "GET") {
@@ -81,7 +82,7 @@ export default async function handler(req: any, res: any) {
         res.status(200).json({ status: "OK" });
       }
     } catch (error) {
-      console.log(error);
+      console.log("error paying lnurl", error);
       res
         .status(500)
         .json({ status: "ERROR", reason: "Internal Server Error" });

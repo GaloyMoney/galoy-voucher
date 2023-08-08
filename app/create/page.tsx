@@ -9,7 +9,6 @@ import {
 } from "@/utils/generated/graphql";
 import useSatsPrice from "@/hooks/useSatsPrice";
 import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
-import { NEXT_PUBLIC_ESCROW_WALLET_USD } from "@/config/variables";
 import {
   calculateCommission,
   errorArrayToString,
@@ -19,7 +18,9 @@ import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/Create/ConifrmModal/ConfirmModal";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import useRealtimePrice from "@/hooks/useRealTimePrice";
-import { DEFAULT_CURRENCY } from "@/config/default";
+import { DEFAULT_CURRENCY } from "@/config/appConfig";
+import { env } from "@/config/env";
+const { NEXT_PUBLIC_ESCROW_WALLET_USD } = env;
 
 export default function CreatePage() {
   const { usdToSats } = useSatsPrice();
@@ -69,7 +70,7 @@ export default function CreatePage() {
         variables: {
           input: {
             recipientWalletId: `${NEXT_PUBLIC_ESCROW_WALLET_USD}`,
-            amount: Number(Number(commissionAmountInDollars) * 100).toFixed(),
+            amount: Math.round(Number(commissionAmountInDollars) * 100),
             memo: `Galoy withdraw  $${Number(
               commissionAmountInDollars
             )} @${Number(commissionPercentage)}`,
@@ -82,7 +83,9 @@ export default function CreatePage() {
 
       const data = result.data?.lnUsdInvoiceCreateOnBehalfOfRecipient.invoice;
       const error = errorArrayToString(
-        result.data?.lnUsdInvoiceCreateOnBehalfOfRecipient.errors
+        result.data?.lnUsdInvoiceCreateOnBehalfOfRecipient.errors?.map(
+          (error) => new Error(error.message)
+        )
       );
       if (!error && data) {
         const createWithdrawLinkResult = await createWithdrawLink({
@@ -111,9 +114,9 @@ export default function CreatePage() {
           `/fund/${createWithdrawLinkResult.data?.createWithdrawLink.id}`
         );
       }
-    } catch (e) {
+    } catch (err) {
       setLoadingPageChange(false);
-      console.log(e);
+      console.log("error in creating invoice at create page", err);
     }
   };
 
