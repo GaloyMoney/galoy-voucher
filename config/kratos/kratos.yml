@@ -12,10 +12,6 @@ serve:
       enabled: true
       allow_credentials: true
       allowed_origins:
-        - http://127.0.0.1:4433
-        - http://*127.0.0.1:4433
-        - http://127.0.0.1:3000
-        - http://*.127.0.0.1:3000
         - http://localhost:3000
         - http://*.localhost:3000
       allowed_methods:
@@ -35,12 +31,12 @@ serve:
         - Set-Cookie
       debug: true
   admin:
-    base_url: http://127.0.0.1:4434
+    base_url: http://localhost:4434
 
 selfservice:
-  default_browser_return_url: http://127.0.0.1:3000
+  default_browser_return_url: http://localhost:3000
   allowed_return_urls:
-    - http://127.0.0.1:3000
+    - http://localhost:3000
 
   methods:
     password:
@@ -48,13 +44,13 @@ selfservice:
 
   flows:
     login:
-      ui_url: http://127.0.0.1:3000/auth/login
+      ui_url: http://localhost:3000/auth/login
 
     registration:
-      ui_url: http://127.0.0.1:3000/auth/registration
+      ui_url: http://localhost:3000/auth/registration
 
     settings:
-      ui_url: http://127.0.0.1:3000/auth/settings
+      ui_url: http://localhost:3000/auth/settings
 
     recovery:
       enabled: false
