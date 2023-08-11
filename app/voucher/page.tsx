@@ -30,12 +30,58 @@ export default function VoucherPage() {
     skip: secret.length !== 12,
   });
 
-  const handleInputChange = (e : React.ChangeEvent<HTMLInputElement>
-    ) => {
-    setInputs((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (value.length > 4) {
+      let parts = value.match(/.{1,4}/g);
+      if (parts) {
+        setInputs({
+          input1: parts[0] || "",
+          input2: parts[1] || "",
+          input3: parts[2] || "",
+        });
+      }
+    } else {
+      setInputs((prevState) => ({
+        ...prevState,
+        [e.target.name]: e.target.value,
+      }));
+      if (value.length === 4) {
+        if (name === "input1") {
+          const nextInput = document.querySelector(
+            `input[name="input2"]`
+          ) as HTMLInputElement;
+          nextInput?.focus();
+        } else if (name === "input2") {
+          const nextInput = document.querySelector(
+            `input[name="input3"]`
+          ) as HTMLInputElement;
+          nextInput?.focus();
+        } else if (name === "input3") {
+          const nextInput = document.querySelector(
+            `input[name="input3"]`
+          ) as HTMLInputElement;
+          nextInput?.blur();
+        }
+      }
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const { name, value } = e.currentTarget;
+    if (e.key === "Backspace" && value === "") {
+      if (name === "input2") {
+        const prevInput = document.querySelector(
+          `input[name="input1"]`
+        ) as HTMLInputElement;
+        prevInput?.focus();
+      } else if (name === "input3") {
+        const prevInput = document.querySelector(
+          `input[name="input2"]`
+        ) as HTMLInputElement;
+        prevInput?.focus();
+      }
+    }
   };
 
   const handleSubmit = () => {
@@ -79,24 +125,24 @@ export default function VoucherPage() {
 
       <div className={styles.voucher_container}>
         <input
-          maxLength={4}
           className={styles.voucher_input}
           name="input1"
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           value={inputs.input1}
         ></input>
         <input
-          maxLength={4}
           className={styles.voucher_input}
           name="input2"
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           value={inputs.input2}
         ></input>
         <input
-          maxLength={4}
           className={styles.voucher_input}
           name="input3"
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           value={inputs.input3}
         ></input>
       </div>

@@ -83,7 +83,7 @@ export default function UserLinks({ params: { user_id } }: Params) {
             <div className={styles.LinksContainer}>
               {withdrawLinks?.map((withdrawLink: WithdrawLink) => (
                 <UserLinksComponent
-                  key={withdrawLink.id}
+                  key={withdrawLink.identifier_code}
                   withdrawLink={withdrawLink}
                 />
               ))}
