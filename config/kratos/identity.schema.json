@@ -11,8 +11,8 @@
           "type": "string",
           "format": "string",
           "title": "username",
-          "minLength": 8,
-          "maxLength": 30,
+          "minLength": 3,
+          "maxLength": 18,
           "ory.sh/kratos": {
             "credentials": {
               "password": {
