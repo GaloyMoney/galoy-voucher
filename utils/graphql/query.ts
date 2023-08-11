@@ -8,13 +8,12 @@ export const GET_WITHDRAW_LINK = gql`
       payment_request
       payment_hash
       payment_secret
-      amount
+      sales_amount
       account_type
       escrow_wallet
       status
       title
-      min_withdrawable
-      max_withdrawable
+      voucher_amount
       unique_hash
       k1
       created_at
@@ -47,13 +46,12 @@ export const GET_WITHDRAW_LINKS_BY_USER_ID = gql`
         payment_request
         payment_hash
         payment_secret
-        amount
+        sales_amount
         account_type
         escrow_wallet
         status
         title
-        min_withdrawable
-        max_withdrawable
+        voucher_amount
         unique_hash
         k1
         created_at

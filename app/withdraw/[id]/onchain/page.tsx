@@ -17,6 +17,7 @@ import FundsPaid from "@/components/FundsPaid";
 import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
 import Heading from "@/components/Heading";
 import { Status } from "@/utils/generated/graphql";
+import { ServerError } from "@apollo/client";
 
 interface Params {
   params: {
@@ -57,12 +58,25 @@ export default function Page({ params: { id } }: Params) {
   });
 
   const withdrawLink = dataWithdrawLink?.getWithdrawLink;
-  const { loading, error, data, refetch } = useGetOnChainPaymentFeesQuery({
+  const { loading, data, refetch } = useGetOnChainPaymentFeesQuery({
     variables: { getOnChainPaymentFeesId: id, btcWalletAddress },
     context: {
       endpoint: "SELF",
     },
     skip: !fetchingFees,
+    onError: (error) => {
+      let errorMessage = error.message;
+      if (error.networkError && error.networkError.name === "ServerError") {
+        const serverError = error.networkError as ServerError;
+        errorMessage = serverError.result?.errors[0]?.message || error.message;
+      }
+      console.log("error in getting onchain ", { error });
+      setErrorModal({
+        message: errorMessage,
+        open: true,
+      });
+      setFetchingFees(false);
+    },
   });
 
   const handleConfirm = async () => {
@@ -99,17 +113,22 @@ export default function Page({ params: { id } }: Params) {
   };
 
   useEffect(() => {
-    if (data) {
-      if (data.getOnChainPaymentFees.fees) {
+    if (data && data.getOnChainPaymentFees.fees) {
+      if (
+        Number(withdrawLink?.voucher_amount) -
+          data.getOnChainPaymentFees.fees >=
+        0
+      ) {
         setFees(data.getOnChainPaymentFees.fees);
         setConfirmModal(true);
+      } else {
+        setErrorModal({
+          message: "Fees are greater than funds, try LNURL withdraw",
+          open: true,
+        });
       }
-    } else if (error) {
-      setErrorModal({
-        message: error.message,
-        open: true,
-      });
     }
+    setFetchingFees(false);
   }, [data]);
 
   const handelGetFees = () => {
@@ -126,6 +145,7 @@ export default function Page({ params: { id } }: Params) {
   if (loadingWithdrawLink) {
     return <PageLoadingComponent />;
   }
+
   return (
     <div className="top_page_container">
       {withdrawLink?.status === Status.Paid ? (
@@ -134,7 +154,7 @@ export default function Page({ params: { id } }: Params) {
         </>
       ) : (
         <>
-          <Heading>On chain fund withdraw</Heading>
+          <Heading>On-chain fund withdrawal</Heading>
           <ModalComponent
             open={successModal}
             onClose={() => setSuccessModal(false)}
@@ -165,19 +185,28 @@ export default function Page({ params: { id } }: Params) {
                   <h1 className={styles.modal_heading}>Confirm Withdraw</h1>
                   <div>
                     <h2 className={styles.modal_sub_heading}>Fees</h2>
-                    <p>{fees} sats</p>
+                    <p>
+                      {fees}{" "}
+                      {withdrawLink?.account_type === "BTC" ? "sats" : "cents"}
+                    </p>
                   </div>
                   <div>
                     <h2 className={styles.modal_sub_heading}>
                       Original amount{" "}
                     </h2>
-                    <p>{withdrawLink?.max_withdrawable} sats</p>
+                    <p>
+                      {withdrawLink?.voucher_amount}{" "}
+                      {withdrawLink?.account_type === "BTC" ? "sats" : "cents"}
+                    </p>
                   </div>
                   <div>
                     <h2 className={styles.modal_sub_heading}>
                       Total amount after fees
                     </h2>
-                    <p>{Number(withdrawLink?.max_withdrawable) - fees} sats </p>
+                    <p>
+                      {Number(withdrawLink?.voucher_amount) - fees}{" "}
+                      {withdrawLink?.account_type === "BTC" ? "sats" : "cents"}{" "}
+                    </p>
                   </div>
                   <div className={styles.modal_button_container}>
                     <Button
@@ -186,10 +215,9 @@ export default function Page({ params: { id } }: Params) {
                         setFetchingFees(false);
                       }}
                     >
-                      {" "}
-                      Cancel{" "}
+                      Cancel
                     </Button>
-                    <Button onClick={handleConfirm}> Confirm </Button>
+                    <Button onClick={handleConfirm}>Confirm</Button>
                   </div>
                 </>
               ) : (
@@ -224,7 +252,7 @@ export default function Page({ params: { id } }: Params) {
                     })
                   }
                 >
-                  ok
+                  OK
                 </Button>
               </div>
             </div>
@@ -254,7 +282,7 @@ export default function Page({ params: { id } }: Params) {
           <InfoComponent>
             Please note that on-chain transactions are slower and come with
             transaction fees. If your wallet supports LNURL withdrawal, it is
-            recommended to use that option instead
+            recommended to use that option instead.
           </InfoComponent>
         </>
       )}

@@ -6,13 +6,12 @@ type WithdrawLink {
   payment_request: String!
   payment_hash: String!
   payment_secret: String!
-  amount: Float!
+  sales_amount: Float!
   account_type: String!
   escrow_wallet: String!
   status: Status!
   title: String!
-  min_withdrawable: Float!
-  max_withdrawable: Float!
+  voucher_amount: Float!
   unique_hash: String!
   k1: String
   created_at: String!
@@ -58,17 +57,17 @@ type Mutation {
 }
 
 input CreateWithdrawLinkInput {
+  id:ID
   user_id: ID!
   payment_request: String!
   payment_hash: String!
   payment_secret: String!
-  amount: Float!
+  sales_amount: Float!
   account_type: String!
   escrow_wallet: String!
   status: Status
   title: String!
-  min_withdrawable: Float!
-  max_withdrawable: Float!
+  voucher_amount: Float!
   unique_hash: String!
   k1: String
   commission_percentage: Float
@@ -79,13 +78,12 @@ input UpdateWithdrawLinkInput {
   payment_request: String
   payment_hash: String
   payment_secret: String
-  amount: Float
+  sales_amount: Float
   account_type: String
   escrow_wallet: String
   status: Status
   title: String
-  min_withdrawable: Float
-  max_withdrawable: Float
+  voucher_amount: Float
   unique_hash: String
   k1: String
   commission_percentage: Float

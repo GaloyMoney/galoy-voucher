@@ -41,11 +41,11 @@ export default function LinkDetails({
           <div className={styles.amount}>
             Pay{" "}
             {withdrawLink?.account_type === "BTC"
-              ? `${withdrawLink?.max_withdrawable} sats`
+              ? `${withdrawLink?.voucher_amount} sats`
               : `≈ ${usdToSats(
-                  withdrawLink?.max_withdrawable / 100
+                  withdrawLink?.voucher_amount / 100
                 ).toFixed()} sats`}{" "}
-            to create withdraw link for ${withdrawLink?.max_withdrawable / 100}{" "}
+            to create withdraw link for ${withdrawLink?.voucher_amount / 100}{" "}
             US Dollar
           </div>
           <div>
@@ -57,7 +57,7 @@ export default function LinkDetails({
       ) : withdrawLink?.status === Status.Funded ? (
         <>
           <div className={`${styles.amount} print_this`}>
-            Voucher Amount ${withdrawLink?.max_withdrawable / 100} US
+            Voucher Amount ${withdrawLink?.voucher_amount / 100} US
           </div>
           <div className="print_this">
             Voucher Code <Bold>{withdrawLink.identifier_code}</Bold>{" "}
