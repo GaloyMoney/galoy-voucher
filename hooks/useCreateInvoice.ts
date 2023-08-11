@@ -3,10 +3,8 @@ import {
   useLnInvoiceCreateOnBehalfOfRecipientMutation,
   useLnUsdInvoiceCreateOnBehalfOfRecipientMutation,
 } from "@/utils/generated/graphql";
-import {
-  NEXT_PUBLIC_ESCROW_WALLET_BTC,
-  NEXT_PUBLIC_ESCROW_WALLET_USD,
-} from "@/config/variables";
+import { env } from "@/config/env";
+const { NEXT_PUBLIC_ESCROW_WALLET_BTC, NEXT_PUBLIC_ESCROW_WALLET_USD } = env;
 
 interface Props {
   recipientWalletCurrency: string;

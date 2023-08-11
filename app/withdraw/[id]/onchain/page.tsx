@@ -70,7 +70,7 @@ export default function Page({ params: { id } }: Params) {
         const serverError = error.networkError as ServerError;
         errorMessage = serverError.result?.errors[0]?.message || error.message;
       }
-      console.log({ error });
+      console.log("error in getting onchain ", { error });
       setErrorModal({
         message: errorMessage,
         open: true,
