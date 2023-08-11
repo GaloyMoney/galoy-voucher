@@ -1,0 +1,50 @@
+name: Run e2e-web-tests
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+      - staging
+
+env:
+  ESCROW_TOKEN: ${{ secrets.ESCROW_TOKEN }}
+  NEXT_PUBLIC_GALOY_URL: ${{ secrets.NEXT_PUBLIC_GALOY_URL }}
+  NEXT_PUBLIC_ESCROW_WALLET_BTC: ${{ secrets.NEXT_PUBLIC_ESCROW_WALLET_BTC }}
+  NEXT_PUBLIC_ESCROW_WALLET_USD: ${{ secrets.NEXT_PUBLIC_ESCROW_WALLET_USD }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Google Chrome
+        run: |
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install ./google-chrome-stable_current_amd64.deb
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Start dependencies
+        run: make start-deps
+
+      - name: Build Next.js application
+        run: yarn build
+
+      - name: Start application
+        run: yarn start &> app.log &
+
+      - name: Wait for application to start
+        run: "tail -f app.log | grep -q 'ready started server on 0.0.0.0:3000, url: http://localhost:3000'"
+
+      - name: Run tests
+        run: yarn test:e2e

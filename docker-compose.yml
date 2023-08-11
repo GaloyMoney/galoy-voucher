@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  postgres:
+    container_name: postgres_ln_service
+    image: postgres:14.1
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ln-withdraw-usr
+      POSTGRES_PASSWORD: ln-withdraw-pwd
+      POSTGRES_DB: ln-withdraw
+
+  kratos:
+    image: oryd/kratos:v0.13.0
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["kratos migrate sql up -y -e && kratos serve -c /etc/config/kratos/kratos.yml --watch-courier --sqa-opt-out --dev"]
+    environment:
+      - DSN=${DSN:-postgres://ln-withdraw-usr:ln-withdraw-pwd@postgres:5432/ln-withdraw?sslmode=disable}
+      - LOG_LEVEL=debug
+    ports:
+      - "4433:4433" # public
+      - "4434:4434" # admin
+    volumes:
+      - type: bind
+        source: ./config/kratos
+        target: /etc/config/kratos
+    depends_on:
+      - postgres

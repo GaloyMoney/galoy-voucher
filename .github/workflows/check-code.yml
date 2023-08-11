@@ -1,0 +1,26 @@
+name: check-code
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+      - staging
+
+jobs:
+  check-code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run check-code script
+        run: make check-code

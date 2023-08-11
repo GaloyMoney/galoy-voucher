@@ -15,13 +15,9 @@ export default async function handler(req: any, res: any) {
 
       if (withdrawLink.account_type === "USD") {
         const response = await getRealtimePrice();
-        withdrawLink.min_withdrawable = convertCentsToSats(
+        withdrawLink.voucher_amount = convertCentsToSats(
           response,
-          Number(withdrawLink.min_withdrawable)
-        );
-        withdrawLink.max_withdrawable = convertCentsToSats(
-          response,
-          Number(withdrawLink.max_withdrawable)
+          Number(withdrawLink.voucher_amount)
         );
       }
 
@@ -29,8 +25,8 @@ export default async function handler(req: any, res: any) {
         tag: "withdrawRequest",
         callback: `${NEXT_PUBLIC_LOCAL_URL}/api/lnurlw/callback/${withdrawLink.id}`,
         k1: withdrawLink.k1,
-        minWithdrawable: withdrawLink.min_withdrawable * 1000,
-        maxWithdrawable: withdrawLink.max_withdrawable * 1000,
+        minWithdrawable: withdrawLink.voucher_amount * 1000,
+        maxWithdrawable: withdrawLink.voucher_amount * 1000,
         defaultDescription: withdrawLink.title,
       });
     } catch (error) {

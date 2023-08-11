@@ -6,6 +6,7 @@ import {
 import { sendPaymentRequest, getRealtimePrice } from "@/services/galoy";
 import { decode } from "light-bolt11-decoder";
 import { convertCentsToSats } from "@/utils/helpers";
+import { NEXT_PUBLIC_GALOY_URL } from "@/config/variables";
 
 export default async function handler(req: any, res: any) {
   if (req.method === "GET") {
@@ -14,10 +15,6 @@ export default async function handler(req: any, res: any) {
 
     try {
       const withdrawLink = await getWithdrawLinkByK1Query(k1);
-      const amount = decode(pr).sections.find(
-        (section: any) => section.name === "amount"
-      )?.value;
-
       if (!withdrawLink) {
         return res
           .status(404)
@@ -38,32 +35,28 @@ export default async function handler(req: any, res: any) {
 
       if (withdrawLink.account_type === "USD") {
         const response = await getRealtimePrice();
-        withdrawLink.min_withdrawable = convertCentsToSats(
+        withdrawLink.voucher_amount = convertCentsToSats(
           response,
-          Number(withdrawLink.min_withdrawable)
-        );
-        withdrawLink.max_withdrawable = convertCentsToSats(
-          response,
-          Number(withdrawLink.max_withdrawable)
+          Number(withdrawLink.voucher_amount)
         );
       }
 
-      if (
-        !(
-          amount >= withdrawLink.min_withdrawable * 1000 &&
-          amount <= withdrawLink.max_withdrawable * 1000
-        )
-      ) {
-        if (withdrawLink.account_type === "USD") {
-          return res.status(404).json({
-            status: "ERROR",
-            reason:
-              "Invalid amount. This is a USD account Link, try withdrawing fast after scanning the link",
-          });
-        } else {
-          return res
-            .status(404)
-            .json({ status: "ERROR", reason: "Invalid amount" });
+      if (NEXT_PUBLIC_GALOY_URL !== "api.staging.galoy.io") {
+        const amount = decode(pr).sections.find(
+          (section: any) => section.name === "amount"
+        )?.value;
+        if (!(amount === withdrawLink.voucher_amount * 1000)) {
+          if (withdrawLink.account_type === "USD") {
+            return res.status(404).json({
+              status: "ERROR",
+              reason:
+                "Invalid amount. This is a USD account Link, try withdrawing fast after scanning the link",
+            });
+          } else {
+            return res
+              .status(404)
+              .json({ status: "ERROR", reason: "Invalid amount" });
+          }
         }
       }
 

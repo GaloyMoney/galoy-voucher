@@ -8,17 +8,17 @@ export const CREATE_WITHDRAW_LINK = gql`
       payment_request
       payment_hash
       payment_secret
-      amount
+      sales_amount
       account_type
       escrow_wallet
       status
       title
-      min_withdrawable
-      max_withdrawable
+      voucher_amount
       unique_hash
       k1
       created_at
       updated_at
+      commission_percentage
     }
   }
 `;
@@ -33,13 +33,12 @@ export const UPDATE_WITHDRAW_LINK = gql`
       input: $updateWithdrawLinkInput
     ) {
       account_type
-      amount
+      sales_amount
       created_at
       escrow_wallet
       id
       k1
-      max_withdrawable
-      min_withdrawable
+      voucher_amount
       payment_hash
       payment_request
       payment_secret
@@ -48,6 +47,7 @@ export const UPDATE_WITHDRAW_LINK = gql`
       unique_hash
       user_id
       updated_at
+      commission_percentage
     }
   }
 `;
@@ -72,7 +72,6 @@ export const LN_INVOICE_CREATE = gql`
   }
 `;
 
-
 export const LN_INVOICE_CREATE_USD = gql`
   mutation LnUsdInvoiceCreateOnBehalfOfRecipient(
     $input: LnUsdInvoiceCreateOnBehalfOfRecipientInput!
@@ -90,5 +89,26 @@ export const LN_INVOICE_CREATE_USD = gql`
         satoshis
       }
     }
+  }
+`;
+
+export const ON_CHAIN_PAYMENT = gql`
+  mutation SendPaymentOnChain(
+    $sendPaymentOnChainId: ID!
+    $btcWalletAddress: String!
+  ) {
+    sendPaymentOnChain(
+      id: $sendPaymentOnChainId
+      btc_wallet_address: $btcWalletAddress
+    ) {
+      amount
+      status
+    }
+  }
+`;
+
+export const DELETE_WITHDRAW_LINK = gql`
+  mutation DeleteWithdrawLink($id: ID!) {
+    deleteWithdrawLink(id: $id)
   }
 `;

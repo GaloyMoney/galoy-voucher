@@ -1,10 +1,14 @@
 "use client";
 import React from "react";
-import { QRCode } from "react-qrcode-logo";
-import { encodeURLToLNURL } from "@/utils/helpers";
-import LoadingComponent from "@/components/LoadingComponent";
-import { useGetWithdrawLinkQuery } from "@/utils/generated/graphql";
+import { useGetWithdrawLinkQuery ,Status } from "@/utils/generated/graphql";
 import { NEXT_PUBLIC_LOCAL_URL } from "@/config/variables";
+import Link from "next/link";
+import Button from "@/components/Button/Button";
+import LinkDetails from "@/components/LinkDetails/LinkDetails";
+import InfoComponent from "@/components/InfoComponent/InfoComponent";
+import FundsPaid from "@/components/FundsPaid";
+import PageLoadingComponent from "@/components/Loading/PageLoadingComponent";
+import Heading from "@/components/Heading";
 
 interface Params {
   params: {
@@ -22,51 +26,50 @@ export default function Page({ params: { id } }: Params) {
   });
 
   if (loading) {
-    return <LoadingComponent />;
+    return <PageLoadingComponent />;
   }
   if (error) {
-    //TODO need to add septate component for error section here
     return <div>Error: {error.message}</div>;
   }
   if (!data) {
     return <div>No data</div>;
   }
 
-  //LNURLw URL this will be encoded in LNURL format
-  const url = encodeURLToLNURL(
-    `${NEXT_PUBLIC_LOCAL_URL}/api/lnurlw/${data.getWithdrawLink?.unique_hash}`
-  );
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(url);
-  };
-
-  //TODO need to add this to septate component
   return (
-    <div className="flex flex-col gap-3 items-center justify-center h-screen">
-      <button className="bg-zinc-700  text-white py-2 px-4 rounded w-80">
-        <span>Account Type : </span> {data.getWithdrawLink?.account_type}
-      </button>
+    <div className="top_page_container">
+      {data.getWithdrawLink?.status === Status.Paid ? (
+        <>
+          <FundsPaid/>
+        </>
+      ) : (
+        <>
+          <Heading>Please Withdraw your funds</Heading>
+          <LinkDetails withdrawLink={data.getWithdrawLink}></LinkDetails>
+          <Link
+            style={{ width: "90%" }}
+            href={`${NEXT_PUBLIC_LOCAL_URL}/withdraw/${id}/lnurl`}
+          >
+            <Button>
+              <span>LNURLw Link</span>{" "}
+            </Button>
+          </Link>
 
-      <button className="bg-zinc-700  text-white py-2 px-4 rounded w-80">
-        <span>Min Withdrawable : </span>{" "}
-        {data.getWithdrawLink?.min_withdrawable}{" "}
-        {data.getWithdrawLink?.account_type === "BTC" ? "sats" : "cents"}
-      </button>
-      <button className="bg-zinc-700  text-white py-2 px-4 rounded w-80">
-        <span>Max Withdrawable : </span>{" "}
-        {data.getWithdrawLink?.max_withdrawable}{" "}
-        {data.getWithdrawLink?.account_type === "BTC" ? "sats" : "cents"}
-      </button>
-      <div>
-        <QRCode size={300} value={url} />
-      </div>
-      <button
-        onClick={copyToClipboard}
-        className="bg-zinc-700 hover:bg-zinc-900 text-white py-2 px-4 rounded w-80"
-      >
-        Copy URL
-      </button>
+          <Link
+            style={{ width: "90%" }}
+            href={`${NEXT_PUBLIC_LOCAL_URL}/withdraw/${id}/onchain`}
+          >
+            <Button>
+              <span>On Chain</span>{" "}
+            </Button>
+          </Link>
+
+          <InfoComponent>
+            You can withdraw funds from supported LNURL wallets or through
+            on-chain transactions. However, please note that on-chain
+            transactions will incur transaction fees.
+          </InfoComponent>
+        </>
+      )}
     </div>
   );
 }

@@ -1,26 +1,44 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import Button from "@/components/Button/Button";
+import { useSession } from "@/context/session";
+import LoadingComponent from "@/components/Loading/PageLoadingComponent";
 // path : /
 //TODO home page or welcome screen needed to be created gere
 export default function Home() {
+  const { session, loading } = useSession();
+  const user_id = session?.identity?.id as any;
+
+  if (loading) {
+    return <LoadingComponent></LoadingComponent>;
+  }
+
   return (
-    <div className="flex flex-col mt-36 items-center  h-screen">
-      <h1 className="text-4xl font-bold">Galoy Withdraw</h1>
-      <p className="mt-1">Start creating withdraw links</p>
+    <div className="flex flex-col mt-36 items-center text-center">
+      <h1 className="text-7xl font-bold">Galoy Withdraw</h1>
+      <p className="mt-1 text-6xl">Start creating withdraw links</p>
       <div className="flex flex-col mt-8 space-y-4">
-        <Link
-          href="/user/aaaaaaaa-e098-4a16-932b-e4f4abc24366/links"
-          className="bg-zinc-700 hover:bg-zinc-900 text-white font-semibold py-2 px-4 rounded flex items-center justify-center"
-        >
-          <button>My links</button>
-        </Link>
-        <Link
-          href="/create"
-          className="bg-zinc-700 hover:bg-zinc-900 text-white font-semibold py-2 px-4 rounded flex items-center justify-center"
-        >
-          <button>Create new Link</button>
+        {user_id ? (
+          <>
+            <Link href={`/user/${user_id}/links`}>
+              <Button>My links</Button>
+            </Link>
+            <Link href="/create">
+              <Button>Create new Link</Button>
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link href={`/auth/login`}>
+              <Button>Login</Button>
+            </Link>
+            <Link href="/auth/registration">
+              <Button>Register</Button>
+            </Link>
+          </>
+        )}
+        <Link href="/voucher">
+          <Button>Redeem Voucher</Button>
         </Link>
       </div>
     </div>
