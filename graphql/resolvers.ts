@@ -26,6 +26,7 @@ const resolvers = {
   Query: {
     getWithdrawLink: async (parent: any, args: any, context: any) => {
       const { id, unique_hash, k1, payment_hash, secret_code } = args;
+      // TODO need to change it to separate resolvers/queries
       let data;
       if (id) {
         data = await getWithdrawLinkByIdQuery(id);
@@ -54,6 +55,9 @@ const resolvers = {
     },
     getWithdrawLinksByUserId: async (parent: any, args: any, context: any) => {
       const { user_id, status, limit, offset } = args;
+      if (context?.user?.id !== user_id) {
+        throw new Error("Unauthorized");
+      }
       if (!user_id) {
         throw new Error("user_id is not provided");
       }
@@ -102,6 +106,9 @@ const resolvers = {
   Mutation: {
     createWithdrawLink: async (parent: any, args: any, context: any) => {
       const { input } = args;
+      if (context?.user?.id !== input.user_id) {
+        throw new Error("Unauthorized");
+      }
       const data = await createWithdrawLinkMutation(input);
       if (data instanceof Error) {
         throw new Error("Internal server error");
