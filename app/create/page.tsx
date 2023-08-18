@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CreatePageAmount from "@/components/Create/CreatePageAmount/CreatePageAmount";
 import CreatePagePercentage from "@/components/Create/CreatePagePercentage/CreatePagePercentage";
 import {
@@ -18,11 +18,22 @@ import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/Create/ConifrmModal/ConfirmModal";
 import InfoComponent from "@/components/InfoComponent/InfoComponent";
 import useRealtimePrice from "@/hooks/useRealTimePrice";
+import { useSession } from "@/context/session";
 import { DEFAULT_CURRENCY } from "@/config/appConfig";
 import { env } from "@/config/env";
 const { NEXT_PUBLIC_ESCROW_WALLET_USD } = env;
 
 export default function CreatePage() {
+  const router = useRouter();
+  const { session, loading } = useSession();
+  const user_id = session?.identity?.id 
+
+  useEffect(() => {
+    if (!loading && !user_id) {
+      router.push("/auth/login");
+    }
+  }, [session, loading]);
+
   const { usdToSats } = useSatsPrice();
   const storedCurrency =
     typeof window !== "undefined" ? localStorage.getItem("currency") : null;
@@ -42,7 +53,6 @@ export default function CreatePage() {
   const [confirmModal, setConfirmModal] = useState<boolean>(false);
   const [loadingPageChange, setLoadingPageChange] = useState<boolean>(false);
 
-  const router = useRouter();
   const AmountInDollars = (
     currencyToCents(Number(amount), currency.id, currency.fractionDigits)
       .convertedCurrencyAmount / 100
@@ -92,7 +102,7 @@ export default function CreatePage() {
           variables: {
             input: {
               payment_hash: data.paymentHash,
-              user_id: "aaaaaaaa-e098-4a16-932b-e4f4abc24366",
+              user_id: user_id,
               payment_request: data.paymentRequest,
               payment_secret: data.paymentSecret,
               sales_amount: Number(AmountInDollars),

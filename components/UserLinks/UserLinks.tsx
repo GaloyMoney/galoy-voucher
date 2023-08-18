@@ -15,12 +15,11 @@ export default function UserLinks({ withdrawLink }: UserLinksProps) {
   return (
     <>
       {" "}
-      <Link
+      {/* TODO need to think if the link is unfunded should users be allowed to click and go on fund page */}
+      {/* <Link
         href={
           withdrawLink.status === Status.Unfunded
             ? `/fund/${withdrawLink.id}`
-            : withdrawLink.status === Status.Funded
-            ? `/withdraw/${withdrawLink.id}`
             : "#"
         }
         onClick={(event) => {
@@ -33,7 +32,7 @@ export default function UserLinks({ withdrawLink }: UserLinksProps) {
         }}
         key={withdrawLink.id}
         className={styles.TopContainer}
-      >
+      > */}
         <div className={styles.LinkContainer}>
           <div className={styles.HeadingContainer}>
             <div>
@@ -106,7 +105,7 @@ export default function UserLinks({ withdrawLink }: UserLinksProps) {
             </div>
           </div>
         </div>
-      </Link>
+      {/* </Link> */}
     </>
   );
 }
